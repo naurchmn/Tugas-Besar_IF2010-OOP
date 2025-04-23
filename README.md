@@ -13,7 +13,7 @@ That Time I Became a Farming Game Dev to Save the World merupakan permainan pixe
 | 4  | Nawaf Amjad Rizqi A. Ismail   | 18223073   | @Nawafarai05   |
 | 5   | Adam Joaquin Girsang   | 18223089   | @adamjoaquin20  |
 
-> Asisten: Farhan
+> Asisten: Farhan Nabil Suryono
 
 ### Features
 Technical Features:
