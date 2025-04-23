@@ -14,7 +14,7 @@ Pemain harus menganani inventory, lahan, dan sekitarannya untuk berkebun. Pemain
 | No       | Nama       | NIM       | Github      |
 | ------------- | ------------- | ------------- | ------------- |
 | 1   | Michelle Hamdani | 18223037  | @michelle07-09   |
-| 2  | Muhammad Aymar Barkhaya  | 18223051   | @  |
+| 2  | Muhammad Aymar Barkhaya  | 18223051   | @aymarb  |
 | 3  | Naura Ayurachmani   | 18223061   | @naurchmn  |
 | 4  | Nawaf Amjad Rizqi A. Ismail   | 18223073   | @Nawafarai05   |
 | 5   | Adam Joaquin Girsang   | 18223089   | @adamjoaquin20  |
@@ -55,7 +55,7 @@ Maps
 - World Map
 
 ### Tech Needs
-IDE: Visual Studio Code
+IDE: IntelliJ IDEA
 Modules: Java
 
  ### How to Run
