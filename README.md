@@ -1,14 +1,8 @@
 # Tugas-Besar_IF2010_Kelompok-5
 # “That Time I Became a Farming Game Dev to Save the World”
 
-### Instruksi
-Anda ditugaskan untuk membuat CLI (Command Line Interface) bernama That Time I Became a Farming Game Dev to Save the World menggunakan bahasa pemrograman Java.
-Menuliskan tahapan untuk melakukan kompilasi dan menjalankan program pada file README.md yang dikumpulkan bersama dengan source code.
-
 ### Deskripsi
-That Time I Became a Farming Game Dev to Save the World merupakan permainan versi sederhananya dari Minecraft. Tujuan permainan ini yaitu permainan bertani dengan player, lahan, item, NPC, dan peta sebagai entitty.
-
-Pemain harus menganani inventory, lahan, dan sekitarannya untuk berkebun. Pemain memiliki items seperti ikan, hasil panen, biji-bijian, makanan, alat, dan misc untuk mendukung kegiatan berkebunnya.Untuk selanjutnya, silahkan membaca spesifikasi ini untuk mengetahui detailnya.
+That Time I Became a Farming Game Dev to Save the World merupakan permainan pixel-art 2D farming simulator yang dikembangkan dengan bahasa pemrograman Java. Tujuan permainan ini menjalani hidup sebagai petani sampai sukses dan menikah.
 
 ### Contributors
 | No       | Nama       | NIM       | Github      |
