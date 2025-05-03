@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'com.spakborhills'
+version = '1.0-SNAPSHOT'
+sourceCompatibility = '11'  // Adjust as needed
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Add dependencies as needed
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+}
+
+application {
+    mainClass = 'com.spakborhills.Main'
+}
+
+test {
+    useJUnitPlatform()
+}
