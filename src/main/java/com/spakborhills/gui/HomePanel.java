@@ -10,7 +10,7 @@ public class HomePanel extends JPanel{
 
     private BufferedImage background;
 
-    public HomePanel() {
+    public HomePanel(MainFrame mainFrame) {
         try{
             background = ImageIO.read(getClass().getResource("/assets/backgrounds/home bg.png"));
         } catch (IOException e) {
@@ -21,6 +21,8 @@ public class HomePanel extends JPanel{
         this.setLayout(null);
         this.setDoubleBuffered(true); //improve rendering performance
         this.setFocusable(true);
+
+        //bikin 4 button home screen
 
         JButton playButton = new GameButton("Play");
         playButton.setBounds(150, 256, 250, 30);
@@ -37,6 +39,12 @@ public class HomePanel extends JPanel{
         JButton exitButton = new GameButton("Exit");
         exitButton.setBounds(150, 361, 250, 30);
         this.add(exitButton);
+
+        //action 4 button home screen
+        playButton.addActionListener(e -> mainFrame.switchPanel("game"));
+        helpButton.addActionListener(e -> System.out.println("Help")); //belum implement
+        creditButton.addActionListener(e -> System.out.println("Credit")); //belum implement
+        exitButton.addActionListener(e -> System.exit(0));
     }
 
     @Override
