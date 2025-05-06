@@ -1,8 +1,8 @@
-package com.spakborhills;
+package com.spakborhills.items;
 
 import java.util.Timer;
 
-public class Seeds { // extends items
+public class Seeds extends Item { // extends items
     String name; // nantinya di items
     String season;
     String seedName;
