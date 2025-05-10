@@ -1,7 +1,7 @@
-package com.spakborhills.entity;
+package com.spakborhills.model.entity;
 
-import com.spakborhills.gui.GamePanel;
-import com.spakborhills.input.KeyHandler;
+import com.spakborhills.view.gui.GamePanel;
+import com.spakborhills.controller.KeyHandler;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

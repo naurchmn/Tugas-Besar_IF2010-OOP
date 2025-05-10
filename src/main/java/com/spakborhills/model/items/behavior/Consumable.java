@@ -1,4 +1,4 @@
-package com.spakborhills.items.behavior;
+package com.spakborhills.model.items.behavior;
 
 public interface Consumable {
     void use();

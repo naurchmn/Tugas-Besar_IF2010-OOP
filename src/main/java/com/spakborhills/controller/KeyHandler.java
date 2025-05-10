@@ -1,4 +1,4 @@
-package com.spakborhills.input;
+package com.spakborhills.controller;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

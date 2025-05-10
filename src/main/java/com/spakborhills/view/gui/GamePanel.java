@@ -1,8 +1,8 @@
-package com.spakborhills.gui;
+package com.spakborhills.view.gui;
 
-import com.spakborhills.game.GameLoop;
-import com.spakborhills.entity.Player;
-import com.spakborhills.input.KeyHandler;
+import com.spakborhills.controller.GameLoop;
+import com.spakborhills.model.entity.Player;
+import com.spakborhills.controller.KeyHandler;
 
 import javax.swing.*;
 import java.awt.*;

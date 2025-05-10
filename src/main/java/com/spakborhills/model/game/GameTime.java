@@ -1,4 +1,4 @@
-package com.spakborhills.game;
+package com.spakborhills.model.game;
 
 public class GameTime {
     private long startTime;

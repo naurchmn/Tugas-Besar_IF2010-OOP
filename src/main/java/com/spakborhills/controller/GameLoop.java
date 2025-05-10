@@ -1,4 +1,6 @@
-package com.spakborhills.game;
+package com.spakborhills.controller;
+
+import com.spakborhills.model.game.GameTime;
 
 public class GameLoop implements Runnable {
     private Thread gameThread; //thread utama
