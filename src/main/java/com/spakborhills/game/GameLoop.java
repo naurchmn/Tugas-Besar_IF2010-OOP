@@ -1,7 +1,8 @@
 package com.spakborhills.game;
 
 public class GameLoop implements Runnable {
-    private Thread gameThread;
+    private Thread gameThread; //thread utama
+    private final GameTime gameTime = new GameTime(); //time utama
     private boolean isRunning = false;
     private final int fps;
     private final Runnable updateLogic;
@@ -18,9 +19,11 @@ public class GameLoop implements Runnable {
             isRunning = true;
             gameThread = new Thread(this);
             gameThread.start();
+            gameTime.setStartTime(System.nanoTime());
         }
         else{
             isRunning = true;
+            gameTime.setStartTime(System.nanoTime());
         }
     }
 
@@ -31,7 +34,7 @@ public class GameLoop implements Runnable {
 
     @Override
     public void run() {
-        double drawInterval = (double) 1000000000 / fps;
+        double drawInterval = (double) 1000000000 / fps; //setting fps
         long lastTime = System.nanoTime();
         long currentTime;
         double delta = 0;
@@ -41,19 +44,34 @@ public class GameLoop implements Runnable {
             delta += (currentTime - lastTime) / drawInterval;
             lastTime = currentTime;
 
-            if (isRunning && delta >= 1) {
+            if (isRunning && delta >= 1) { //update logic dan paint
                 updateLogic.run();
                 repaintPanel.run();
                 delta--;
             }
 
-            if (!isRunning) {
+            if (!isRunning) {  //hemat CPU kalau lagi pause
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
+
+            // Tidur sementara untuk menjaga FPS tetap akurat
+            try {
+                Thread.sleep((long) (drawInterval / 1_000_000));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    public GameTime getGameTime() {
+        return gameTime;
+    }
+
+    public boolean isRunning() {
+        return isRunning;
     }
 }

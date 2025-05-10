@@ -34,6 +34,7 @@ public class GamePanel extends  JPanel{
 
         backButton.addActionListener(e -> {
             mainFrame.switchPanel("home");
+            pauseGame();
             keyH.resetKeys();
         });
     }
@@ -47,8 +48,12 @@ public class GamePanel extends  JPanel{
     }
 
     public void update(){
+        if(!gameLoop.isRunning()){
+            return;
+        }
         player.update();
-        System.out.println("Update");
+        gameLoop.getGameTime().updateGameTime();
+        gameLoop.getGameTime().displayGameTime(); //debug gametime
     }
 
     @Override
@@ -56,5 +61,11 @@ public class GamePanel extends  JPanel{
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         player.draw(g2);
+
+        //debug totalgametime
+        int totalMinutes = gameLoop.getGameTime().getTotalGameMinutes();
+        g2.setColor(Color.white);
+        g2.setFont(new Font("Comic Sans", Font.PLAIN, 20));
+        g2.drawString("Total minutes: " + totalMinutes, 300, 30);
     }
 }
