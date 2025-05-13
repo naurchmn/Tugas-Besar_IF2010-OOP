@@ -1,6 +1,6 @@
 package com.spakborhills;
 
-import com.spakborhills.gui.MainFrame;
+import com.spakborhills.view.gui.MainFrame;
 
 import javax.swing.*;
 

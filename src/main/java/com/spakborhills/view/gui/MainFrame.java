@@ -1,12 +1,12 @@
-package com.spakborhills.gui;
+package com.spakborhills.view.gui;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class MainFrame extends JFrame {
 
-    private CardLayout cardLayout;
-    private JPanel mainPanel;
+    private final CardLayout cardLayout;
+    private final JPanel mainPanel;
 
     public MainFrame() {
         setTitle("Spakbor Hills");
@@ -34,5 +34,12 @@ public class MainFrame extends JFrame {
         mainPanel.revalidate();
         mainPanel.repaint();
         System.out.println("Switching to " + panelName);
+
+        if(panelName.equals("game")) {
+            GamePanel gamePanel = (GamePanel) mainPanel.getComponent(1);
+            gamePanel.startGame();
+            gamePanel.requestFocusInWindow();
+        }
+
     }
 }
