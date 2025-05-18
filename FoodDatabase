@@ -1,0 +1,27 @@
+import java.util.HashMap;
+import java.util.Map;
+
+public class FoodDatabase {
+    private static final Map<String, Food> foods = new HashMap<>();
+
+    static {
+        foods.put("Fish n' Chips", new Food("Fish n' Chips", 50, 150, 135, true));
+        foods.put("Baguette", new Food("Baguette", 25, 100, 80, true));
+        foods.put("Sashimi", new Food("Sashimi", 70, 300, 275, true));
+        foods.put("Fugu", new Food("Fugu", 50, -1, 135, false));
+        foods.put("Wine", new Food("Wine", 20, 100, 90, true));
+        foods.put("Pumpkin Pie", new Food("Pumpkin Pie", 35, 120, 100, true));
+        foods.put("Veggie Soup", new Food("Veggie Soup", 40, 140, 120, true));
+        foods.put("Fish Stew", new Food("Fish Stew", 70, 280, 260, true));
+        foods.put("Spakbor Salad", new Food("Spakbor Salad", 70, -1, 250, false));
+        foods.put("Fish Sandwich", new Food("Fish Sandwich", 50, 200, 180, true));
+        foods.put("The Legends of Spakbor", new Food("The Legends of Spakbor", 100, -1, 2000, false));
+        foods.put("Cooked Pig's Head", new Food("Cooked Pig's Head", 100, 1000, 0, true));
+    }
+    public static Food getFood(String name) {
+        return foods.get(name);
+    }
+    public static Map<String, Food> getFoods() {
+        return new HashMap<>(foods);
+    }
+}
