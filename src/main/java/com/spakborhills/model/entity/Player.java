@@ -9,7 +9,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class Player {
-    private int x, y, speed;
+    private int screenX, screenY;
+    private int worldx, worldy;
+    private int speed;
     private final String name;
 
     private BufferedImage sprite;
@@ -23,13 +25,16 @@ public class Player {
        this.keyH = keyH;
        this.name = name;
 
+       screenX = gp.screenWidth/2 - gp.getTileSize()/2;
+       screenY = gp.screenHeight/2 - gp.getTileSize()/2;
+
        setDefaultValues();
        getPlayerImage();
     }
 
     public void setDefaultValues(){
-        x = 256;
-        y = 256;
+        worldx = gp.getTileSize() * gp.maxWorldCol / 2;
+        worldy = gp.getTileSize() * gp.maxWorldRow / 2;
         speed = 4;
         direction = "down";
     }
@@ -52,21 +57,37 @@ public class Player {
 
             if (keyH.isUpPressed()) {
                 direction = "up";
-                y -= speed;
+                worldy -= speed;
             } else if (keyH.isLeftPressed()) {
                 direction = "left";
-                x -= speed;
+                worldx -= speed;
             } else if (keyH.isDownPressed()) {
                 direction = "down";
-                y += speed;
+                worldy += speed;
             } else if (keyH.isRightPressed()) {
                 direction = "right";
-                x += speed;
+                worldx += speed;
             }
         }
     }
 
     public void draw(Graphics2D g2){
-        g2.drawImage(sprite, x, y, 32, 32, null);
+        g2.drawImage(sprite, screenX, screenY, gp.getTileSize(), gp.getTileSize(), null);
+    }
+
+    public int getWorldx() {
+        return worldx;
+    }
+
+    public int getWorldy() {
+        return worldy;
+    }
+
+    public int getScreenX() {
+        return screenX;
+    }
+
+    public int getScreenY() {
+        return screenY;
     }
 }
