@@ -1,5 +1,6 @@
 package com.spakborhills.view.gui;
 
+import com.spakborhills.controller.CollisionChecker;
 import com.spakborhills.controller.GameLoop;
 import com.spakborhills.controller.TileManager;
 import com.spakborhills.model.entity.Player;
@@ -25,7 +26,8 @@ public class GamePanel extends  JPanel{
     public final int worldWidth = tileSize * maxWorldCol;
     public final int worldHeight = tileSize * maxWorldRow;
 
-    TileManager tileM = new TileManager(this);
+    public TileManager tileM = new TileManager(this);
+    public CollisionChecker cChecker = new CollisionChecker(this);
     private Player player;
     private GameLoop gameLoop;
     private KeyHandler keyH = new KeyHandler();
@@ -37,6 +39,7 @@ public class GamePanel extends  JPanel{
     public Player getPlayer() {
         return player;
     }
+
     public GamePanel(MainFrame mainFrame) {
 
         this.setBackground(Color.WHITE);

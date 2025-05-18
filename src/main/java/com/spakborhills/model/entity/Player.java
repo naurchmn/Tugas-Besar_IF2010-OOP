@@ -7,15 +7,11 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Objects;
 
-public class Player {
+public class Player extends Entity{
     private int screenX, screenY;
-    private int worldx, worldy;
-    private int speed;
     private final String name;
-
-    private BufferedImage sprite;
-    private String direction;
 
     GamePanel gp;
     KeyHandler keyH;
@@ -28,26 +24,40 @@ public class Player {
        screenX = gp.screenWidth/2 - gp.getTileSize()/2;
        screenY = gp.screenHeight/2 - gp.getTileSize()/2;
 
+       solidArea = new Rectangle(12, 18, 18, 27);
+
        setDefaultValues();
        getPlayerImage();
     }
 
     public void setDefaultValues(){
-        worldx = gp.getTileSize() * gp.maxWorldCol / 2;
-        worldy = gp.getTileSize() * gp.maxWorldRow / 2;
+        setWorldx(gp.getTileSize() * gp.maxWorldCol / 2);
+        setWorldy(gp.getTileSize() * gp.maxWorldRow / 2);
         speed = 4;
         direction = "down";
     }
 
     public void getPlayerImage(){
-        try{
-            sprite = ImageIO.read(getClass().getResource("/assets/sprites/dasco.jpg"));
+        try {
+            front1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/downidle.png")));
+            front2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/down01.png")));
+            front3 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/downidle.png")));
+            front4 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/down02.png")));
+            back1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/upidle.png")));
+            back2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/up01.png")));
+            back3 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/upidle.png")));
+            back4 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/up02.png")));
+            left1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/leftidle.png")));
+            left2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/left01.png")));
+            left3 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/leftidle.png")));
+            left4 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/left02.png")));
+            right1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/rightidle.png")));
+            right2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/right01.png")));
+            right3 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/rightidle.png")));
+            right4 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/right02.png")));
+
         } catch (IOException e) {
-            System.out.println("Error loading player image");
-            e.printStackTrace();
-        }
-        catch (NullPointerException e){
-            System.out.println("Error loading player image null");
+            System.out.println("Gagal load gambar!");
             e.printStackTrace();
         }
     }
@@ -57,30 +67,100 @@ public class Player {
 
             if (keyH.isUpPressed()) {
                 direction = "up";
-                worldy -= speed;
             } else if (keyH.isLeftPressed()) {
                 direction = "left";
-                worldx -= speed;
             } else if (keyH.isDownPressed()) {
                 direction = "down";
-                worldy += speed;
             } else if (keyH.isRightPressed()) {
                 direction = "right";
-                worldx += speed;
             }
+
+            collisionOn = false;
+            gp.cChecker.checkTile(this);
+
+            if (!collisionOn){
+                switch (direction){
+                    case "up" : setWorldy(getWorldy() - speed); break;
+                    case "down" : setWorldy(getWorldy() + speed); break;
+                    case "left" : setWorldx(getWorldx() - speed); break;
+                    case "right" : setWorldx(getWorldx() + speed); break;
+                    default: break;
+                }
+            }
+
+            spriteCounter++;
+            if (!collisionOn){
+                if (spriteCounter > 10){
+                    if (spriteNum == 1) {
+                        spriteNum = 2;
+                    } else if (spriteNum == 2) {
+                        spriteNum = 3;
+                    } else if (spriteNum == 3) {
+                        spriteNum = 4;
+                    } else if (spriteNum == 4) {
+                        spriteNum = 1;
+                    }
+                    spriteCounter = 0;
+                }
+            }
+        }
+        else {
+            spriteNum = 1;
         }
     }
 
     public void draw(Graphics2D g2){
-        g2.drawImage(sprite, screenX, screenY, gp.getTileSize(), gp.getTileSize(), null);
-    }
 
-    public int getWorldx() {
-        return worldx;
-    }
+        BufferedImage image = null;
 
-    public int getWorldy() {
-        return worldy;
+        switch (direction) {
+            case "down" :
+                if (spriteNum == 1) {
+                    image = front1;
+                } else if (spriteNum == 2) {
+                    image = front2;
+                } else if (spriteNum == 3) {
+                    image = front3;
+                } else {
+                    image = front4;
+                }
+                break;
+            case "up" :
+                if (spriteNum == 1) {
+                    image = back1;
+                } else if (spriteNum == 2) {
+                    image = back2;
+                } else if (spriteNum == 3) {
+                    image = back3;
+                } else {
+                    image = back4;
+                }
+                break;
+            case "left" :
+                if (spriteNum == 1) {
+                    image = left1;
+                } else if (spriteNum == 2) {
+                    image = left2;
+                } else if (spriteNum == 3) {
+                    image = left3;
+                } else {
+                    image = left4;
+                }
+                break;
+            case "right" :
+                if (spriteNum == 1) {
+                    image = right1;
+                } else if (spriteNum == 2) {
+                    image = right2;
+                } else if (spriteNum == 3) {
+                    image = right3;
+                } else {
+                    image = right4;
+                }
+                break;
+        }
+
+        g2.drawImage(image, screenX, screenY, gp.getTileSize(), gp.getTileSize(), null);
     }
 
     public int getScreenX() {
