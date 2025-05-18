@@ -1,6 +1,7 @@
 package com.spakborhills.view.gui;
 
 import com.spakborhills.controller.GameLoop;
+import com.spakborhills.model.entity.Entity;
 import com.spakborhills.model.entity.Player;
 import com.spakborhills.controller.KeyHandler;
 
@@ -13,6 +14,7 @@ public class GamePanel extends  JPanel{
     private final int tileSize = oriTileSize * scale;
 
     private Player player;
+    private Entity npc[];
     private GameLoop gameLoop;
     private KeyHandler keyH = new KeyHandler();
 
@@ -25,6 +27,7 @@ public class GamePanel extends  JPanel{
         this.setFocusable(true);
 
         player = new Player(this, keyH, "asep spakbor");
+        npc = new Entity[7];
         this.addKeyListener(keyH);
         gameLoop = new GameLoop(60, this::update, this::repaint);
 
