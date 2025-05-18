@@ -1,6 +1,5 @@
 package com.spakborhills.view.npc;
 
-import com.spakborhills.model.entity.Entity;
 import com.spakborhills.view.gui.GamePanel;
 
 import javax.imageio.ImageIO;

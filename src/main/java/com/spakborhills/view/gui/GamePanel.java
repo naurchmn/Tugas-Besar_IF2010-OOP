@@ -1,7 +1,6 @@
 package com.spakborhills.view.gui;
 
 import com.spakborhills.controller.GameLoop;
-import com.spakborhills.model.entity.Entity;
 import com.spakborhills.model.entity.Player;
 import com.spakborhills.controller.KeyHandler;
 
