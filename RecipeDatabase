@@ -1,0 +1,84 @@
+import java.util.HashMap;
+import java.util.Map;
+
+public class RecipeDatabase {
+    private Map<String, Recipe> recipes = new HashMap<>();
+
+    static{
+        Map<String, Recipe> ingredients = new HashMap<>();
+
+        //Fish n' Chips
+        ingredients.put("Any Fish", 2);
+        ingredients.put("Wheat", 1);
+        ingredients.put("Potato", 1);
+        recipes.put("recipe_1", new Recipe("recipe_1", "Fish n' Chips", new HashMap<>(ingredients), "Store"));
+        ingredients.clear();
+
+        //Baguette
+        ingredients.put("Wheat", 3);
+        recipes.put("recipe_2", new Recipe("recipe_2", "Baguette", new HashMap<>(ingredients), "Default"));
+        ingredients.clear();
+
+        //Sashimi
+        ingredients.put("Salmon", 3);
+        recipes.put("recipe_3", new Recipe("recipe_3", "Sashimi", new HashMap<>(ingredients), "Catch 10 fish"));
+        ingredients.clear();
+
+        //Fugu
+        ingredients.put("Pufferfish", 1);
+        recipes.put("recipe_4", new Recipe("recipe_4", "Fugu", new HashMap<>(ingredients), "Catch pufferfish"));
+        ingredients.clear();
+
+        //Wine
+        ingredients.put("Grape", 2);
+        recipes.put("recipe_5", new Recipe("recipe_5", "Wine", new HashMap<>(ingredients), "Default"));
+        ingredients.clear();
+
+        //Pumpkin Pie
+        ingredients.put("Egg", 1);
+        ingredients.put("Wheat", 1);
+        ingredients.put("Pumpkin", 1);
+        recipes.put("recipe_6", new Recipe("recipe_6", "Pumpkin Pie", new HashMap<>(ingredients), "Default"));
+        ingredients.clear();
+
+        //Veggie Soup
+        ingredients.put("Cauliflower", 1);
+        ingredients.put("Parsnip", 1);
+        ingredients.put("Potato", 1);
+        ingredients,put("Tomato", 1);
+        recipes.put("recipe_7", new Recipe("recipe_7", "Veggie Soup", new HashMap<>(ingredients), totalHarvests >= 1));
+        ingredients.clear();
+
+        //Fish Stew
+        ingredients.put("Any Fish", 2);
+        ingredients.put("Hot pepper", 1);
+        ingredients.put("Cauliflower", 1);
+        recipes.put("recipe_8", new Recipe("recipe_8", "Fish Stew", new HashMap<>(ingredients), "Hot Pepper"));
+        ingredients.clear();
+
+        //Spakbor Salad
+        ingredients.put("Melon", 1);
+        ingredients.put("Cranberry", 1);
+        ingredients.put("Blueberry", 1);
+        ingredients,put("Tomato", 1);
+        recipes.put("recipe_9", new Recipe("recipe_9", "Spakbor Salad", new HashMap<>(ingredients), "Default"));
+        ingredients.clear();
+
+        //Fish Sandwich
+        ingredients.put("Any Fish", 1);
+        ingredients.put("Wheat", 2);
+        ingredients.put("Hot pepper", 1);
+        ingredients.put("Tomato", 1)
+        recipes.put("recipe_10", new Recipe("recipe_10", "Fish Sandwich", new HashMap<>(ingredients), "Store"));
+        ingredients.clear();
+
+        //The Legends of Spakbor
+        ingredients.put("Legend Fish", 1);
+        ingredients.put("Parsnip", 1);
+        ingredients.put("Potato", 2);
+        ingredients.put("Tomato", 1);
+        ingredients.put("Eggplant", 1);
+        recipes.put("recipe_11", new Recipe("recipe_11", "The Legends of Spakbor", new HashMap<>(ingredients), LegendFish));
+        ingredients.clear();
+    }
+}
