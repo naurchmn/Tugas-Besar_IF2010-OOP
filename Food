@@ -1,42 +1,41 @@
-import java.util.List;
-
-public class Recipe {
-    private String id;
+public class Food {
     private String name;
-    private List<String> ingredients;
-    private String unlockMethod;
+    private int energy;
+    private Integer buyPrice; // null jika tidak bisa dibeli
+    private int sellPrice;
 
-    public Recipe(String id, String name, List<String> ingredients, String unlockMethod) {
-        this.id = id;
+    public Food(String name, int energy, Integer buyPrice, int sellPrice) {
         this.name = name;
-        this.ingredients = ingredients;
-        this.unlockMethod = unlockMethod;
-    }
-
-    public String getId() {
-        return id;
+        this.energy = energy;
+        this.buyPrice = buyPrice;
+        this.sellPrice = sellPrice;
     }
 
     public String getName() {
         return name;
     }
 
-    public List<String> getIngredients() {
-        return ingredients;
+    public int getEnergy() {
+        return energy;
     }
 
-    public String getUnlockMethod() {
-        return unlockMethod;
+    public Integer getBuyPrice() {
+        return buyPrice;
+    }
+
+    public int getSellPrice() {
+        return sellPrice;
+    }
+
+    public boolean isPurchasable() {
+        return buyPrice != null;
     }
 
     public void displayInfo() {
-        System.out.println("Resep: " + name);
-        System.out.println("ID: " + id);
-        System.out.println("Bahan:");
-        for (String bahan : ingredients) {
-            System.out.println(" - " + bahan);
-        }
-        System.out.println("Cara Unlock: " + unlockMethod);
+        System.out.println("Nama: " + name);
+        System.out.println("Energi: +" + energy);
+        System.out.println("Harga Beli: " + (buyPrice != null ? buyPrice + "g" : "-"));
+        System.out.println("Harga Jual: " + sellPrice + "g");
         System.out.println();
     }
 }
