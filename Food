@@ -1,0 +1,42 @@
+import java.util.List;
+
+public class Recipe {
+    private String id;
+    private String name;
+    private List<String> ingredients;
+    private String unlockMethod;
+
+    public Recipe(String id, String name, List<String> ingredients, String unlockMethod) {
+        this.id = id;
+        this.name = name;
+        this.ingredients = ingredients;
+        this.unlockMethod = unlockMethod;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<String> getIngredients() {
+        return ingredients;
+    }
+
+    public String getUnlockMethod() {
+        return unlockMethod;
+    }
+
+    public void displayInfo() {
+        System.out.println("Resep: " + name);
+        System.out.println("ID: " + id);
+        System.out.println("Bahan:");
+        for (String bahan : ingredients) {
+            System.out.println(" - " + bahan);
+        }
+        System.out.println("Cara Unlock: " + unlockMethod);
+        System.out.println();
+    }
+}
