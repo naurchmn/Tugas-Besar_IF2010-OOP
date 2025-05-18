@@ -1,6 +1,8 @@
 package com.spakborhills.view.gui;
 
+import com.spakborhills.controller.CollisionChecker;
 import com.spakborhills.controller.GameLoop;
+import com.spakborhills.controller.TileManager;
 import com.spakborhills.model.entity.Player;
 import com.spakborhills.controller.KeyHandler;
 
@@ -9,18 +11,40 @@ import java.awt.*;
 
 public class GamePanel extends  JPanel{
     private final int oriTileSize = 16;
-    private final int scale = 1;
+    private final int scale = 3;
     private final int tileSize = oriTileSize * scale;
+    private final int maxScreenCol = 12;
+    private final int maxScreenRow = 12;
 
+    //Screen Setting
+    public final int screenWidth = tileSize * maxScreenCol;
+    public final int screenHeight = tileSize * maxScreenRow;
+
+    // World Setting
+    public final int maxWorldCol = 32;
+    public final int maxWorldRow = 32;
+    public final int worldWidth = tileSize * maxWorldCol;
+    public final int worldHeight = tileSize * maxWorldRow;
+
+    public TileManager tileM = new TileManager(this);
+    public CollisionChecker cChecker = new CollisionChecker(this);
     private Player player;
     private Entity npc[];
     private GameLoop gameLoop;
     private KeyHandler keyH = new KeyHandler();
 
+    public int getTileSize() {
+        return tileSize;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
     public GamePanel(MainFrame mainFrame) {
 
-        this.setBackground(Color.GREEN);
-        this.setPreferredSize(new Dimension(512, 512));
+        this.setBackground(Color.WHITE);
+        this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setLayout(null);
         this.setDoubleBuffered(true); //improve rendering performance
         this.setFocusable(true);
@@ -62,6 +86,11 @@ public class GamePanel extends  JPanel{
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+
+        //draw background tiles
+        tileM.draw(g2);
+
+        //draw player
         player.draw(g2);
 
         //debug totalgametime
