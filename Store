@@ -1,0 +1,92 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class Store {
+    private String Emily;
+    private List<Food> foodForSale;
+    private List<Seed> seedsForSale;
+    private List<Crop> cropsForSale;
+
+    public Store(String Emily) {
+        this.Emily = Emily;
+        this.foodForSale = new ArrayList<>();
+        this.seedsForSale = new ArrayList<>();
+        this.cropsForSale = new ArrayList<>();
+        initializeStoreItems();
+    }
+    private void initializeStoreItems() {
+        foodForSale.add(FoodDatabase.getFood("Fish n' Chips"));
+        foodForSale.add(FoodDatabase.getFood("Fish Sandwich"));
+
+        seedsForSale.add(SeedDatabase.getSeed("Parsnip Seeds"));
+        seedsForSale.add(SeedDatabase.getSeed("Cauliflower Seeds"));
+        seedsForSale.add(SeedDatabase.getSeed("Potato Seeds"));
+        seedsForSale.add(SeedDatabase.getSeed("Wheat Seeds"));
+        seedsForSale.add(SeedDatabase.getSeed("Blueberry Seeds"));
+        seedsForSale.add(SeedDatabase.getSeed("Tomato Seeds"));
+        seedsForSale.add(SeedDatabase.getSeed("Hot Pepper Seeds"));
+        seedsForSale.add(SeedDatabase.getSeed("Melon Seeds"));
+        seedsForSale.add(SeedDatabase.getSeed("Cranberry Seeds"));
+        seedsForSale.add(SeedDatabase.getSeed("Pumpkin Seeds"));
+        seedsForSale.add(SeedDatabase.getSeed("Wheat Seeds"));
+        seedsForSale.add(SeedDatabase.getSeed("Grape Seeds"));
+
+        cropsForSale.add(CropDatabase.getSeed("Parsnip"));
+        cropsForSale.add(CropDatabase.getSeed("Cauliflower"));
+        cropsForSale.add(CropDatabase.getSeed("Potato"));
+        cropsForSale.add(CropDatabase.getSeed("Wheat"));
+        cropsForSale.add(CropDatabase.getSeed("Blueberry"));
+        cropsForSale.add(CropDatabase.getSeed("Tomato"));
+        cropsForSale.add(CropDatabase.getSeed("Hot Pepper"));
+        cropsForSale.add(CropDatabase.getSeed("Melon"));
+        cropsForSale.add(CropDatabase.getSeed("Cranberry"));
+        cropsForSale.add(CropDatabase.getSeed("Pumpkin"));
+        cropsForSale.add(CropDatabase.getSeed("Grape"));
+
+    }
+    public void displayItems() {
+        System.out.println("==="+ Emily + "'s Store ===");
+
+        System.out.println("\n Foods");
+        for (Food food : foodForSale) {
+            System.out.println(food.getName() + "-" + food.getBuyPrice() + "-" + food.getSellPrice() + "g");
+
+        }
+        System.out.println("\n Seeds");
+        for (Seed seed : seedsForSale) {
+            System.out.println(seed.getName() + "-" + seed.getBuyPrice() + "g (" + seed.getSeason() + ")");
+
+        }
+        System.out.println("\n Crops");
+        for (Crop crop : cropsForSale) {
+            if (crop.getBuyPrice() > 0) {
+                System.out.println(crop.getName() + " - " + crop.getBuyPrice() + "g");
+            }
+        }
+    }
+    public boolean buyItem(Player player, String itemName, int quantity) {
+        // Check food
+        for (Food food : foodForSale) {
+            if (food.getName().equalsIgnoreCase(itemName)) {
+                return player.buyItem(food, quantity);
+            }
+        }
+
+        // Check seeds
+        for (Seed seed : seedsForSale) {
+            if (seed.getName().equalsIgnoreCase(itemName)) {
+                return player.buyItem(seed, quantity);
+            }
+        }
+
+        // Check crops
+        for (Crop crop : cropsForSale) {
+            if (crop.getName().equalsIgnoreCase(itemName)) {
+                return player.buyItem(crop, quantity);
+            }
+        }
+
+        return false;
+    }
+
+}
