@@ -1,36 +1,46 @@
 package com.spakborhills.view.npc;
 
+import com.spakborhills.model.entity.Entity;
+import com.spakborhills.model.entity.NPC;
+import com.spakborhills.model.entity.NPCRegistry;
 import com.spakborhills.view.gui.GamePanel;
 
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Random;
+import java.util.*;
 
 public class NPCView extends Entity {
 
-    public NPCView(GamePanel gp) {
+    private NPC npc;
+    private static final Map<String, BufferedImage> spriteCache = new HashMap<>();
+    private BufferedImage sprite;
+    private GamePanel gp;
+
+    public NPCView(GamePanel gp, String npcName) {
         super(gp);
 
-        direction = "down";
-        speed = 4;
-
-        getNPCImage();
+        this.npc = NPCRegistry.createNPC(npcName);
+        this.direction = "down";
+        this.speed = 4;
+        getNPCImage(npcName);
     }
 
-    public void getNPCImage() {
-        try{
-            sprite = ImageIO.read(getClass().getResource("/assets/sprites/dasco.jpg"));
+    public void getNPCImage(String npcName) {
+        try {
+            if (!spriteCache.containsKey(npcName)) {
+                String imagePath = "/assets/sprites/" + npcName.toLowerCase() + ".jpg";
+                BufferedImage sprite = ImageIO.read(getClass().getResource(imagePath));
+                spriteCache.put(npcName, sprite);
+            }
+            this.front1 = spriteCache.get(npcName);
         } catch (IOException e) {
-            System.out.println("Error loading player image");
+            System.out.println("Gagal load gambar!");
             e.printStackTrace();
         }
-        catch (NullPointerException e){
-            System.out.println("Error loading player image null");
-            e.printStackTrace();
-        }
+
     }
 
-    @Override
     public void setAction() {
 
         Random random = new Random();
@@ -49,4 +59,6 @@ public class NPCView extends Entity {
             direction = "right";
         }
     }
+
+    public NPC getNPC() {return npc;}
 }

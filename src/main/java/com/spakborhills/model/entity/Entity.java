@@ -1,9 +1,13 @@
 package com.spakborhills.model.entity;
 
+import com.spakborhills.view.gui.GamePanel;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Entity {
+    GamePanel gp;
+
     private int worldx, worldy;
     public int speed;
 
@@ -13,8 +17,12 @@ public class Entity {
     public int spriteCounter = 0;
     public int spriteNum = 1;
 
-    public Rectangle solidArea;
+    public Rectangle solidArea = new Rectangle(0, 0, 48, 48);
     public boolean collisionOn = false;
+
+    public Entity(GamePanel gp){
+        this.gp = gp;
+    }
 
     public int getWorldy() {
         return worldy;
