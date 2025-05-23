@@ -3,6 +3,7 @@ package com.spakborhills.view.gui;
 import com.spakborhills.controller.CollisionChecker;
 import com.spakborhills.controller.GameLoop;
 import com.spakborhills.controller.TileManager;
+import com.spakborhills.model.entity.Entity;
 import com.spakborhills.model.entity.Player;
 import com.spakborhills.controller.KeyHandler;
 
@@ -55,7 +56,7 @@ public class GamePanel extends  JPanel{
         gameLoop = new GameLoop(60, this::update, this::repaint);
 
         JButton backButton = new GameButton("Back to homescreen");
-        backButton.setBounds(10, 10, 100, 20);
+        backButton.setBounds(10, 10, 150, 25);
         this.add(backButton);
 
         backButton.addActionListener(e -> {
@@ -96,7 +97,7 @@ public class GamePanel extends  JPanel{
         //debug totalgametime
         int totalMinutes = gameLoop.getGameTime().getTotalGameMinutes();
         g2.setColor(Color.white);
-        g2.setFont(new Font("Comic Sans", Font.PLAIN, 20));
+        g2.setFont(new Font("Courier New", Font.BOLD, 20));
         g2.drawString("Total minutes: " + totalMinutes, 300, 30);
     }
 }
