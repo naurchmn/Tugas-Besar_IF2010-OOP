@@ -3,6 +3,7 @@ package com.spakborhills.view.gui;
 import com.spakborhills.controller.CollisionChecker;
 import com.spakborhills.controller.GameLoop;
 import com.spakborhills.controller.TileManager;
+import com.spakborhills.model.entity.Entity;
 import com.spakborhills.model.entity.Player;
 import com.spakborhills.controller.KeyHandler;
 
@@ -29,6 +30,7 @@ public class GamePanel extends  JPanel{
     public TileManager tileM = new TileManager(this);
     public CollisionChecker cChecker = new CollisionChecker(this);
     private Player player;
+    private Entity npc[];
     private GameLoop gameLoop;
     private KeyHandler keyH = new KeyHandler();
     private String currentMap = "farm";
@@ -50,11 +52,12 @@ public class GamePanel extends  JPanel{
         this.setFocusable(true);
 
         player = new Player(this, keyH, "asep spakbor");
+        npc = new Entity[7];
         this.addKeyListener(keyH);
         gameLoop = new GameLoop(60, this::update, this::repaint);
 
         JButton backButton = new GameButton("Back to homescreen");
-        backButton.setBounds(10, 10, 100, 20);
+        backButton.setBounds(10, 10, 150, 25);
         this.add(backButton);
 
         backButton.addActionListener(e -> {
@@ -77,6 +80,8 @@ public class GamePanel extends  JPanel{
             return;
         }
 
+        gameLoop.getGameTime().updateGameTime();
+
         //pindah map kalau melebihi boundary
         if (player.getWorldx() > (31) * tileSize && currentMap.equals("farm")){ //31 hardcode maxFarmCol
             currentMap = "world";
@@ -86,7 +91,6 @@ public class GamePanel extends  JPanel{
             currentMap = "farm";
             System.out.println("Playerriu ke " + currentMap);
         }
-        gameLoop.getGameTime().updateGameTime();
 
         //switch map sesuai kebutuhan
         switch (currentMap){

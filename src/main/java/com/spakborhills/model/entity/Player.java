@@ -14,11 +14,11 @@ public class Player extends Entity{
     private final String name;
     private String currentMap;
 
-    GamePanel gp;
     KeyHandler keyH;
 
     public Player(GamePanel gp, KeyHandler keyH, String name) {
-       this.gp = gp;
+       super(gp);
+
        this.keyH = keyH;
        this.name = name;
 
