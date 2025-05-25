@@ -17,6 +17,7 @@ public class TileManager {
     GamePanel gp;
     public Tile[] tile;
     public int[][] mapTileNum;
+    private String loadedMap;
 
     public TileManager(GamePanel gp) {
         this.gp = gp;
@@ -32,7 +33,6 @@ public class TileManager {
             System.out.println("Found map at: " + resourceUrl);
             loadMap("/assets/Map/Farm.txt");
         }
-
     }
 
     public void getTileImage() {
@@ -119,5 +119,13 @@ public class TileManager {
                 worldRow++;
             }
         }
+    }
+
+    public String getLoadedMap() {
+        return loadedMap;
+    }
+
+    public void setLoadedMap(String loadedMap) {
+        this.loadedMap = loadedMap;
     }
 }

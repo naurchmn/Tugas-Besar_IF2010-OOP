@@ -12,6 +12,7 @@ import java.util.Objects;
 public class Player extends Entity{
     private int screenX, screenY;
     private final String name;
+    private String currentMap;
 
     GamePanel gp;
     KeyHandler keyH;
@@ -63,6 +64,22 @@ public class Player extends Entity{
     }
 
     public void update(){
+
+            //switch ke map world kalo lewat boundary kanan
+        if (getWorldx() > gp.getTileSize() * (gp.maxWorldCol - 1)) {
+            setWorldx(0);
+            setWorldy(gp.getTileSize() * gp.maxWorldRow / 2);
+            currentMap = gp.tileM.getLoadedMap();
+            System.out.println("Player di " + currentMap);
+        }
+            //switch ke map farm kalo lewat boundary kiri
+        if (getWorldx() < 0) {
+            setWorldx(gp.getTileSize() * (gp.maxWorldCol - 1));
+            setWorldy(gp.getTileSize() * gp.maxWorldRow / 2);
+            currentMap = gp.tileM.getLoadedMap();
+            System.out.println("Player di " + currentMap);
+        }
+
         if(keyH.isUpPressed() || keyH.isDownPressed() || keyH.isLeftPressed() || keyH.isRightPressed()) {
 
             if (keyH.isUpPressed()) {
