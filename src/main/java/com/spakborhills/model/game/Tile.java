@@ -1,4 +1,4 @@
-package com.spakborhills.gui.Tiles;
+package com.spakborhills.model.game;
 
 import java.awt.image.BufferedImage;
 

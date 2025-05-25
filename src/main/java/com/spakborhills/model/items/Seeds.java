@@ -1,4 +1,4 @@
-package com.spakborhills.items;
+package com.spakborhills.model.items;
 
 import java.util.Timer;
 

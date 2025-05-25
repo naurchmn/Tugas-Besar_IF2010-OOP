@@ -1,9 +1,8 @@
-package com.spakborhills.items;
+package com.spakborhills.model.items;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import com.spakborhills.gui.GamePanel;
-import java.awt.Rectangle;
+import com.spakborhills.view.gui.GamePanel;
 
 public class SuperItem {
     public BufferedImage image;

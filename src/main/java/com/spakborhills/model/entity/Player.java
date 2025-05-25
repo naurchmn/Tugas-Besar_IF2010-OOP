@@ -1,7 +1,7 @@
-package com.spakborhills.entity;
+package com.spakborhills.model.entity;
 
-import com.spakborhills.gui.GamePanel;
-import com.spakborhills.gui.KeyHandler;
+import com.spakborhills.view.gui.GamePanel;
+import com.spakborhills.view.gui.KeyHandler;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -31,22 +31,22 @@ public class Player extends Entity {
 
     public void getPlayerImage() {
         try {
-            front1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/Aymar/aymar00.png")));
-            front2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/Aymar/aymar01.png")));
-            front3 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/Aymar/aymar00.png")));
-            front4 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/Aymar/aymar02.png")));
-            back1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/Aymar/aymar03.png")));
-            back2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/Aymar/aymar04.png")));
-            back3 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/Aymar/aymar03.png")));
-            back4 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/Aymar/aymar05.png")));
-            left1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/Aymar/aymar06.png")));
-            left2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/Aymar/aymar07.png")));
-            left3 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/Aymar/aymar06.png")));
-            left4 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/Aymar/aymar08.png")));
-            right1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/Aymar/aymar09.png")));
-            right2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/Aymar/aymar10.png")));
-            right3 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/Aymar/aymar09.png")));
-            right4 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/Aymar/aymar11.png")));
+            front1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/downidle.png")));
+            front2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/down01.png")));
+            front3 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/downidle.png")));
+            front4 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/down02.png")));
+            back1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/upidle.png")));
+            back2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/up01.png")));
+            back3 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/upidle.png")));
+            back4 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/up02.png")));
+            left1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/leftidle.png")));
+            left2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/left01.png")));
+            left3 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/leftidle.png")));
+            left4 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/left02.png")));
+            right1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/rightidle.png")));
+            right2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/right01.png")));
+            right3 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/rightidle.png")));
+            right4 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/right02.png")));
 
         } catch (IOException e) {
             System.out.println("Gagal load gambar!");

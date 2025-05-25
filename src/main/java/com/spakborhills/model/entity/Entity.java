@@ -1,4 +1,4 @@
-package com.spakborhills.entity;
+package com.spakborhills.model.entity;
 
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;

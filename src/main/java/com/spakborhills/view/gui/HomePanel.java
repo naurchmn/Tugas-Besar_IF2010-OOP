@@ -1,4 +1,4 @@
-package com.spakborhills.gui;
+package com.spakborhills.view.gui;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

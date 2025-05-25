@@ -1,4 +1,4 @@
-package com.spakborhills.gui.Tiles;
+package com.spakborhills.controller;
 
 import java.io.*;
 import java.awt.*;
@@ -7,7 +7,8 @@ import java.util.*;
 
 import javax.imageio.ImageIO;
 
-import com.spakborhills.gui.GamePanel;
+import com.spakborhills.model.game.Tile;
+import com.spakborhills.view.gui.GamePanel;
 
 public class TileManager {
     GamePanel gp;

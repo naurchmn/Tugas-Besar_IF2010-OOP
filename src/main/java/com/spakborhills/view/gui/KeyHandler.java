@@ -1,4 +1,4 @@
-package com.spakborhills.gui;
+package com.spakborhills.view.gui;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

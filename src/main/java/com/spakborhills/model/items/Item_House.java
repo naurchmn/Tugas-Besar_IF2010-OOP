@@ -1,4 +1,4 @@
-package com.spakborhills.items;
+package com.spakborhills.model.items;
 
 import javax.imageio.ImageIO;
 import java.io.IOException;

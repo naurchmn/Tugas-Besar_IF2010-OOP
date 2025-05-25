@@ -1,4 +1,4 @@
-package com.spakborhills.items;
+package com.spakborhills.model.items;
 
 import java.io.IOException;
 import java.util.Objects;

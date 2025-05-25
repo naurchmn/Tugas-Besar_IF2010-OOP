@@ -1,17 +1,14 @@
-package com.spakborhills.gui;
+package com.spakborhills.view.gui;
 
 import javax.swing.*;
-
 import java.awt.*;
 
-import javax.swing.JPanel;
-
-import com.spakborhills.entity.Player;
-import com.spakborhills.gui.Tiles.TileManager;
-import com.spakborhills.items.SuperItem;
+import com.spakborhills.model.entity.Player;
+import com.spakborhills.model.items.SuperItem;
+import com.spakborhills.controller.TileManager;
+import com.spakborhills.controller.CollisionChecker;
 
 public class GamePanel extends JPanel implements Runnable{
-
     // Screen Setting
     public final int originalTileSize = 16; // 16 x 16 tile
     final int scale = 3;
@@ -30,13 +27,14 @@ public class GamePanel extends JPanel implements Runnable{
 
     int FPS = 120;
 
-    TileManager tileM = new TileManager(this);;
+    public TileManager tileM = new TileManager(this);;
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
     public CollisionChecker cChecker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
     public Player player = new Player(this, keyH);
     public SuperItem[] item = new SuperItem[10];
+
 
     public GamePanel(MainFrame mainFrame) {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -51,7 +49,7 @@ public class GamePanel extends JPanel implements Runnable{
         buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
         JButton backButton = new GameButton("Back to homescreen");
-        backButton.setFocusable(false);
+        backButton.setBounds(150, 256, 250, 30);
         buttonPanel.add(backButton);
 
         this.setLayout(new BorderLayout());
@@ -63,7 +61,6 @@ public class GamePanel extends JPanel implements Runnable{
 
         // Request focus after initialization
         SwingUtilities.invokeLater(this::requestFocusInWindow);
-
     }
 
     public void setupGame() {
@@ -107,17 +104,6 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void update() {
         player.update();
-
-//        // Check tile collision
-//        this.cChecker.checkTile(player);
-//
-//        // Check object collision
-//        int objIndex = this.cChecker.checkObject(player, true); // Ini akan mengatur player.collisionOn jika ada tabrakan
-//
-//        // Jika collisionOn true, pemain tidak bergerak
-//        if (player.collisionOn == false) {
-//            player.update();
-//        }
     }
 
     public void paintComponent(Graphics g) {

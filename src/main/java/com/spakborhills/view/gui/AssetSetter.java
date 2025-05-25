@@ -1,6 +1,6 @@
-package com.spakborhills.gui;
+package com.spakborhills.view.gui;
 
-import com.spakborhills.items.*;
+import com.spakborhills.model.items.*;
 
 public class AssetSetter {
     GamePanel gp;
