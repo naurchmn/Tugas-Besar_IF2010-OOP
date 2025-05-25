@@ -2,7 +2,6 @@ package com.spakborhills.items;
 
 import java.io.IOException;
 import java.util.Objects;
-
 import javax.imageio.ImageIO;
 
 public class Item_Key extends SuperItem {
@@ -13,6 +12,7 @@ public class Item_Key extends SuperItem {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        collision = false;
     }
 
 }

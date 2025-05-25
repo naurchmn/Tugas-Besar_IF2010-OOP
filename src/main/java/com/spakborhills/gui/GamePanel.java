@@ -13,18 +13,18 @@ import com.spakborhills.items.SuperItem;
 public class GamePanel extends JPanel implements Runnable{
 
     // Screen Setting
-    final int originalTileSize = 16; // 16 x 16 tile
+    public final int originalTileSize = 16; // 16 x 16 tile
     final int scale = 3;
 
-    public final int tileSize = originalTileSize * scale; // so it's 48 x 48 tile
+    public final int tileSize = originalTileSize * scale;
     public final int maxScreenCol = 12;
     public final int maxScreenRow = 12; // screen ratio 16 : 9
     public final int screenWidth = tileSize * maxScreenCol; // 576 pixels
     public final int screenHeight = tileSize * maxScreenRow; // 576 pixels
 
     // World Setting
-    public final int maxWorldCol = 50;
-    public final int maxWorldRow = 50;
+    public final int maxWorldCol = 250;
+    public final int maxWorldRow = 250;
     public final int worldWidth = tileSize * maxWorldCol;
     public final int worldHeight = tileSize * maxWorldRow;
 
@@ -107,6 +107,17 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void update() {
         player.update();
+
+//        // Check tile collision
+//        this.cChecker.checkTile(player);
+//
+//        // Check object collision
+//        int objIndex = this.cChecker.checkObject(player, true); // Ini akan mengatur player.collisionOn jika ada tabrakan
+//
+//        // Jika collisionOn true, pemain tidak bergerak
+//        if (player.collisionOn == false) {
+//            player.update();
+//        }
     }
 
     public void paintComponent(Graphics g) {
@@ -116,11 +127,8 @@ public class GamePanel extends JPanel implements Runnable{
         // TILE
         tileM.draw(g2); // make sure tile first before the player below, so its like a layer
 
-        for (int i = 0; i < item.length; i++) {
-            if (item[i] != null) {
-                item[i].draw(g2, this);
-            }
-        }
+        item[0].draw(g2, this, 3);
+        item[1].draw(g2, this, 18);
 
         // PLAYER
         player.draw(g2);

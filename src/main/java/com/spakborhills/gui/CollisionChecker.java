@@ -1,6 +1,7 @@
 package com.spakborhills.gui;
 
 import com.spakborhills.entity.Entity;
+import com.spakborhills.items.SuperItem;
 
 public class CollisionChecker {
 
@@ -23,8 +24,8 @@ public class CollisionChecker {
 
         int tileNum1, tileNum2;
 
-        switch(entity.direction) {
-            case "up" :
+        switch (entity.direction) {
+            case "up":
                 entityTopRow = (entityTopWorldY - entity.speed) / gp.tileSize;
                 tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityTopRow];
                 tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityTopRow];
@@ -32,7 +33,7 @@ public class CollisionChecker {
                     entity.collisionOn = true;
                 }
                 break;
-            case "down" :
+            case "down":
                 entityBottomRow = (entityBottomWorldY + entity.speed) / gp.tileSize;
                 tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityBottomRow];
                 tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityBottomRow];
@@ -40,7 +41,7 @@ public class CollisionChecker {
                     entity.collisionOn = true;
                 }
                 break;
-            case "left" :
+            case "left":
                 entityLeftCol = (entityLeftWorldX - entity.speed) / gp.tileSize;
                 tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityTopRow];
                 tileNum2 = gp.tileM.mapTileNum[entityLeftCol][entityBottomRow];
@@ -48,7 +49,7 @@ public class CollisionChecker {
                     entity.collisionOn = true;
                 }
                 break;
-            case "right" :
+            case "right":
                 entityRightCol = (entityRightWorldX - entity.speed) / gp.tileSize;
                 tileNum1 = gp.tileM.mapTileNum[entityRightCol][entityTopRow];
                 tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityBottomRow];
