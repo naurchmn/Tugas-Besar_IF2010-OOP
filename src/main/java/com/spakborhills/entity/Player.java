@@ -55,8 +55,8 @@ public class Player extends Entity {
     }
 
     public void setDefaultValues() {
-        worldX = gp.tileSize * 16;
-        worldY = gp.tileSize * 11;
+        worldX = gp.tileSize * 216;
+        worldY = gp.tileSize * 151;
         speed = 3;
         direction = "down";
     }
@@ -157,6 +157,14 @@ public class Player extends Entity {
                 break;
         }
         g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+    }
+
+    public int getWorldX() {
+        return worldX;
+    }
+
+    public int getWorldY() {
+        return worldY;
     }
 }
 
