@@ -20,6 +20,10 @@ public class Entity {
     public Rectangle solidArea = new Rectangle(0, 0, 48, 48);
     public boolean collisionOn = false;
 
+    // CHARACTER ATTRIBUTES
+    public int maxEnergy;
+    public int energy;
+
     public Entity(GamePanel gp){
         this.gp = gp;
     }
