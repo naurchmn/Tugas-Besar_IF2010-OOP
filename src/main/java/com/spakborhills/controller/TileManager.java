@@ -1,19 +1,25 @@
 package com.spakborhills.controller;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.*;
 import java.awt.*;
 import java.net.URL;
 import java.util.*;
+import java.util.Objects;
 
 import javax.imageio.ImageIO;
 
-import com.spakborhills.model.game.Tile;
 import com.spakborhills.view.gui.GamePanel;
+import com.spakborhills.model.game.Tile;
 
 public class TileManager {
     GamePanel gp;
     public Tile[] tile;
     public int[][] mapTileNum;
+    private String loadedMap;
     ArrayList<String> fileNames = new ArrayList<>();
     ArrayList<String> tileCols = new ArrayList<>();
 
@@ -48,7 +54,6 @@ public class TileManager {
             System.out.println("Found map at: " + resourceUrl);
             loadMap("/assets/Maps/WorldMaps");
         }
-
     }
 
     public void getTileImage() {
@@ -114,16 +119,16 @@ public class TileManager {
         while (worldCol < gp.maxWorldCol && worldRow < gp.maxWorldRow) {
             int tileNum = mapTileNum[worldCol][worldRow];
 
-            int worldX = worldCol * gp.tileSize;
-            int worldY = worldRow * gp.tileSize;
-            int screenX = worldX - gp.player.worldX + gp.player.screenX;
-            int screenY = worldY - gp.player.worldY + gp.player.screenY;
+            int worldX = worldCol * gp.getTileSize();
+            int worldY = worldRow * gp.getTileSize();
+            int screenX = worldX - gp.getPlayer().getWorldx() + gp.getPlayer().getScreenX();
+            int screenY = worldY - gp.getPlayer().getWorldy() + gp.getPlayer().getScreenY();
 
-            if (worldX + gp.tileSize > gp.player.worldX - gp.player.screenX &&
-                    worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
-                    worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
-                    worldY - gp.tileSize < gp.player.worldY + gp.player.screenY) {
-                g2.drawImage(tile[tileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+            if (worldX + gp.getTileSize() > gp.getPlayer().getWorldx() - gp.getPlayer().getScreenX() &&
+                    worldX - gp.getTileSize() < gp.getPlayer().getWorldx() + gp.getPlayer().getScreenX() &&
+                    worldY + gp.getTileSize() > gp.getPlayer().getWorldy() - gp.getPlayer().getScreenY() &&
+                    worldY - gp.getTileSize() < gp.getPlayer().getWorldy() + gp.getPlayer().getScreenY()) {
+                g2.drawImage(tile[tileNum].image, screenX, screenY, gp.getTileSize(), gp.getTileSize(), null);
             }
 
             worldCol++;
@@ -133,5 +138,13 @@ public class TileManager {
                 worldRow++;
             }
         }
+    }
+
+    public String getLoadedMap() {
+        return loadedMap;
+    }
+
+    public void setLoadedMap(String loadedMap) {
+        this.loadedMap = loadedMap;
     }
 }

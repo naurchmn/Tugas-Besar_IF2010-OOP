@@ -1,35 +1,45 @@
 package com.spakborhills.model.entity;
 
 import com.spakborhills.view.gui.GamePanel;
-import com.spakborhills.view.gui.KeyHandler;
+import com.spakborhills.controller.KeyHandler;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
 import javax.imageio.ImageIO;
 
-public class Player extends Entity {
-    GamePanel gp;
+public class Player extends Entity{
+    private int screenX, screenY;
+    private final String name;
+    private String currentMap;
+
     KeyHandler keyH;
 
-    public final int screenX;
-    public final int screenY;
+    public Player(GamePanel gp, KeyHandler keyH, String name) {
+       super(gp);
 
-    public Player(GamePanel gp, KeyHandler keyH) {
-        this.gp = gp;
-        this.keyH = keyH;
+       this.keyH = keyH;
+       this.name = name;
 
-        screenX = gp.screenWidth/2 - gp.tileSize/2;
-        screenY = gp.screenHeight/2 - gp.tileSize/2 ;
+       screenX = gp.screenWidth/2 - gp.getTileSize()/2;
+       screenY = gp.screenHeight/2 - gp.getTileSize()/2;
 
-        solidArea = new Rectangle(12, 18, 18, 27);
+       solidArea = new Rectangle(12, 18, 18, 27);
 
-        setDefaultValues();
-        getPlayerImage(); // Call the method to load the image
+       setDefaultValues();
+       getPlayerImage();
     }
 
-    public void getPlayerImage() {
+    public void setDefaultValues(){
+        setWorldx(gp.getTileSize() * gp.maxWorldCol / 2);
+        setWorldy(gp.getTileSize() * gp.maxWorldRow / 2);
+        speed = 4;
+        direction = "down";
+    }
+
+    public void getPlayerImage(){
         try {
             front1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/downidle.png")));
             front2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/down01.png")));
@@ -54,23 +64,32 @@ public class Player extends Entity {
         }
     }
 
-    public void setDefaultValues() {
-        worldX = gp.tileSize * 216;
-        worldY = gp.tileSize * 151;
-        speed = 3;
-        direction = "down";
-    }
+    public void update(){
 
-    public void update() {
+            //switch ke map world kalo lewat boundary kanan
+        if (getWorldx() > gp.getTileSize() * (gp.maxWorldCol - 1)) {
+            setWorldx(0);
+            setWorldy(gp.getTileSize() * gp.maxWorldRow / 2);
+            currentMap = gp.tileM.getLoadedMap();
+            System.out.println("Player di " + currentMap);
+        }
+            //switch ke map farm kalo lewat boundary kiri
+        if (getWorldx() < 0) {
+            setWorldx(gp.getTileSize() * (gp.maxWorldCol - 1));
+            setWorldy(gp.getTileSize() * gp.maxWorldRow / 2);
+            currentMap = gp.tileM.getLoadedMap();
+            System.out.println("Player di " + currentMap);
+        }
 
-        if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
-            if (keyH.upPressed) {
+        if(keyH.isUpPressed() || keyH.isDownPressed() || keyH.isLeftPressed() || keyH.isRightPressed()) {
+
+            if (keyH.isUpPressed()) {
                 direction = "up";
-            } else if (keyH.downPressed) {
-                direction = "down";
-            } else if (keyH.leftPressed) {
+            } else if (keyH.isLeftPressed()) {
                 direction = "left";
-            } else if (keyH.rightPressed) {
+            } else if (keyH.isDownPressed()) {
+                direction = "down";
+            } else if (keyH.isRightPressed()) {
                 direction = "right";
             }
 
@@ -78,35 +97,38 @@ public class Player extends Entity {
             collisionOn = false;
             gp.cChecker.checkTile(this);
 
-            // IF COLLISION IS FLASEPLAYER CAN MOVE
-            if (collisionOn == false) {
-                switch(direction) {
-                    case "up" : worldY -= speed; break;
-                    case "down" : worldY += speed; break;
-                    case "left" : worldX -= speed; break;
-                    case "right" : worldX += speed; break;
+            if (!collisionOn){
+                switch (direction){
+                    case "up" : setWorldy(getWorldy() - speed); break;
+                    case "down" : setWorldy(getWorldy() + speed); break;
+                    case "left" : setWorldx(getWorldx() - speed); break;
+                    case "right" : setWorldx(getWorldx() + speed); break;
+                    default: break;
                 }
             }
 
             spriteCounter++;
-            if (spriteCounter > 10) {
-                if (spriteNum == 1) {
-                    spriteNum = 2;
-                } else if (spriteNum == 2) {
-                    spriteNum = 3;
-                } else if (spriteNum == 3) {
-                    spriteNum = 4;
-                } else if (spriteNum == 4) {
-                    spriteNum = 1;
+            if (!collisionOn){
+                if (spriteCounter > 10){
+                    if (spriteNum == 1) {
+                        spriteNum = 2;
+                    } else if (spriteNum == 2) {
+                        spriteNum = 3;
+                    } else if (spriteNum == 3) {
+                        spriteNum = 4;
+                    } else if (spriteNum == 4) {
+                        spriteNum = 1;
+                    }
+                    spriteCounter = 0;
                 }
-                spriteCounter = 0;
             }
-        } else {
+        }
+        else {
             spriteNum = 1;
         }
     }
 
-    public void draw(Graphics2D g2) {
+    public void draw(Graphics2D g2){
 
         BufferedImage image = null;
 
@@ -156,15 +178,15 @@ public class Player extends Entity {
                 }
                 break;
         }
-        g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+
+        g2.drawImage(image, screenX, screenY, gp.getTileSize(), gp.getTileSize(), null);
     }
 
-    public int getWorldX() {
-        return worldX;
+    public int getScreenX() {
+        return screenX;
     }
 
-    public int getWorldY() {
-        return worldY;
+    public int getScreenY() {
+        return screenY;
     }
 }
-
