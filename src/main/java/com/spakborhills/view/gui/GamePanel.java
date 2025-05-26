@@ -35,7 +35,6 @@ public class GamePanel extends JPanel implements Runnable{
     public Player player = new Player(this, keyH);
     public SuperItem[] item = new SuperItem[10];
 
-
     public GamePanel(MainFrame mainFrame) {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.WHITE);
@@ -43,21 +42,52 @@ public class GamePanel extends JPanel implements Runnable{
         this.setFocusable(true);
         this.addKeyListener(keyH);
 
-        // Create panel for the button to prevent layout issues
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setOpaque(false);
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+//        // Create panel for the button to prevent layout issues
+//        JPanel buttonPanel = new JPanel();
+//        buttonPanel.setOpaque(false);
+//        buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+//
+//        JButton backButton = new GameButton("Back to homescreen");
+//        backButton.setBounds(150, 256, 250, 30);
+//        buttonPanel.add(backButton);
+//
+//        this.setLayout(new BorderLayout());
+//        this.add(buttonPanel, BorderLayout.NORTH);
+//
+//        backButton.addActionListener(e -> {
+//            mainFrame.switchPanel("home");
+//
+//        });
+//
+//        // Request focus after initialization
+//        SwingUtilities.invokeLater(this::requestFocusInWindow);
+        // Menggunakan BorderLayout untuk GamePanel itu sendiri
+        this.setLayout(new BorderLayout()); // Pastikan GamePanel menggunakan BorderLayout
 
+        // Buat panel untuk tombol
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setOpaque(false); // Agar background panel transparan
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10)); // FlowLayout untuk tombol, dengan padding
+
+        // Buat tombol
         JButton backButton = new GameButton("Back to homescreen");
-        backButton.setBounds(150, 256, 250, 30);
+        // Hapus baris setBounds() karena FlowLayout akan mengabaikannya
+        // backButton.setBounds(150, 256, 250, 30); // HAPUS BARIS INI
+
+        // Tambahkan tombol ke buttonPanel
         buttonPanel.add(backButton);
 
-        this.setLayout(new BorderLayout());
+        // Tambahkan buttonPanel ke GamePanel di bagian NORTH (atas)
         this.add(buttonPanel, BorderLayout.NORTH);
 
+        // Tambahkan ActionListener untuk tombol
         backButton.addActionListener(e -> {
             mainFrame.switchPanel("home");
         });
+
+        // Validasi ulang layout setelah menambahkan komponen
+        this.revalidate();
+        this.repaint();
 
         // Request focus after initialization
         SwingUtilities.invokeLater(this::requestFocusInWindow);

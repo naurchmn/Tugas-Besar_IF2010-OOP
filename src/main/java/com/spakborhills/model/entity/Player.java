@@ -156,7 +156,25 @@ public class Player extends Entity {
                 }
                 break;
         }
-        g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+
+        int x = screenX;
+        int y = screenY;
+
+        if (screenX > worldX) {
+            x = worldX;
+        } if (screenY > worldY) {
+            y = worldY;
+        }
+        int rightOffSet = gp.screenWidth - screenX;
+        if (rightOffSet > gp.worldWidth - worldX) {
+            x = gp.screenWidth - (gp.worldWidth - worldX);
+        }
+        int bottomOffSet = gp.screenHeight - screenY;
+        if (bottomOffSet > gp.worldHeight - worldY) {
+            y = gp.screenHeight - (gp.worldHeight - worldY);
+        }
+
+        g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null);
     }
 
     public int getWorldX() {

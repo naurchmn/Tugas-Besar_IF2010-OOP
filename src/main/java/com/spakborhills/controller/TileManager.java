@@ -21,7 +21,7 @@ public class TileManager {
         this.gp = gp;
 
         // READ TILE DATA
-        InputStream is = getClass().getResourceAsStream("/assets/Maps/TileData");
+        InputStream is = getClass().getResourceAsStream("/assets/WorldMaps/TileData");
         BufferedReader br = new BufferedReader(new InputStreamReader(Objects.requireNonNull(is)));
 
         // GETTING TILE NAME AND COLLISION
@@ -41,12 +41,12 @@ public class TileManager {
 
         mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
 
-        URL resourceUrl = getClass().getResource("/assets/Maps/WorldMaps");
+        URL resourceUrl = getClass().getResource("/assets/WorldMaps/WorldMaps");
         if (resourceUrl == null) {
             System.out.println("Could not find map file in classpath");
         } else {
             System.out.println("Found map at: " + resourceUrl);
-            loadMap("/assets/Maps/WorldMaps");
+            loadMap("/assets/WorldMaps/WorldMaps");
         }
 
     }
@@ -119,10 +119,32 @@ public class TileManager {
             int screenX = worldX - gp.player.worldX + gp.player.screenX;
             int screenY = worldY - gp.player.worldY + gp.player.screenY;
 
+            // STOPING AT EDGE
+            if (gp.player.screenX > gp.player.worldX) {
+                screenX = worldX;
+            } if (gp.player.screenY > gp.player.worldY) {
+                screenY = worldY;
+            }
+
+            int rightOffSet = gp.screenWidth - gp.player.screenX;
+            if (rightOffSet > gp.worldWidth - gp.player.worldX) {
+                screenX = gp.screenWidth - (gp.worldWidth - worldX);
+            }
+            int bottomOffSet = gp.screenHeight - gp.player.screenY;
+            if (bottomOffSet > gp.worldHeight - gp.player.worldY) {
+                screenY = gp.screenHeight - (gp.worldHeight - worldY);
+            }
+
+            // DRAW THE TILE
             if (worldX + gp.tileSize > gp.player.worldX - gp.player.screenX &&
                     worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
                     worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
                     worldY - gp.tileSize < gp.player.worldY + gp.player.screenY) {
+                g2.drawImage(tile[tileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+            } else if (gp.player.screenX > gp.player.worldX ||
+                    gp.player.screenY > gp.player.worldY ||
+                    rightOffSet > gp.worldWidth - gp.player.worldX ||
+                    bottomOffSet > gp.worldHeight - gp.player.worldY) {
                 g2.drawImage(tile[tileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
             }
 
