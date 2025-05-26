@@ -33,6 +33,7 @@ public class GamePanel extends  JPanel{
     private Entity npc[];
     private GameLoop gameLoop;
     private KeyHandler keyH = new KeyHandler();
+    private String currentMap = "farm";
 
     public int getTileSize() {
         return tileSize;
@@ -78,9 +79,34 @@ public class GamePanel extends  JPanel{
         if(!gameLoop.isRunning()){
             return;
         }
-        player.update();
+
         gameLoop.getGameTime().updateGameTime();
-        gameLoop.getGameTime().displayGameTime(); //debug gametime
+
+        //pindah map kalau melebihi boundary
+        if (player.getWorldx() > (31) * tileSize && currentMap.equals("farm")){ //31 hardcode maxFarmCol
+            currentMap = "world";
+            System.out.println("Playerriu ke " + currentMap);
+        }
+        else if (player.getWorldx() < 0 && currentMap.equals("world")){
+            currentMap = "farm";
+            System.out.println("Playerriu ke " + currentMap);
+        }
+
+        //switch map sesuai kebutuhan
+        switch (currentMap){
+            case "farm":
+                if(!"farm".equals(tileM.getLoadedMap())){
+                    tileM.setLoadedMap("farm");
+                    tileM.loadMap("/assets/Map/Farm.txt");
+                }
+                break;
+            case "world":
+                if(!"world".equals(tileM.getLoadedMap())){
+                    tileM.setLoadedMap("world");
+                    tileM.loadMap("/assets/Map/World.txt");
+                }
+        }
+        player.update();
     }
 
     @Override
@@ -94,10 +120,7 @@ public class GamePanel extends  JPanel{
         //draw player
         player.draw(g2);
 
-        //debug totalgametime
-        int totalMinutes = gameLoop.getGameTime().getTotalGameMinutes();
-        g2.setColor(Color.white);
-        g2.setFont(new Font("Courier New", Font.BOLD, 20));
-        g2.drawString("Total minutes: " + totalMinutes, 300, 30);
+        //draw time
+        gameLoop.getGameTime().displayGameTime(g2);
     }
 }
