@@ -21,7 +21,7 @@ public class TileManager {
         this.gp = gp;
 
         // READ TILE DATA
-        InputStream is = getClass().getResourceAsStream("/assets/Maps/TileData");
+        InputStream is = getClass().getResourceAsStream("/assets/WorldMaps/TileData");
         BufferedReader br = new BufferedReader(new InputStreamReader(Objects.requireNonNull(is)));
 
         // GETTING TILE NAME AND COLLISION
@@ -41,12 +41,12 @@ public class TileManager {
 
         mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
 
-        URL resourceUrl = getClass().getResource("/assets/Maps/WorldMaps");
+        URL resourceUrl = getClass().getResource("/assets/WorldMaps/WorldMaps");
         if (resourceUrl == null) {
             System.out.println("Could not find map file in classpath");
         } else {
             System.out.println("Found map at: " + resourceUrl);
-            loadMap("/assets/Maps/WorldMaps");
+            loadMap("/assets/WorldMaps/WorldMaps");
         }
 
     }
