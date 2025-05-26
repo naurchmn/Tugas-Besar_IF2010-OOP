@@ -27,9 +27,6 @@ public class MainFrame extends JFrame {
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
-
-        gamePanel.setupGame();
-        gamePanel.startGameThread();
     }
 
     public void switchPanel(String panelName) {
@@ -38,14 +35,10 @@ public class MainFrame extends JFrame {
         mainPanel.repaint();
         System.out.println("Switching to " + panelName);
 
-        if (panelName.equals("game")) {
-            SwingUtilities.invokeLater(() -> {
-                Component comp = mainPanel.getComponent(1);
-                if (comp instanceof GamePanel) {
-                    comp.requestFocusInWindow();
-                }
-            });
+        if(panelName.equals("game")) {
+            GamePanel gamePanel = (GamePanel) mainPanel.getComponent(1);
+            gamePanel.startGame();
+            gamePanel.requestFocusInWindow();
         }
-
     }
 }

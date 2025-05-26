@@ -14,17 +14,17 @@ public class SuperItem {
 //    public int solidAreaDefaultY = 0;
 
     public void draw(Graphics2D g2, GamePanel gp, int scale) {
-        int screenX = worldX - gp.player.worldX + gp.player.screenX;
-        int screenY = worldY - gp.player.worldY + gp.player.screenY;
-        int objSize = gp.originalTileSize * scale;
+        int screenX = worldX - gp.getPlayer().worldX + gp.getPlayer().getScreenX();
+        int screenY = worldY - gp.getPlayer().worldY + gp.getPlayer().getScreenY();
+        int objSize = gp.getTileSize() * scale;
 
 //        Rectangle solidArea = new Rectangle(worldX, worldY, objSize, objSize);
 
-        if (worldX + objSize > gp.player.worldX - gp.player.screenX &&
-                worldX - objSize < gp.player.worldX + gp.player.screenX &&
-                worldY + objSize > gp.player.worldY - gp.player.screenY &&
-                worldY - objSize < gp.player.worldY + gp.player.screenY) {
-            g2.drawImage(image, screenX, screenY, objSize, objSize, null);
+        if (worldX + objSize > gp.getPlayer().worldX - gp.getPlayer().getScreenX() &&
+                worldX - objSize < gp.getPlayer().worldX + gp.getPlayer().getScreenX() &&
+                worldY + objSize > gp.getPlayer().worldY - gp.getPlayer().getScreenY() &&
+                worldY - objSize < gp.getPlayer().worldY + gp.getPlayer().getScreenY()) {
+            g2.drawImage(image, gp.getPlayer().getScreenX(), gp.getPlayer().getScreenY(), objSize, objSize, null);
         }
     }
 }

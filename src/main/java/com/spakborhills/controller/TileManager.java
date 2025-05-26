@@ -16,6 +16,7 @@ public class TileManager {
     public int[][] mapTileNum;
     ArrayList<String> fileNames = new ArrayList<>();
     ArrayList<String> tileCols = new ArrayList<>();
+    private String loadedMap;
 
     public TileManager(GamePanel gp) {
         this.gp = gp;
@@ -41,22 +42,22 @@ public class TileManager {
 
         mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
 
-        URL resourceUrl = getClass().getResource("/assets/WorldMaps/WorldMaps");
-        if (resourceUrl == null) {
-            System.out.println("Could not find map file in classpath");
-        } else {
-            System.out.println("Found map at: " + resourceUrl);
-            loadMap("/assets/WorldMaps/WorldMaps");
-        }
+//        URL resourceUrl = getClass().getResource("/assets/WorldMaps/WorldMaps");
+//        if (resourceUrl == null) {
+//            System.out.println("Could not find map file in classpath");
+//        } else {
+//            System.out.println("Found map at: " + resourceUrl);
+//            loadMap("/assets/WorldMaps/WorldMaps");
+//        }
 
     }
 
     public void getTileImage() {
         for (int i = 0; i < fileNames.size(); i++){
-            String fileName;
+            String tileName;
             boolean tileCol;
 
-            fileName = fileNames.get(i);
+            tileName = fileNames.get(i);
 
             if (tileCols.get(i).equals("true")) {
                 tileCol = true;
@@ -64,7 +65,7 @@ public class TileManager {
                 tileCol = false;
             }
 
-            setup(i, fileName, tileCol);
+            setup(i, tileName, tileCol);
         }
     }
 
@@ -79,9 +80,9 @@ public class TileManager {
         }
     }
 
-    public void loadMap(String fileMap) {
+    public void loadMap(String loadedMap) {
         try {
-            InputStream is = getClass().getResourceAsStream(fileMap);
+            InputStream is = getClass().getResourceAsStream(loadedMap);
             BufferedReader br = new BufferedReader(new InputStreamReader(Objects.requireNonNull(is)));
 
             int col = 0;
@@ -114,38 +115,38 @@ public class TileManager {
         while (worldCol < gp.maxWorldCol && worldRow < gp.maxWorldRow) {
             int tileNum = mapTileNum[worldCol][worldRow];
 
-            int worldX = worldCol * gp.tileSize;
-            int worldY = worldRow * gp.tileSize;
-            int screenX = worldX - gp.player.worldX + gp.player.screenX;
-            int screenY = worldY - gp.player.worldY + gp.player.screenY;
+            int worldX = worldCol * gp.getTileSize();
+            int worldY = worldRow * gp.getTileSize();
+            int screenX = worldX - gp.getPlayer().worldX + gp.getPlayer().getScreenX();
+            int screenY = worldY - gp.getPlayer().worldY + gp.getPlayer().getScreenY();
 
             // STOPING AT EDGE
-            if (gp.player.screenX > gp.player.worldX) {
+            if (gp.getPlayer().getScreenX() > gp.getPlayer().worldX) {
                 screenX = worldX;
-            } if (gp.player.screenY > gp.player.worldY) {
+            } if (gp.getPlayer().getScreenY() > gp.getPlayer().worldY) {
                 screenY = worldY;
             }
 
-            int rightOffSet = gp.screenWidth - gp.player.screenX;
-            if (rightOffSet > gp.worldWidth - gp.player.worldX) {
+            int rightOffSet = gp.screenWidth - gp.getPlayer().getScreenX();
+            if (rightOffSet > gp.worldWidth - gp.getPlayer().worldX) {
                 screenX = gp.screenWidth - (gp.worldWidth - worldX);
             }
-            int bottomOffSet = gp.screenHeight - gp.player.screenY;
-            if (bottomOffSet > gp.worldHeight - gp.player.worldY) {
+            int bottomOffSet = gp.screenHeight - gp.getPlayer().getScreenY();
+            if (bottomOffSet > gp.worldHeight - gp.getPlayer().worldY) {
                 screenY = gp.screenHeight - (gp.worldHeight - worldY);
             }
 
             // DRAW THE TILE
-            if (worldX + gp.tileSize > gp.player.worldX - gp.player.screenX &&
-                    worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
-                    worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
-                    worldY - gp.tileSize < gp.player.worldY + gp.player.screenY) {
-                g2.drawImage(tile[tileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
-            } else if (gp.player.screenX > gp.player.worldX ||
-                    gp.player.screenY > gp.player.worldY ||
-                    rightOffSet > gp.worldWidth - gp.player.worldX ||
-                    bottomOffSet > gp.worldHeight - gp.player.worldY) {
-                g2.drawImage(tile[tileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+            if (worldX + gp.getTileSize() > gp.getPlayer().worldX - gp.getPlayer().getScreenX() &&
+                    worldX - gp.getTileSize() < gp.getPlayer().worldX + gp.getPlayer().getScreenX() &&
+                    worldY + gp.getTileSize() > gp.getPlayer().worldY - gp.getPlayer().getScreenY() &&
+                    worldY - gp.getTileSize() < gp.getPlayer().worldY + gp.getPlayer().getScreenY()) {
+                g2.drawImage(tile[tileNum].image, screenX, screenY, gp.getTileSize(), gp.getTileSize(), null);
+            } else if (gp.getPlayer().getScreenX() > gp.getPlayer().worldX ||
+                    gp.getPlayer().getScreenY() > gp.getPlayer().worldY ||
+                    rightOffSet > gp.worldWidth - gp.getPlayer().worldX ||
+                    bottomOffSet > gp.worldHeight - gp.getPlayer().worldY) {
+                g2.drawImage(tile[tileNum].image, screenX, screenY, gp.getTileSize(), gp.getTileSize(), null);
             }
 
             worldCol++;
@@ -155,5 +156,12 @@ public class TileManager {
                 worldRow++;
             }
         }
+    }
+    public String getLoadedMap() {
+        return loadedMap;
+    }
+
+    public void setLoadedMap(String loadedMap) {
+        this.loadedMap = loadedMap;
     }
 }

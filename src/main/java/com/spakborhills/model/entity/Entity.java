@@ -1,9 +1,12 @@
 package com.spakborhills.model.entity;
 
+import com.spakborhills.view.gui.GamePanel;
+
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 public class Entity {
+    public GamePanel gp;
     public int worldX, worldY;
     public int speed;
 
@@ -24,19 +27,19 @@ public class Entity {
         this.gp = gp;
     }
 
-    public int getWorldy() {
-        return worldy;
+    public int getWorldY() {
+        return worldY;
     }
 
-    public void setWorldy(int worldy) {
-        this.worldy = worldy;
+    public void setWorldY(int worldY) {
+        this.worldY = worldY;
     }
 
-    public int getWorldx() {
-        return worldx;
+    public int getWorldX() {
+        return worldX;
     }
 
-    public void setWorldx(int worldx) {
-        this.worldx = worldx;
+    public void setWorldX(int worldX) {
+        this.worldX = worldX;
     }
 }
