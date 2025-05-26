@@ -56,7 +56,7 @@ public class GamePanel extends  JPanel{
         gameLoop = new GameLoop(60, this::update, this::repaint);
 
         JButton backButton = new GameButton("Back to homescreen");
-        backButton.setBounds(10, 10, 150, 25);
+        backButton.setBounds(15, 10, 157, 25);
         this.add(backButton);
 
         backButton.addActionListener(e -> {
