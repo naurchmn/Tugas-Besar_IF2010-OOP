@@ -15,4 +15,28 @@ public class Entity {
 
     public Rectangle solidArea;
     public boolean collisionOn = false;
+
+    // CHARACTER ATTRIBUTES
+    public int maxEnergy;
+    public int energy;
+
+    public Entity(GamePanel gp){
+        this.gp = gp;
+    }
+
+    public int getWorldy() {
+        return worldy;
+    }
+
+    public void setWorldy(int worldy) {
+        this.worldy = worldy;
+    }
+
+    public int getWorldx() {
+        return worldx;
+    }
+
+    public void setWorldx(int worldx) {
+        this.worldx = worldx;
+    }
 }
