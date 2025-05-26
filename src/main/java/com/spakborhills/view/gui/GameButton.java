@@ -8,10 +8,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class GameButton extends JButton {
-    private static final Color BUTTON_COLOR = new Color(98, 98, 98);
-    private static final Color HIGHLIGHT_COLOR = new Color(156, 156, 156);
-    private static final Color SHADOW_COLOR = new Color(49, 49, 49);
-    private static final Color TEXT_COLOR = new Color(255, 255, 255);
+    private static final Color BUTTON_COLOR = new Color(112, 168, 168);
+    private static final Color HIGHLIGHT_COLOR = new Color(192, 224, 224);
+    private static final Color SHADOW_COLOR = new Color(48, 80, 80);
+    private static final Color TEXT_COLOR = new Color(240, 240, 240);
     
     public GameButton(String text) {
         super(text);
@@ -27,7 +27,7 @@ public class GameButton extends JButton {
         setForeground(TEXT_COLOR);
         
         // Create pixel-style font
-        setFont(new Font("Courier New", Font.BOLD, 12));
+        setFont(new Font("Courier New", Font.BOLD, 13));
 
 
         // Create 8-bit style border
