@@ -12,12 +12,12 @@ public class HomePanel extends JPanel{
 
     public HomePanel(MainFrame mainFrame) {
         try{
-            background = ImageIO.read(getClass().getResource("/assets/backgrounds/home bg title.png"));
+            background = ImageIO.read(getClass().getResource("/assets/backgrounds/home bg.png"));
         } catch (IOException e) {
             setBackground(Color.black);
         }
 
-        this.setPreferredSize(new Dimension(576, 576));
+        this.setPreferredSize(new Dimension(512, 512));
         this.setLayout(null);
         this.setDoubleBuffered(true); //improve rendering performance
         this.setFocusable(true);
@@ -25,19 +25,19 @@ public class HomePanel extends JPanel{
         // bikin 4 button home screen
 
         JButton playButton = new GameButton("Play");
-        playButton.setBounds(170, 256, 250, 30);
+        playButton.setBounds(150, 256, 250, 30);
         this.add(playButton);
 
         JButton helpButton = new GameButton("Help");
-        helpButton.setBounds(170, 291, 250, 30);
+        helpButton.setBounds(150, 291, 250, 30);
         this.add(helpButton);
 
         JButton creditButton = new GameButton("Credit");
-        creditButton.setBounds(170, 326, 250, 30);
+        creditButton.setBounds(150, 326, 250, 30);
         this.add(creditButton);
 
         JButton exitButton = new GameButton("Exit");
-        exitButton.setBounds(170, 361, 250, 30);
+        exitButton.setBounds(150, 361, 250, 30);
         this.add(exitButton);
 
         //action 4 button home screen

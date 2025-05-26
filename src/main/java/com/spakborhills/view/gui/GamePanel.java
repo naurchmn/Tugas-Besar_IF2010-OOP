@@ -1,24 +1,23 @@
 package com.spakborhills.view.gui;
 
-import com.spakborhills.controller.CollisionChecker;
-import com.spakborhills.controller.GameLoop;
-import com.spakborhills.controller.TileManager;
-import com.spakborhills.model.entity.Entity;
-import com.spakborhills.model.entity.Player;
-import com.spakborhills.controller.KeyHandler;
-import com.spakborhills.model.items.SuperItem;
 import javax.swing.*;
 import java.awt.*;
-public class GamePanel extends  JPanel{
-    private final int oriTileSize = 16;
-    private final int scale = 3;
-    private final int tileSize = oriTileSize * scale;
-    private final int maxScreenCol = 12;
-    private final int maxScreenRow = 12;
 
-    //Screen Setting
-    public final int screenWidth = tileSize * maxScreenCol;
-    public final int screenHeight = tileSize * maxScreenRow;
+import com.spakborhills.model.entity.Player;
+import com.spakborhills.model.items.SuperItem;
+import com.spakborhills.controller.TileManager;
+import com.spakborhills.controller.CollisionChecker;
+
+public class GamePanel extends JPanel implements Runnable{
+    // Screen Setting
+    public final int originalTileSize = 16; // 16 x 16 tile
+    final int scale = 3;
+
+    public final int tileSize = originalTileSize * scale;
+    public final int maxScreenCol = 12;
+    public final int maxScreenRow = 12; // screen ratio 16 : 9
+    public final int screenWidth = tileSize * maxScreenCol; // 576 pixels
+    public final int screenHeight = tileSize * maxScreenRow; // 576 pixels
 
     // World Setting
     public final int maxWorldCol = 250;
@@ -26,45 +25,38 @@ public class GamePanel extends  JPanel{
     public final int worldWidth = tileSize * maxWorldCol;
     public final int worldHeight = tileSize * maxWorldRow;
 
-    public TileManager tileM = new TileManager(this);
+    int FPS = 120;
+
+    public TileManager tileM = new TileManager(this);;
+    KeyHandler keyH = new KeyHandler();
+    Thread gameThread;
     public CollisionChecker cChecker = new CollisionChecker(this);
-    private Player player;
-    private Entity npc[];
-    private GameLoop gameLoop;
-    private KeyHandler keyH = new KeyHandler();
-    private String currentMap = "farm";
-    public SuperItem[] item = new SuperItem[10];
     public AssetSetter aSetter = new AssetSetter(this);
+    public Player player = new Player(this, keyH);
+    public SuperItem[] item = new SuperItem[10];
 
-    public int getTileSize() {
-        return tileSize;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
 
     public GamePanel(MainFrame mainFrame) {
-
-        this.setBackground(Color.WHITE);
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
-        this.setLayout(null);
-        this.setDoubleBuffered(true); //improve rendering performance
+        this.setBackground(Color.WHITE);
+        this.setDoubleBuffered(true);
         this.setFocusable(true);
-
-        player = new Player(this, keyH, "asep spakbor");
-        npc = new Entity[7];
         this.addKeyListener(keyH);
-        gameLoop = new GameLoop(60, this::update, this::repaint);
+
+        // Create panel for the button to prevent layout issues
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setOpaque(false);
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
         JButton backButton = new GameButton("Back to homescreen");
-        backButton.setBounds(10, 10, 150, 25);
-        this.add(backButton);
+        backButton.setBounds(150, 256, 250, 30);
+        buttonPanel.add(backButton);
+
+        this.setLayout(new BorderLayout());
+        this.add(buttonPanel, BorderLayout.NORTH);
 
         backButton.addActionListener(e -> {
             mainFrame.switchPanel("home");
-            pauseGame();
-            keyH.resetKeys();
         });
 
         // Request focus after initialization
@@ -75,66 +67,58 @@ public class GamePanel extends  JPanel{
         aSetter.setObject();
     }
 
-    }
-
-    public void startGame() {
-        gameLoop.startGame();
-    }
-
-    public void pauseGame(){
-        gameLoop.pause();
-    }
-
-    public void update(){
-        if(!gameLoop.isRunning()){
-            return;
-        }
-
-        gameLoop.getGameTime().updateGameTime();
-
-        //pindah map kalau melebihi boundary
-        if (player.getWorldx() > (31) * tileSize && currentMap.equals("farm")){ //31 hardcode maxFarmCol
-            currentMap = "world";
-            System.out.println("Playerriu ke " + currentMap);
-        }
-        else if (player.getWorldx() < 0 && currentMap.equals("world")){
-            currentMap = "farm";
-            System.out.println("Playerriu ke " + currentMap);
-        }
-
-        //switch map sesuai kebutuhan
-        switch (currentMap){
-            case "farm":
-                if(!"farm".equals(tileM.getLoadedMap())){
-                    tileM.setLoadedMap("farm");
-                    tileM.loadMap("/assets/Map/Farm.txt");
-                }
-                break;
-            case "world":
-                if(!"world".equals(tileM.getLoadedMap())){
-                    tileM.setLoadedMap("world");
-                    tileM.loadMap("/assets/Map/World.txt");
-                }
-        }
-        player.update();
+    public void startGameThread() {
+        gameThread = new Thread(this); // passing this Game Panel ke Thread
+        gameThread.start();
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
+    public void run() {
+        double drawInterval = (double) 1000000000 / FPS;
+        double delta = 0;
+        long lastTime = System.nanoTime();
+        long currentTime;
+        long timer = 0;
+        int drawCount = 0;
+
+        while (gameThread != null) {
+            currentTime = System.nanoTime();
+
+            delta += (currentTime - lastTime) / drawInterval;
+            timer += (currentTime - lastTime);
+            lastTime = currentTime;
+
+            if (delta >= 1) {
+                update();
+                repaint();
+                delta--;
+                drawCount++;
+            }
+
+            if (timer >= 1000000000) {
+                drawCount = 0;
+                timer = 0;
+            }
+        }
+    }
+
+    public void update() {
+        player.update();
+    }
+
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        //draw background tiles
-        tileM.draw(g2);
+        // TILE
+        tileM.draw(g2); // make sure tile first before the player below, so its like a layer
 
-        //draw player
         item[0].draw(g2, this, 3);
         item[1].draw(g2, this, 18);
 
         // PLAYER
         player.draw(g2);
 
-        //draw time
-        gameLoop.getGameTime().displayGameTime(g2);
+        g2.dispose();
     }
 }

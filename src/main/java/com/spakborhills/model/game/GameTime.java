@@ -1,7 +1,5 @@
 package com.spakborhills.model.game;
 
-import java.awt.*;
-
 public class GameTime {
     private long startTime;
     private int totalGameMinutes;
@@ -46,11 +44,8 @@ public class GameTime {
         startTime = currentTime;
     }
 
-    public void displayGameTime(Graphics2D g2) {
-        g2.setColor(Color.white);
-        g2.setFont(new Font("Comic Sans", Font.PLAIN, 30));
-        g2.drawString("Season " + inGameSeason + ", " + inGameDays, 400, 30);
-        g2.drawString(inGameHours + ":" + inGameMinutes, 500, 60);
+    public void displayGameTime() {
+        System.out.println(inGameDays + ":" + inGameHours + ":" + inGameMinutes);
     }
 
     public void advanceGameTime(int gameMinutes){
