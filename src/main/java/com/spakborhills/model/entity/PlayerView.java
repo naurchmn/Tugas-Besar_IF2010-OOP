@@ -9,14 +9,14 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
 
-public class Player extends Entity{
+public class PlayerView extends Entity{
     private int screenX, screenY;
     private final String name;
     private String currentMap;
 
     KeyHandler keyH;
 
-    public Player(GamePanel gp, KeyHandler keyH, String name) {
+    public PlayerView(GamePanel gp, KeyHandler keyH, String name) {
        super(gp);
 
        this.keyH = keyH;
