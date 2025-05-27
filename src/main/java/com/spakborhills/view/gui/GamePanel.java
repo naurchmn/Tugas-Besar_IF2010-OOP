@@ -1,11 +1,10 @@
 package com.spakborhills.view.gui;
 
-import com.spakborhills.controller.CollisionChecker;
-import com.spakborhills.controller.GameLoop;
-import com.spakborhills.controller.TileManager;
+import com.spakborhills.controller.*;
+import com.spakborhills.controller.KeyHandler;
 import com.spakborhills.model.entity.Entity;
 import com.spakborhills.model.entity.Player;
-import com.spakborhills.controller.KeyHandler;
+import com.spakborhills.model.entity.PlayerView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,13 +21,14 @@ public class GamePanel extends  JPanel{
     public final int screenHeight = tileSize * maxScreenRow;
 
     // World Setting
-    public final int maxWorldCol = 32;
-    public final int maxWorldRow = 32;
+    public final int maxWorldCol = 250;
+    public final int maxWorldRow = 250;
     public final int worldWidth = tileSize * maxWorldCol;
     public final int worldHeight = tileSize * maxWorldRow;
 
     public TileManager tileM = new TileManager(this);
     public CollisionChecker cChecker = new CollisionChecker(this);
+    private PlayerView playerView;
     private Player player;
     private Entity npc[];
     private GameLoop gameLoop;
@@ -39,11 +39,11 @@ public class GamePanel extends  JPanel{
         return tileSize;
     }
 
-    public Player getPlayer() {
-        return player;
+    public PlayerView getPlayer() {
+        return playerView;
     }
 
-    public GamePanel(MainFrame mainFrame) {
+    public GamePanel(MainFrame mainFrame, LoginPanel loginPanel) {
 
         this.setBackground(Color.WHITE);
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -51,20 +51,22 @@ public class GamePanel extends  JPanel{
         this.setDoubleBuffered(true); //improve rendering performance
         this.setFocusable(true);
 
-        player = new Player(this, keyH, "asep spakbor");
+
+        playerView = new PlayerView(this, keyH);
+        player = new Player(loginPanel.getPlayerName(), "male");
         npc = new Entity[7];
         this.addKeyListener(keyH);
         gameLoop = new GameLoop(60, this::update, this::repaint);
 
-        JButton backButton = new GameButton("Back to homescreen");
-        backButton.setBounds(10, 10, 150, 25);
-        this.add(backButton);
-
-        backButton.addActionListener(e -> {
-            mainFrame.switchPanel("home");
-            pauseGame();
-            keyH.resetKeys();
-        });
+//        JButton backButton = new GameButton("Back to homescreen");
+//        backButton.setBounds(15, 10, 157, 25);
+//        this.add(backButton);
+//
+//        backButton.addActionListener(e -> {
+//            mainFrame.switchPanel("home");
+//            pauseGame();
+//            keyH.resetKeys();
+//        });
     }
 
     public void startGame() {
@@ -83,11 +85,15 @@ public class GamePanel extends  JPanel{
         gameLoop.getGameTime().updateGameTime();
 
         //pindah map kalau melebihi boundary
-        if (player.getWorldx() > (31) * tileSize && currentMap.equals("farm")){ //31 hardcode maxFarmCol
+        if (playerView.getWorldX() < 95 * tileSize &&
+                (playerView.getWorldY() > 120 * tileSize && playerView.getWorldY() < 124 * tileSize) &&
+                currentMap.equals("farm")){ //31 hardcode maxFarmCol
             currentMap = "world";
             System.out.println("Playerriu ke " + currentMap);
         }
-        else if (player.getWorldx() < 0 && currentMap.equals("world")){
+        else if (playerView.getWorldX() > 217 * tileSize &&
+                (playerView.getWorldY() > 149 * tileSize && playerView.getWorldY() < 153 * tileSize) &&
+                currentMap.equals("world")){
             currentMap = "farm";
             System.out.println("Playerriu ke " + currentMap);
         }
@@ -97,16 +103,20 @@ public class GamePanel extends  JPanel{
             case "farm":
                 if(!"farm".equals(tileM.getLoadedMap())){
                     tileM.setLoadedMap("farm");
-                    tileM.loadMap("/assets/Map/Farm.txt");
+                    tileM.loadMap("/assets/FarmMaps/farm_map.txt");
+                    playerView.setWorldX(tileSize * 95);
+                    playerView.setWorldY(tileSize * 122);
                 }
                 break;
             case "world":
                 if(!"world".equals(tileM.getLoadedMap())){
                     tileM.setLoadedMap("world");
-                    tileM.loadMap("/assets/Map/World.txt");
+                    tileM.loadMap("/assets/WorldMaps/WorldMaps");
+                    playerView.setWorldX(tileSize * 216);
+                    playerView.setWorldY(tileSize * 151);
                 }
         }
-        player.update();
+        playerView.update();
     }
 
     @Override
@@ -118,9 +128,13 @@ public class GamePanel extends  JPanel{
         tileM.draw(g2);
 
         //draw player
-        player.draw(g2);
+        playerView.draw(g2);
 
         //draw time
         gameLoop.getGameTime().displayGameTime(g2);
+    }
+
+    public String getCurrentMap() {
+        return this.currentMap;
     }
 }
