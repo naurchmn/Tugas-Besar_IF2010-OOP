@@ -6,7 +6,7 @@ import java.awt.*;
 public class MainFrame extends JFrame {
 
     private CardLayout cardLayout;
-    private JPanel mainPanel;
+    JPanel mainPanel;
 
     public MainFrame() {
         setTitle("Spakbor Hills");
@@ -17,9 +17,11 @@ public class MainFrame extends JFrame {
         mainPanel = new JPanel(cardLayout);
 
         HomePanel homePanel = new HomePanel(this);
-        GamePanel gamePanel = new GamePanel(this);
+        LoginPanel loginPanel = new LoginPanel(this);
+        GamePanel gamePanel = new GamePanel(this, loginPanel);
 
         mainPanel.add(homePanel, "home");
+        mainPanel.add(loginPanel, "login");
         mainPanel.add(gamePanel, "game");
 
         setContentPane(mainPanel);
@@ -36,7 +38,7 @@ public class MainFrame extends JFrame {
         System.out.println("Switching to " + panelName);
 
         if(panelName.equals("game")) {
-            GamePanel gamePanel = (GamePanel) mainPanel.getComponent(1);
+            GamePanel gamePanel = (GamePanel) mainPanel.getComponent(2);
             gamePanel.startGame();
             gamePanel.requestFocusInWindow();
         }
