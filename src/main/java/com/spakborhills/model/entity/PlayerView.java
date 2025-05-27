@@ -11,16 +11,14 @@ import java.util.Objects;
 
 public class PlayerView extends Entity{
     private int screenX, screenY;
-    private final String name;
     private String currentMap;
 
     KeyHandler keyH;
 
-    public PlayerView(GamePanel gp, KeyHandler keyH, String name) {
+    public PlayerView(GamePanel gp, KeyHandler keyH) {
        super(gp);
 
        this.keyH = keyH;
-       this.name = name;
        this.currentMap = gp.getCurrentMap();
 
        screenX = gp.screenWidth/2 - gp.getTileSize()/2;
@@ -33,7 +31,6 @@ public class PlayerView extends Entity{
        } else if (currentMap.equals("world")) {
            setDefaultValues(216, 151);
        }
-
        getPlayerImage();
     }
 

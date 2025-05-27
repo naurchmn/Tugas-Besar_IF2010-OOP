@@ -1,24 +1,27 @@
 package com.spakborhills.model.entity;
 
 //import com.spakborhills.model.entity.NPCRegistry;
-import com.spakborhills.model.items.Inventory;
+import com.spakborhills.model.items.Item;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Player {
     private String name;
     private String gender;
-    private int maxEnergy = 100;
+    private final int maxEnergy = 100;
     private int energy;
     private String FarmName;
     //private NPC partner;
     private int gold;
-    private Inventory inventory;
+    private List<Item> inventory;
     // location
 
     public Player(String name, String gender) {
         this.name = name;
         this.gender = gender;
         this.energy = maxEnergy;
-        this.inventory = new Inventory();
+        inventory = new ArrayList<>();
     }
 
     public int getEnergy() {
