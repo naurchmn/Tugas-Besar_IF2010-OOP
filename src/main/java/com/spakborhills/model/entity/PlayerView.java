@@ -34,7 +34,6 @@ public class PlayerView extends Entity{
            setDefaultValues(216, 151);
        }
 
-       setDefaultValues();
        getPlayerImage();
     }
 

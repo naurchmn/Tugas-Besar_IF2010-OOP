@@ -1,9 +1,8 @@
 package com.spakborhills.model.entity;
 
-//import com.spakborhills.model.entity.NPCRegistry;
+// import com.spakborhills.model.entity.NPCRegistry;
 import com.spakborhills.model.items.Inventory;
-import com.spakborhills.model.entity.NPCRegistry;
-import com.spakborhills.model.items.Inventory;
+
 
 public class Player {
     private String name;

@@ -1,6 +1,6 @@
 package com.spakborhills.controller;
 
-import com.spakborhills.model.entity.NPCRegistry;
+//import com.spakborhills.model.entity.NPCRegistry;
 import com.spakborhills.model.entity.Player;
 
 public class PlayerController {
@@ -26,7 +26,7 @@ public class PlayerController {
 
     // WORLD ACTION
     public void fishing(){}
-    public void proposing(NPCRegistry npc){}
+//    public void proposing(NPCRegistry npc){}
     public void marrying(){}
     public void visiting(){}
     public void gifting(){}
