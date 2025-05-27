@@ -1,190 +1,39 @@
 package com.spakborhills.model.entity;
 
-import com.spakborhills.view.gui.GamePanel;
-import com.spakborhills.controller.KeyHandler;
+//import com.spakborhills.model.entity.NPCRegistry;
+import com.spakborhills.model.items.Inventory;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.Objects;
+public class Player {
+    private String name;
+    private String gender;
+    private int maxEnergy = 100;
+    private int energy;
+    private String FarmName;
+    //private NPC partner;
+    private int gold;
+    private Inventory inventory;
+    // location
 
-public class Player extends Entity{
-    private int screenX, screenY;
-    private final String name;
-    private String currentMap;
-
-    KeyHandler keyH;
-
-    public Player(GamePanel gp, KeyHandler keyH, String name) {
-       super(gp);
-
-       this.keyH = keyH;
-       this.name = name;
-
-       screenX = gp.screenWidth/2 - gp.getTileSize()/2;
-       screenY = gp.screenHeight/2 - gp.getTileSize()/2;
-
-       solidArea = new Rectangle(12, 18, 18, 27);
-
-       setDefaultValues();
-       getPlayerImage();
+    public Player(String name, String gender) {
+        this.name = name;
+        this.gender = gender;
+        this.energy = maxEnergy;
+        this.inventory = new Inventory();
     }
 
-    public void setDefaultValues(){
-        setWorldx(gp.getTileSize() * gp.maxWorldCol / 2);
-        setWorldy(gp.getTileSize() * gp.maxWorldRow / 2);
-        speed = 4;
-        direction = "down";
+    public int getEnergy() {
+        return energy;
     }
 
-    public void getPlayerImage(){
-        try {
-            front1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/downidle.png")));
-            front2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/down01.png")));
-            front3 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/downidle.png")));
-            front4 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/down02.png")));
-            back1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/upidle.png")));
-            back2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/up01.png")));
-            back3 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/upidle.png")));
-            back4 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/up02.png")));
-            left1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/leftidle.png")));
-            left2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/left01.png")));
-            left3 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/leftidle.png")));
-            left4 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/left02.png")));
-            right1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/rightidle.png")));
-            right2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/right01.png")));
-            right3 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/rightidle.png")));
-            right4 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/sprites/player/right02.png")));
-
-        } catch (IOException e) {
-            System.out.println("Gagal load gambar!");
-            e.printStackTrace();
-        }
+    public void setEnergy(int energy) {
+        this.energy = energy;
     }
 
-    public void update(){
-
-            //switch ke map world kalo lewat boundary kanan
-        if (getWorldx() > gp.getTileSize() * (gp.maxWorldCol - 1)) {
-            setWorldx(0);
-            setWorldy(gp.getTileSize() * gp.maxWorldRow / 2);
-            currentMap = gp.tileM.getLoadedMap();
-            System.out.println("Player di " + currentMap);
-        }
-            //switch ke map farm kalo lewat boundary kiri
-        if (getWorldx() < 0) {
-            setWorldx(gp.getTileSize() * (gp.maxWorldCol - 1));
-            setWorldy(gp.getTileSize() * gp.maxWorldRow / 2);
-            currentMap = gp.tileM.getLoadedMap();
-            System.out.println("Player di " + currentMap);
-        }
-
-        if(keyH.isUpPressed() || keyH.isDownPressed() || keyH.isLeftPressed() || keyH.isRightPressed()) {
-
-            if (keyH.isUpPressed()) {
-                direction = "up";
-            } else if (keyH.isLeftPressed()) {
-                direction = "left";
-            } else if (keyH.isDownPressed()) {
-                direction = "down";
-            } else if (keyH.isRightPressed()) {
-                direction = "right";
-            }
-
-            collisionOn = false;
-            gp.cChecker.checkTile(this);
-
-            if (!collisionOn){
-                switch (direction){
-                    case "up" : setWorldy(getWorldy() - speed); break;
-                    case "down" : setWorldy(getWorldy() + speed); break;
-                    case "left" : setWorldx(getWorldx() - speed); break;
-                    case "right" : setWorldx(getWorldx() + speed); break;
-                    default: break;
-                }
-            }
-
-            spriteCounter++;
-            if (!collisionOn){
-                if (spriteCounter > 10){
-                    if (spriteNum == 1) {
-                        spriteNum = 2;
-                    } else if (spriteNum == 2) {
-                        spriteNum = 3;
-                    } else if (spriteNum == 3) {
-                        spriteNum = 4;
-                    } else if (spriteNum == 4) {
-                        spriteNum = 1;
-                    }
-                    spriteCounter = 0;
-                }
-            }
-        }
-        else {
-            spriteNum = 1;
-        }
+    public int getGold() {
+        return gold;
     }
 
-    public void draw(Graphics2D g2){
-
-        BufferedImage image = null;
-
-        switch (direction) {
-            case "down" :
-                if (spriteNum == 1) {
-                    image = front1;
-                } else if (spriteNum == 2) {
-                    image = front2;
-                } else if (spriteNum == 3) {
-                    image = front3;
-                } else {
-                    image = front4;
-                }
-                break;
-            case "up" :
-                if (spriteNum == 1) {
-                    image = back1;
-                } else if (spriteNum == 2) {
-                    image = back2;
-                } else if (spriteNum == 3) {
-                    image = back3;
-                } else {
-                    image = back4;
-                }
-                break;
-            case "left" :
-                if (spriteNum == 1) {
-                    image = left1;
-                } else if (spriteNum == 2) {
-                    image = left2;
-                } else if (spriteNum == 3) {
-                    image = left3;
-                } else {
-                    image = left4;
-                }
-                break;
-            case "right" :
-                if (spriteNum == 1) {
-                    image = right1;
-                } else if (spriteNum == 2) {
-                    image = right2;
-                } else if (spriteNum == 3) {
-                    image = right3;
-                } else {
-                    image = right4;
-                }
-                break;
-        }
-
-        g2.drawImage(image, screenX, screenY, gp.getTileSize(), gp.getTileSize(), null);
-    }
-
-    public int getScreenX() {
-        return screenX;
-    }
-
-    public int getScreenY() {
-        return screenY;
+    public void setGold(int gold) {
+        this.gold = gold;
     }
 }

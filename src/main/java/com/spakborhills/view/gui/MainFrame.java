@@ -5,8 +5,8 @@ import java.awt.*;
 
 public class MainFrame extends JFrame {
 
-    private final CardLayout cardLayout;
-    private final JPanel mainPanel;
+    private CardLayout cardLayout;
+    private JPanel mainPanel;
 
     public MainFrame() {
         setTitle("Spakbor Hills");
@@ -40,6 +40,5 @@ public class MainFrame extends JFrame {
             gamePanel.startGame();
             gamePanel.requestFocusInWindow();
         }
-
     }
 }
