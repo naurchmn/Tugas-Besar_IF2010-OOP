@@ -41,15 +41,6 @@ public class TileManager {
         getTileImage();
 
         mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
-
-//        URL resourceUrl = getClass().getResource("/assets/WorldMaps/WorldMaps");
-//        if (resourceUrl == null) {
-//            System.out.println("Could not find map file in classpath");
-//        } else {
-//            System.out.println("Found map at: " + resourceUrl);
-//            loadMap("/assets/WorldMaps/WorldMaps");
-//        }
-
     }
 
     public void getTileImage() {

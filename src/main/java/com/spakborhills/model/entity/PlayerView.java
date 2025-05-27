@@ -34,6 +34,7 @@ public class PlayerView extends Entity{
            setDefaultValues(216, 151);
        }
 
+       setDefaultValues();
        getPlayerImage();
     }
 
@@ -115,8 +116,6 @@ public class PlayerView extends Entity{
         else {
             spriteNum = 1;
         }
-
-//        System.out.printf("x: %d, y: %d\n", worldX, worldY);
     }
 
     public void draw(Graphics2D g2){
