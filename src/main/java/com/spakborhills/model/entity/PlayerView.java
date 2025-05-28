@@ -100,7 +100,6 @@ public class PlayerView extends Entity{
 
             // Dapatkan jenis tile yang sedang diinjak pemain
             currentTileType = gp.tileM.getTileTypeAtPlayerPosition(getWorldX(), getWorldY());
-            currentTileNum = gp.tileM.getTileNum(getWorldX(), getWorldY());
 //            System.out.println("Player berada di atas tile: " + currentTileType);
 //            System.out.println(currentTileNum);
 
@@ -123,6 +122,8 @@ public class PlayerView extends Entity{
         else {
             spriteNum = 1;
         }
+
+//        System.out.printf("x: %d, y: %d\n", worldX, worldY);
     }
 
     public void draw(Graphics2D g2){

@@ -45,7 +45,7 @@ public class GamePanel extends  JPanel{
         return playerView;
     }
 
-    public GamePanel(MainFrame mainFrame) {
+    public GamePanel(MainFrame mainFrame, LoginPanel loginPanel) {
 
         this.setBackground(Color.WHITE);
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -53,7 +53,7 @@ public class GamePanel extends  JPanel{
         this.setDoubleBuffered(true); //improve rendering performance
         this.setFocusable(true);
 
-        player = new Player("Asep Spakbor", "male");
+        player = new Player(loginPanel.getPlayerName(), "male");
         playerView = new PlayerView(this, keyH, player);
         playerController = new PlayerController(player, playerView);
 
@@ -61,15 +61,15 @@ public class GamePanel extends  JPanel{
         this.addKeyListener(keyH);
         gameLoop = new GameLoop(60, this::update, this::repaint);
 
-        JButton backButton = new GameButton("Back to homescreen");
-        backButton.setBounds(15, 10, 157, 25);
-        this.add(backButton);
-
-        backButton.addActionListener(e -> {
-            mainFrame.switchPanel("home");
-            pauseGame();
-            keyH.resetKeys();
-        });
+//        JButton backButton = new GameButton("Back to homescreen");
+//        backButton.setBounds(15, 10, 157, 25);
+//        this.add(backButton);
+//
+//        backButton.addActionListener(e -> {
+//            mainFrame.switchPanel("home");
+//            pauseGame();
+//            keyH.resetKeys();
+//        });
     }
 
     public void startGame() {
