@@ -41,9 +41,8 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_RIGHT:
                 rightPressed = true;
                 break;
-            case KeyEvent.VK_M :
-                if (!mapPressed) mapPressed = true;
-                else mapPressed = false;
+            case KeyEvent.VK_M:
+                mapPressed = true;
                 break;
         }
     }
@@ -76,6 +75,9 @@ public class KeyHandler implements KeyListener {
                 break;
             case KeyEvent.VK_RIGHT:
                 rightPressed = false;
+                break;
+            case KeyEvent.VK_M:
+                mapPressed = false;
                 break;
         }
     }

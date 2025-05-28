@@ -11,16 +11,18 @@ import java.util.Objects;
 
 public class PlayerView extends Entity{
     private int screenX, screenY;
-    private final String name;
+    private Player player;
     private String currentMap;
+    private String currentTileType;
+    private int currentTileNum;
 
     KeyHandler keyH;
 
-    public PlayerView(GamePanel gp, KeyHandler keyH, String name) {
+    public PlayerView(GamePanel gp, KeyHandler keyH, Player player) {
        super(gp);
 
        this.keyH = keyH;
-       this.name = name;
+       this.player = player;
        this.currentMap = gp.getCurrentMap();
 
        screenX = gp.screenWidth/2 - gp.getTileSize()/2;
@@ -95,6 +97,12 @@ public class PlayerView extends Entity{
                     default: break;
                 }
             }
+
+            // Dapatkan jenis tile yang sedang diinjak pemain
+            currentTileType = gp.tileM.getTileTypeAtPlayerPosition(getWorldX(), getWorldY());
+            currentTileNum = gp.tileM.getTileNum(getWorldX(), getWorldY());
+//            System.out.println("Player berada di atas tile: " + currentTileType);
+//            System.out.println(currentTileNum);
 
             spriteCounter++;
             if (!collisionOn){
@@ -177,5 +185,9 @@ public class PlayerView extends Entity{
 
     public int getScreenY() {
         return screenY;
+    }
+
+    public String getCurrentTileType() {
+        return currentTileType;
     }
 }
