@@ -28,18 +28,20 @@ public class GamePanel extends  JPanel{
 
     public TileManager tileM = new TileManager(this);
     public CollisionChecker cChecker = new CollisionChecker(this);
-    private PlayerView playerView;
     private Player player;
+    private PlayerView playerView;
+    private PlayerController playerController;
     private Entity npc[];
     private GameLoop gameLoop;
     private KeyHandler keyH = new KeyHandler();
     private String currentMap = "farm";
+    private String currentTileType;
 
     public int getTileSize() {
         return tileSize;
     }
 
-    public PlayerView getPlayer() {
+    public PlayerView getPlayerView() {
         return playerView;
     }
 
@@ -51,9 +53,10 @@ public class GamePanel extends  JPanel{
         this.setDoubleBuffered(true); //improve rendering performance
         this.setFocusable(true);
 
-
-        playerView = new PlayerView(this, keyH);
         player = new Player(loginPanel.getPlayerName(), "male");
+        playerView = new PlayerView(this, keyH, player);
+        playerController = new PlayerController(player, playerView);
+
         npc = new Entity[7];
         this.addKeyListener(keyH);
         gameLoop = new GameLoop(60, this::update, this::repaint);
@@ -84,7 +87,7 @@ public class GamePanel extends  JPanel{
 
         gameLoop.getGameTime().updateGameTime();
 
-        //pindah map kalau melebihi boundary
+        // pindah map kalau melebihi boundary
         if (playerView.getWorldX() < 95 * tileSize &&
                 (playerView.getWorldY() > 120 * tileSize && playerView.getWorldY() < 124 * tileSize) &&
                 currentMap.equals("farm")){ //31 hardcode maxFarmCol
@@ -98,7 +101,7 @@ public class GamePanel extends  JPanel{
             System.out.println("Playerriu ke " + currentMap);
         }
 
-        //switch map sesuai kebutuhan
+        // switch map sesuai kebutuhan
         switch (currentMap){
             case "farm":
                 if(!"farm".equals(tileM.getLoadedMap())){
@@ -116,6 +119,21 @@ public class GamePanel extends  JPanel{
                     playerView.setWorldY(tileSize * 151);
                 }
         }
+        currentTileType = playerView.getCurrentTileType();
+
+        if (keyH.isMapPressed()) { // Jika tombol 'F' ditekan
+            if (currentTileType.equals("000.png")) {
+                playerController.tilling();
+            }
+            if (currentTileType.equals("046.png") || currentTileType.equals("047.png") ||
+                    currentTileType.equals("039.png") || currentTileType.equals("040.png")) {
+                playerController.visiting();
+            }
+            if (currentTileType.equals("005.png")) {
+
+            }
+        }
+
         playerView.update();
     }
 
