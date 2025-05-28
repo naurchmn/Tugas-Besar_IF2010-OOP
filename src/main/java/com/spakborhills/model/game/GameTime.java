@@ -21,9 +21,9 @@ public class GameTime {
     public GameTime() {
         totalGameMinutes = 0; //testing purpose
         startTime = 0;
-        inGameMinutes = totalGameMinutes % 60;
-        inGameHours = totalGameMinutes / 60 % 24;
-        inGameDays = (totalGameMinutes / 60 / 24 % 10) + 1;
+        inGameMinutes = 0;
+        inGameHours = 6;
+        inGameDays = 1;
         inGameSeason = 0;
     }
 
@@ -56,7 +56,7 @@ public class GameTime {
     }
 
     public void advanceGameTime(int gameMinutes){
-        totalGameMinutes += 1;
+        totalGameMinutes += gameMinutes;
         inGameMinutes += gameMinutes;
         normalizeTime();
     }
@@ -68,13 +68,13 @@ public class GameTime {
         }
 
         if (inGameHours >= 24) {
-            inGameDays += inGameHours / 24;
-            inGameHours %= 24;
+            inGameDays += 1;
+            inGameHours = 0;
         }
 
         if (inGameDays >= 10) {
-            inGameSeason += inGameDays / 10;
-            inGameDays %= 10;
+            inGameSeason += 1;
+            inGameDays = 1;
         }
 
         if (inGameSeason >= 3) {
@@ -84,5 +84,13 @@ public class GameTime {
 
     public int getTotalGameMinutes() {
         return totalGameMinutes;
+    }
+
+    public void startNewDay(int minuteTo2){
+        inGameDays += 1;
+        inGameHours = 6;
+        inGameMinutes = 0;
+        totalGameMinutes += 2400 + minuteTo2;
+        normalizeTime();
     }
 }
