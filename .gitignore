@@ -25,3 +25,4 @@ pom.xml
 !**/src/test/**/build/
 
 .idea/workspace.xml
+build/reports/problems/problems-report.html

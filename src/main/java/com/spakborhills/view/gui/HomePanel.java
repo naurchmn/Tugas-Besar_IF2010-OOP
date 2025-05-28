@@ -22,7 +22,7 @@ public class HomePanel extends JPanel{
         this.setDoubleBuffered(true); //improve rendering performance
         this.setFocusable(true);
 
-        //bikin 4 button home screen
+        // bikin 4 button home screen
 
         JButton playButton = new GameButton("Play");
         playButton.setBounds(160, 240, 250, 50);
@@ -41,7 +41,7 @@ public class HomePanel extends JPanel{
         this.add(exitButton);
 
         //action 4 button home screen
-        playButton.addActionListener(e -> mainFrame.switchPanel("game"));
+        playButton.addActionListener(e -> mainFrame.switchPanel("login"));
         helpButton.addActionListener(e -> System.out.println("Help")); //belum implement
         creditButton.addActionListener(e -> System.out.println("Credit")); //belum implement
         exitButton.addActionListener(e -> System.exit(0));

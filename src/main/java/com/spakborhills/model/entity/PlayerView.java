@@ -9,32 +9,35 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
 
-public class Player extends Entity{
+public class PlayerView extends Entity{
     private int screenX, screenY;
-    private final String name;
     private String currentMap;
 
     KeyHandler keyH;
 
-    public Player(GamePanel gp, KeyHandler keyH, String name) {
+    public PlayerView(GamePanel gp, KeyHandler keyH) {
        super(gp);
 
        this.keyH = keyH;
-       this.name = name;
+       this.currentMap = gp.getCurrentMap();
 
        screenX = gp.screenWidth/2 - gp.getTileSize()/2;
        screenY = gp.screenHeight/2 - gp.getTileSize()/2;
 
        solidArea = new Rectangle(12, 18, 18, 27);
 
-       setDefaultValues();
+       if (currentMap.equals("farm")) {
+           setDefaultValues(119, 123);
+       } else if (currentMap.equals("world")) {
+           setDefaultValues(216, 151);
+       }
        getPlayerImage();
     }
 
-    public void setDefaultValues(){
-        setWorldx(gp.getTileSize() * gp.maxWorldCol / 2);
-        setWorldy(gp.getTileSize() * gp.maxWorldRow / 2);
-        speed = 4;
+    public void setDefaultValues(int x, int y){
+        setWorldX(gp.getTileSize() * x);
+        setWorldY(gp.getTileSize() * y);
+        speed = 5;
         direction = "down";
     }
 
@@ -65,21 +68,6 @@ public class Player extends Entity{
 
     public void update(){
 
-            //switch ke map world kalo lewat boundary kanan
-        if (getWorldx() > gp.getTileSize() * (gp.maxWorldCol - 1)) {
-            setWorldx(0);
-            setWorldy(gp.getTileSize() * gp.maxWorldRow / 2);
-            currentMap = gp.tileM.getLoadedMap();
-            System.out.println("Player di " + currentMap);
-        }
-            //switch ke map farm kalo lewat boundary kiri
-        if (getWorldx() < 0) {
-            setWorldx(gp.getTileSize() * (gp.maxWorldCol - 1));
-            setWorldy(gp.getTileSize() * gp.maxWorldRow / 2);
-            currentMap = gp.tileM.getLoadedMap();
-            System.out.println("Player di " + currentMap);
-        }
-
         if(keyH.isUpPressed() || keyH.isDownPressed() || keyH.isLeftPressed() || keyH.isRightPressed()) {
 
             if (keyH.isUpPressed()) {
@@ -97,10 +85,10 @@ public class Player extends Entity{
 
             if (!collisionOn){
                 switch (direction){
-                    case "up" : setWorldy(getWorldy() - speed); break;
-                    case "down" : setWorldy(getWorldy() + speed); break;
-                    case "left" : setWorldx(getWorldx() - speed); break;
-                    case "right" : setWorldx(getWorldx() + speed); break;
+                    case "up" : setWorldY(getWorldY() - speed); break;
+                    case "down" : setWorldY(getWorldY() + speed); break;
+                    case "left" : setWorldX(getWorldX() - speed); break;
+                    case "right" : setWorldX(getWorldX() + speed); break;
                     default: break;
                 }
             }
@@ -124,6 +112,8 @@ public class Player extends Entity{
         else {
             spriteNum = 1;
         }
+
+//        System.out.printf("x: %d, y: %d\n", worldX, worldY);
     }
 
     public void draw(Graphics2D g2){

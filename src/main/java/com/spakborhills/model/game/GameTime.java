@@ -3,6 +3,7 @@ package com.spakborhills.model.game;
 import java.awt.*;
 
 public class GameTime {
+    private Season season = Season.SPRING;
     private long startTime;
     private int totalGameMinutes;
 
@@ -18,10 +19,11 @@ public class GameTime {
 
 
     public GameTime() {
+        totalGameMinutes = 0; //testing purpose
         startTime = 0;
-        inGameMinutes = 0;
-        inGameHours = 0;
-        inGameDays = 0;
+        inGameMinutes = totalGameMinutes % 60;
+        inGameHours = totalGameMinutes / 60 % 24;
+        inGameDays = (totalGameMinutes / 60 / 24 % 10) + 1;
         inGameSeason = 0;
     }
 
@@ -49,7 +51,7 @@ public class GameTime {
     public void displayGameTime(Graphics2D g2) {
         g2.setColor(Color.white);
         g2.setFont(new Font("Comic Sans", Font.PLAIN, 30));
-        g2.drawString("Season " + inGameSeason + ", " + inGameDays, 400, 30);
+        g2.drawString(season.seasonToString(inGameSeason) + ", " + inGameDays, 400, 30);
         g2.drawString(inGameHours + ":" + inGameMinutes, 500, 60);
     }
 
@@ -75,7 +77,7 @@ public class GameTime {
             inGameDays %= 10;
         }
 
-        if (inGameSeason >= 4) {
+        if (inGameSeason >= 3) {
             inGameSeason = 0;
         }
     }
