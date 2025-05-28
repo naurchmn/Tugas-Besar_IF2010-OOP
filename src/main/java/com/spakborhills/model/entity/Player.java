@@ -1,6 +1,6 @@
 package com.spakborhills.model.entity;
 
-//import com.spakborhills.model.entity.NPCRegistry;
+//import com.spakborhills.model.entity.npc.NPCRegistry;
 import com.spakborhills.model.items.Item;
 
 import java.util.ArrayList;

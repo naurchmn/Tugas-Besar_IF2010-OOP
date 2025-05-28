@@ -19,10 +19,6 @@ public class Entity {
     public Rectangle solidArea;
     public boolean collisionOn = false;
 
-    // CHARACTER ATTRIBUTES
-    public int maxEnergy;
-    public int energy;
-
     public Entity(GamePanel gp){
         this.gp = gp;
     }
