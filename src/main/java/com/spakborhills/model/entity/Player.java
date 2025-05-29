@@ -1,6 +1,7 @@
 package com.spakborhills.model.entity;
 
 //import com.spakborhills.model.entity.npc.NPCRegistry;
+import com.spakborhills.model.items.Inventory;
 import com.spakborhills.model.items.Item;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class Player {
     private String farmName;
     //private NPC partner;
     private int gold;
-    private Map<Item, Integer> inventory;
+    private Inventory inventory;
     private Item itemHeld = null;
 
     // location
@@ -26,11 +27,11 @@ public class Player {
         this.gender = gender;
         this.farmName = farmName;
         this.energy = maxEnergy;
-        inventory = new HashMap<>();
-        inventory.put(new Item("Hoe"), 1);
-        inventory.put(new Item("Watering Can"), 1);
-        inventory.put(new Item("Pickaxe"), 1);
-        inventory.put(new Item("Fishing Rod"), 1);
+        inventory = new Inventory();
+        inventory.add(new Item("Hoe"), 1);
+        inventory.add(new Item("Watering Can"), 1);
+        inventory.add(new Item("Pickaxe"), 1);
+        inventory.add(new Item("Fishing Rod"), 1);
     }
 
     public int getEnergy() {
@@ -60,7 +61,7 @@ public class Player {
         this.itemHeld = item;
     }
 
-    public Map<Item, Integer> getInventory() {
+    public Inventory getInventory() {
         return inventory;
     }
 }

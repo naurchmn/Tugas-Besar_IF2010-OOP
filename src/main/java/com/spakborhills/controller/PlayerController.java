@@ -34,7 +34,7 @@ public class PlayerController {
         }
 
         Item foundItem = null;
-        for (Item item : player.getInventory().keySet()){
+        for (Item item : player.getInventory().getPlayerInventory().keySet()){
             if (item.getName().equals(itemUse)){
                 foundItem = item;
                 break;
