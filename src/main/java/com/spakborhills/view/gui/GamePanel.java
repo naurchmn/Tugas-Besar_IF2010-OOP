@@ -102,12 +102,12 @@ public class GamePanel extends  JPanel{
         if (inventoryOpened) {
             // Print hanya saat inventory baru dibuka
             if (!wasInventoryOpened) {
-                if (player.getInventory().isEmpty()) {
+                if (player.getInventory().getPlayerInventory().isEmpty()) {
                     System.out.println("Inventory empty:(");
                     System.out.println("Press I to continue game");
                 } else {
                     System.out.println("Inventory :");
-                    for (Map.Entry<Item, Integer> entry : player.getInventory().entrySet()) {
+                    for (Map.Entry<Item, Integer> entry : player.getInventory().getPlayerInventory().entrySet()) {
                         System.out.println(entry.getKey().getName() + ": " + entry.getValue());
                     }
                     playerController.chooseItem();
@@ -164,12 +164,12 @@ public class GamePanel extends  JPanel{
         }
 
         if (keyH.isInventoryPressed()){
-            if(player.getInventory().isEmpty()) {
+            if(player.getInventory().getPlayerInventory().isEmpty()) {
                 System.out.println("Inventory kosong!");
             }
             else{
                 System.out.println("Inventory :");
-                for (Item item : player.getInventory().keySet()) {
+                for (Item item : player.getInventory().getPlayerInventory().keySet()) {
                     System.out.println("\n" + item.getName());
                 }
             }
