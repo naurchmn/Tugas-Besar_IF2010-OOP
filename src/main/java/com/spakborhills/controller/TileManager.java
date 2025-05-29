@@ -96,7 +96,10 @@ public class TileManager {
 
             br.close();
 
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            e.printStackTrace(); // <-- TAMBAHKAN INI
+            System.err.println("Failed to load map: " + loadedMap);
+        }
     }
 
     public void draw(Graphics2D g2) {
@@ -166,5 +169,50 @@ public class TileManager {
             return fileNames.get(tileNum); // Mengembalikan nama file tile
         }
         return "Unknown"; // Jika di luar batas
+    }
+
+    // Metode untuk mendapatkan jenis tile yang ada di hadapan Player
+    public String getTileTypeInFrontOfPlayer(int playerWorldX, int playerWorldY, String playerDirection) {
+        int targetCol = playerWorldX / gp.getTileSize();
+        int targetRow = playerWorldY / gp.getTileSize();
+
+        // Adjust target tile based on player's direction
+        switch (playerDirection) {
+            case "up":
+                targetRow--; // One tile above
+                break;
+            case "down":
+                targetRow++; // One tile below
+                break;
+            case "left":
+                targetCol--; // One tile to the left
+                break;
+            case "right":
+                targetCol++; // One tile to the right
+                break;
+        }
+
+        // Check if the target tile is within map boundaries
+        if (targetCol >= 0 && targetCol < gp.maxWorldCol && targetRow >= 0 && targetRow < gp.maxWorldRow) {
+            int tileNum = mapTileNum[targetCol][targetRow];
+            return fileNames.get(tileNum);
+        }
+
+        return "Unknown"; // Target tile is out of bounds
+    }
+
+    public void changeTile(int col, int row, String newTileFileName) {
+        if (col >= 0 && col < gp.maxWorldCol && row >= 0 && row < gp.maxWorldRow) {
+            // Temukan indeks tile dari nama file
+            int newTileIndex = fileNames.indexOf(newTileFileName);
+            if (newTileIndex != -1) {
+                mapTileNum[col][row] = newTileIndex;
+                System.out.println("Tile at [" + col + "," + row + "] changed to " + newTileFileName);
+            } else {
+                System.err.println("Error: Tile file name '" + newTileFileName + "' not found in TileData.");
+            }
+        } else {
+            System.err.println("Error: Attempted to change tile out of bounds at [" + col + "," + row + "]");
+        }
     }
 }

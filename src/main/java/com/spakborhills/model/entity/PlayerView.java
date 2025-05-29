@@ -14,7 +14,7 @@ public class PlayerView extends Entity{
     private Player player;
     private String currentMap;
     private String currentTileType;
-    private int currentTileNum;
+    private String frontTileType;
 
     KeyHandler keyH;
 
@@ -100,8 +100,8 @@ public class PlayerView extends Entity{
 
             // Dapatkan jenis tile yang sedang diinjak pemain
             currentTileType = gp.tileM.getTileTypeAtPlayerPosition(getWorldX(), getWorldY());
-//            System.out.println("Player berada di atas tile: " + currentTileType);
-//            System.out.println(currentTileNum);
+            frontTileType = gp.tileM.getTileTypeInFrontOfPlayer(getWorldX(), getWorldY(), direction);
+//            System.out.println("Player berada di atas tile: " + frontTileType);
 
             spriteCounter++;
             if (!collisionOn){
@@ -122,8 +122,6 @@ public class PlayerView extends Entity{
         else {
             spriteNum = 1;
         }
-
-//        System.out.printf("x: %d, y: %d\n", worldX, worldY);
     }
 
     public void draw(Graphics2D g2){
@@ -191,4 +189,6 @@ public class PlayerView extends Entity{
     public String getCurrentTileType() {
         return currentTileType;
     }
+
+    public String getFrontTileType() {return frontTileType;}
 }
