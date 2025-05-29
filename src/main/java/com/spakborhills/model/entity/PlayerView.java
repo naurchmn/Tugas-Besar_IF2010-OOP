@@ -35,7 +35,6 @@ public class PlayerView extends Entity{
        } else if (currentMap.equals("world")) {
            setDefaultValues(216, 151);
        }
-
        getPlayerImage();
     }
 

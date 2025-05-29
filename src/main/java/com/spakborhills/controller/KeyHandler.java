@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
 
-    boolean upPressed, downPressed, leftPressed, rightPressed, enterPressed, spacePressed;
+    boolean upPressed, downPressed, leftPressed, rightPressed, enterPressed, spacePressed, inventoryPressed;
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -17,28 +17,16 @@ public class KeyHandler implements KeyListener {
         int keyCode = e.getKeyCode();
 
         switch (keyCode) {
-            case KeyEvent.VK_W:
+            case KeyEvent.VK_W, KeyEvent.VK_UP:
                 upPressed = true;
                 break;
-            case KeyEvent.VK_S:
+            case KeyEvent.VK_S, KeyEvent.VK_DOWN:
                 downPressed = true;
                 break;
-            case KeyEvent.VK_A:
+            case KeyEvent.VK_A, KeyEvent.VK_LEFT:
                 leftPressed = true;
                 break;
-            case KeyEvent.VK_D:
-                rightPressed = true;
-                break;
-            case KeyEvent.VK_UP:
-                upPressed = true;
-                break;
-            case KeyEvent.VK_DOWN:
-                downPressed = true;
-                break;
-            case KeyEvent.VK_LEFT:
-                leftPressed = true;
-                break;
-            case KeyEvent.VK_RIGHT:
+            case KeyEvent.VK_D, KeyEvent.VK_RIGHT:
                 rightPressed = true;
                 break;
             case KeyEvent.VK_ENTER:
@@ -85,6 +73,9 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_SPACE :
                 spacePressed = false;
                 break;
+            case KeyEvent.VK_I:
+                inventoryPressed = !inventoryPressed;
+                break;
         }
     }
 
@@ -102,6 +93,8 @@ public class KeyHandler implements KeyListener {
     }
     public boolean isEnterPressed() {return enterPressed;}
     public boolean isSpacePressed() {return spacePressed;}
+    public boolean isInventoryPressed() {return inventoryPressed;}
+    public void setInventoryPressed(boolean inventoryPressed) {this.inventoryPressed = inventoryPressed;}
 
     public void resetKeys(){
         upPressed = false;

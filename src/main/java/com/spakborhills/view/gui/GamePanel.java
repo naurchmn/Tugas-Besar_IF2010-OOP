@@ -5,6 +5,7 @@ import com.spakborhills.controller.KeyHandler;
 import com.spakborhills.model.entity.Entity;
 import com.spakborhills.model.entity.Player;
 import com.spakborhills.model.entity.PlayerView;
+import com.spakborhills.model.items.Item;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +16,7 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Map;
 
 public class GamePanel extends  JPanel{
     private final int oriTileSize = 16;
@@ -50,6 +52,8 @@ public class GamePanel extends  JPanel{
     private int entranceWorldY = -1; // Mengubah menjadi WorldX/WorldY
 
     private boolean positionSetByReturn = false;
+
+    private boolean inventoryOpened;
 
     public int getTileSize() {
         return tileSize;
@@ -123,7 +127,7 @@ public class GamePanel extends  JPanel{
         this.setDoubleBuffered(true); //improve rendering performance
         this.setFocusable(true);
 
-        player = new Player(loginPanel.getPlayerName(), "male");
+        player = new Player(loginPanel.getPlayerName(), "male", loginPanel.getFarmName());
         playerView = new PlayerView(this, keyH, player);
         playerController = new PlayerController(player, playerView, this);
 
@@ -155,6 +159,33 @@ public class GamePanel extends  JPanel{
             return;
         }
 
+        boolean wasInventoryOpened = inventoryOpened;
+        if (keyH.isInventoryPressed()){
+            inventoryOpened = !inventoryOpened;
+            keyH.setInventoryPressed(false);
+
+            if(wasInventoryOpened && !inventoryOpened){
+                gameLoop.getGameTime().setStartTime(System.nanoTime());
+                System.out.println("Game continued");
+            }
+        }
+
+        if (inventoryOpened) {
+            // Print hanya saat inventory baru dibuka
+            if (!wasInventoryOpened) {
+                if (player.getInventory().getPlayerInventory().isEmpty()) {
+                    System.out.println("Inventory empty:(");
+                    System.out.println("Press I to continue game");
+                } else {
+                    System.out.println("Inventory :");
+                    for (Map.Entry<Item, Integer> entry : player.getInventory().getPlayerInventory().entrySet()) {
+                        System.out.println(entry.getKey().getName() + ": " + entry.getValue());
+                    }
+                    playerController.chooseItem();
+                }
+            }
+            return;
+        }
         gameLoop.getGameTime().updateGameTime();
         playerView.update();
 
@@ -212,6 +243,19 @@ public class GamePanel extends  JPanel{
             if (currentTileType.equals("004.png") || currentTileType.equals("148.png")) {
                 playerController.watering();
             }
+        }
+
+        if (keyH.isInventoryPressed()){
+            if(player.getInventory().getPlayerInventory().isEmpty()) {
+                System.out.println("Inventory kosong!");
+            }
+            else{
+                System.out.println("Inventory :");
+                for (Item item : player.getInventory().getPlayerInventory().keySet()) {
+                    System.out.println("\n" + item.getName());
+                }
+            }
+            keyH.setInventoryPressed(false);
         }
 
         // switch map sesuai kebutuhan

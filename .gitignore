@@ -1,6 +1,7 @@
 # ===== Gradle Build Output =====
 .gradle/
 build/
+bin/
 
 # ===== IntelliJ IDEA =====
 .idea/
@@ -26,3 +27,5 @@ pom.xml
 
 .idea/workspace.xml
 build/reports/problems/problems-report.html
+*.class
+/bin
