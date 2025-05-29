@@ -1,6 +1,4 @@
-package com.spakborhills.model.bin;
-
-import com.spakborhills.model.items.Item;
+package com.spakborhills.model.items;
 
 import java.util.*;
 

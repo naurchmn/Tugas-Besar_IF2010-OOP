@@ -1,7 +1,8 @@
-package com.spakborhills.model.currency;
+package com.spakborhills.controller;
 
 public class Gold {
     private int amount;
+    private static int totalGold;
 
     public Gold() {
         this.amount = 0;
