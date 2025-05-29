@@ -4,7 +4,7 @@ import com.spakborhills.model.game.GameTime;
 
 public class GameLoop implements Runnable {
     private Thread gameThread; //thread utama
-    private final GameTime gameTime = new GameTime(); //time utama
+    private final GameTime gameTime = GameTime.getInstance(); //time utama
     private boolean isRunning = false;
     private final int fps;
     private final Runnable updateLogic;
