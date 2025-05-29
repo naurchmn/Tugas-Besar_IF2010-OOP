@@ -1,8 +1,14 @@
 package com.spakborhills.model.game;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Random;
 
 public class GameTime {
+    private static GameTime instance; //singleton
+
     private Season season = Season.SPRING;
     private long startTime;
     private int totalGameMinutes;
@@ -17,14 +23,26 @@ public class GameTime {
     private int inGameDays;
     private int inGameSeason;
 
+    private Weather weather;
+    private Random random = new Random();
+    private ArrayList<Integer> rainyDays = new ArrayList<>();
+    private int nextRainyDayIdx = 0;
 
-    public GameTime() {
+
+    private GameTime() {
         totalGameMinutes = 0; //testing purpose
         startTime = 0;
         inGameMinutes = 0;
         inGameHours = 6;
         inGameDays = 1;
         inGameSeason = 0;
+    }
+
+    public static GameTime getInstance() {
+        if (instance == null) {
+            instance = new GameTime();
+        }
+        return instance;
     }
 
     public void setStartTime(long startTime) {
@@ -70,16 +88,50 @@ public class GameTime {
         if (inGameHours >= 24) {
             inGameDays += 1;
             inGameHours = 0;
+            changeWeather();
         }
 
         if (inGameDays >= 10) {
             inGameSeason += 1;
             inGameDays = 1;
+            randomizeRainyDay();
         }
 
         if (inGameSeason >= 3) {
             inGameSeason = 0;
         }
+    }
+
+    private void randomizeRainyDay() {
+        rainyDays.clear();
+        rainyDays.add(random.nextInt(10) + 1);
+        int secondRainyDay;
+        do{
+            secondRainyDay = random.nextInt(10) + 1;
+        } while(rainyDays.getFirst() == secondRainyDay);
+        rainyDays.add(secondRainyDay);
+        Collections.sort(rainyDays);
+
+        nextRainyDayIdx = 0;
+    }
+
+    private void changeWeather(){
+        if(nextRainyDayIdx < rainyDays.size() && inGameDays==rainyDays.get(nextRainyDayIdx)){
+            weather = Weather.RAINY;
+            nextRainyDayIdx++;
+        }
+        else{
+            if (random.nextDouble() < 0.2){
+                weather = Weather.RAINY;
+            }
+            else{
+                weather = Weather.SUNNY;
+            }
+        }
+    }
+
+    public Weather getWeather() {
+        return weather;
     }
 
     public int getTotalGameMinutes() {
