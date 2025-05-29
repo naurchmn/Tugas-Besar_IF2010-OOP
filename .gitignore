@@ -28,3 +28,4 @@ pom.xml
 build/reports/problems/problems-report.html
 *.class
 /bin
+/.idea
