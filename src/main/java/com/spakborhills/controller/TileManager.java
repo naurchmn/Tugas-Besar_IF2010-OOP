@@ -1,73 +1,79 @@
 package com.spakborhills.controller;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.awt.*;
 import java.net.URL;
-import java.util.Objects;
+import java.util.*;
 
 import javax.imageio.ImageIO;
 
-import com.spakborhills.view.gui.GamePanel;
 import com.spakborhills.model.game.Tile;
+import com.spakborhills.view.gui.GamePanel;
 
 public class TileManager {
     GamePanel gp;
     public Tile[] tile;
     public int[][] mapTileNum;
+    ArrayList<String> fileNames = new ArrayList<>();
+    ArrayList<String> tileCols = new ArrayList<>();
     private String loadedMap;
 
     public TileManager(GamePanel gp) {
         this.gp = gp;
 
-        tile = new Tile[10];
-        mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
+        // READ TILE DATA
+        InputStream is = getClass().getResourceAsStream("/assets/WorldMaps/TileData");
+        BufferedReader br = new BufferedReader(new InputStreamReader(Objects.requireNonNull(is)));
 
-        getTileImage();
-        URL resourceUrl = getClass().getResource("/assets/Map/Farm.txt");
-        if (resourceUrl == null) {
-            System.err.println("Could not find map file in classpath");
-        } else {
-            System.out.println("Found map at: " + resourceUrl);
-            loadMap("/assets/Map/Farm.txt");
+        // GETTING TILE NAME AND COLLISION
+        String line;
+
+        try {
+            while ((line = br.readLine()) != null) {
+                fileNames.add(line);
+                tileCols.add(br.readLine());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+        tile = new Tile[fileNames.size()];
+        getTileImage();
+
+        mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
     }
 
     public void getTileImage() {
+        for (int i = 0; i < fileNames.size(); i++){
+            String tileName;
+            boolean tileCol;
+
+            tileName = fileNames.get(i);
+
+            if (tileCols.get(i).equals("true")) {
+                tileCol = true;
+            } else {
+                tileCol = false;
+            }
+
+            setup(i, tileName, tileCol);
+        }
+    }
+
+    public void setup(int index, String imageName, boolean collision) {
         try {
-            tile[0] = new Tile();
-            tile[0].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/MapTiles/000.png")));
-
-            tile[1] = new Tile();
-            tile[1].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/MapTiles/006.png")));
-            tile[1].collision = true;
-
-            tile[2] = new Tile();
-            tile[2].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/MapTiles/004.png")));
-
-            tile[3] = new Tile();
-            tile[3].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/MapTiles/001.png")));
-
-            tile[4] = new Tile();
-            tile[4].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/MapTiles/005.png")));
-            tile[4].collision = true;
-
-            tile[5] = new Tile();
-            tile[5].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/MapTiles/003.png")));
-
-            tile[6] = new Tile();
-            tile[6].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/MapTiles/002.png")));
+            tile[index] = new Tile();
+            tile[index].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/assets/MapTiles/" + imageName)));
+            tile[index].collision = collision;
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void loadMap(String fileMap) {
+    public void loadMap(String loadedMap) {
         try {
-            InputStream is = getClass().getResourceAsStream(fileMap);
+            InputStream is = getClass().getResourceAsStream(loadedMap);
             BufferedReader br = new BufferedReader(new InputStreamReader(Objects.requireNonNull(is)));
 
             int col = 0;
@@ -102,13 +108,35 @@ public class TileManager {
 
             int worldX = worldCol * gp.getTileSize();
             int worldY = worldRow * gp.getTileSize();
-            int screenX = worldX - gp.getPlayer().getWorldx() + gp.getPlayer().getScreenX();
-            int screenY = worldY - gp.getPlayer().getWorldy() + gp.getPlayer().getScreenY();
+            int screenX = worldX - gp.getPlayerView().worldX + gp.getPlayerView().getScreenX();
+            int screenY = worldY - gp.getPlayerView().worldY + gp.getPlayerView().getScreenY();
 
-            if (worldX + gp.getTileSize() > gp.getPlayer().getWorldx() - gp.getPlayer().getScreenX() &&
-                    worldX - gp.getTileSize() < gp.getPlayer().getWorldx() + gp.getPlayer().getScreenX() &&
-                    worldY + gp.getTileSize() > gp.getPlayer().getWorldy() - gp.getPlayer().getScreenY() &&
-                    worldY - gp.getTileSize() < gp.getPlayer().getWorldy() + gp.getPlayer().getScreenY()) {
+            // STOPING AT EDGE
+            if (gp.getPlayerView().getScreenX() > gp.getPlayerView().worldX) {
+                screenX = worldX;
+            } if (gp.getPlayerView().getScreenY() > gp.getPlayerView().worldY) {
+                screenY = worldY;
+            }
+
+            int rightOffSet = gp.screenWidth - gp.getPlayerView().getScreenX();
+            if (rightOffSet > gp.worldWidth - gp.getPlayerView().worldX) {
+                screenX = gp.screenWidth - (gp.worldWidth - worldX);
+            }
+            int bottomOffSet = gp.screenHeight - gp.getPlayerView().getScreenY();
+            if (bottomOffSet > gp.worldHeight - gp.getPlayerView().worldY) {
+                screenY = gp.screenHeight - (gp.worldHeight - worldY);
+            }
+
+            // DRAW THE TILE
+            if (worldX + gp.getTileSize() > gp.getPlayerView().worldX - gp.getPlayerView().getScreenX() &&
+                    worldX - gp.getTileSize() < gp.getPlayerView().worldX + gp.getPlayerView().getScreenX() &&
+                    worldY + gp.getTileSize() > gp.getPlayerView().worldY - gp.getPlayerView().getScreenY() &&
+                    worldY - gp.getTileSize() < gp.getPlayerView().worldY + gp.getPlayerView().getScreenY()) {
+                g2.drawImage(tile[tileNum].image, screenX, screenY, gp.getTileSize(), gp.getTileSize(), null);
+            } else if (gp.getPlayerView().getScreenX() > gp.getPlayerView().worldX ||
+                    gp.getPlayerView().getScreenY() > gp.getPlayerView().worldY ||
+                    rightOffSet > gp.worldWidth - gp.getPlayerView().worldX ||
+                    bottomOffSet > gp.worldHeight - gp.getPlayerView().worldY) {
                 g2.drawImage(tile[tileNum].image, screenX, screenY, gp.getTileSize(), gp.getTileSize(), null);
             }
 
@@ -120,12 +148,23 @@ public class TileManager {
             }
         }
     }
-
     public String getLoadedMap() {
         return loadedMap;
     }
 
     public void setLoadedMap(String loadedMap) {
         this.loadedMap = loadedMap;
+    }
+
+    // Metode baru untuk mendapatkan jenis tile di posisi pemain
+    public String getTileTypeAtPlayerPosition(int worldX, int worldY) {
+        int tileCol = worldX / gp.getTileSize();
+        int tileRow = worldY / gp.getTileSize();
+
+        if (tileCol >= 0 && tileCol < gp.maxWorldCol && tileRow >= 0 && tileRow < gp.maxWorldRow) {
+            int tileNum = mapTileNum[tileCol][tileRow];
+            return fileNames.get(tileNum); // Mengembalikan nama file tile
+        }
+        return "Unknown"; // Jika di luar batas
     }
 }

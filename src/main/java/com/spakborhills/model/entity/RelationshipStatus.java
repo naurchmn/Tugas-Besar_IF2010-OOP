@@ -1,5 +1,5 @@
 package com.spakborhills.model.entity;
 
 public enum RelationshipStatus {
-    SINGLE, FIANCE ,SPOUSE
+    SINGLE, FIANCE, SPOUSE
 }
