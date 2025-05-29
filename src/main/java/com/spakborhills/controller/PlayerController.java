@@ -1,6 +1,8 @@
 package com.spakborhills.controller;
 
+import java.util.ArrayList;
 import java.util.Scanner;
+import javax.swing.JOptionPane; // tambahkan import di atas file
 
 //import com.spakborhills.model.entity.NPCRegistry;
 import com.spakborhills.model.entity.Player;
@@ -8,24 +10,29 @@ import com.spakborhills.model.entity.PlayerView;
 import com.spakborhills.model.entity.RelationshipStatus;
 import com.spakborhills.model.entity.npc.NPC;
 import com.spakborhills.model.game.GameTime;
+import com.spakborhills.model.game.Season;
+import com.spakborhills.model.game.Weather;
 import com.spakborhills.model.items.Item;
 import com.spakborhills.model.items.behavior.Edible;
 import com.spakborhills.model.items.behavior.Usable;
 import com.spakborhills.model.items.crops.Crops;
 import com.spakborhills.model.items.fish.Fish;
+import com.spakborhills.model.items.fish.FishRegistry;
 import com.spakborhills.model.items.foods.Food;
 import com.spakborhills.model.items.seeds.Seed;
 import com.spakborhills.view.gui.GamePanel;
 import com.spakborhills.view.gui.MainFrame;
 import java.awt.*;
+import java.util.Set;
+import java.util.Random;
 
 public class PlayerController {
 
     private Player player;
     private PlayerView drawPlayer;
-    private static final Scanner sc = new Scanner(System.in);
     GameTime gameTime = GameTime.getInstance();
     private GamePanel gp;
+    private Random rand = new Random();
 
     public PlayerController(Player player, PlayerView drawPlayer, GamePanel gp) {
         this.player = player;
@@ -35,15 +42,15 @@ public class PlayerController {
 
     // General Action
     public void chooseItem(){
-        String itemUse = sc.nextLine();
+        String itemUse = JOptionPane.showInputDialog(null, "Masukkan nama item yang ingin dipilih atau back untuk kembali:", "Pilih Item", JOptionPane.QUESTION_MESSAGE);
 
-        if (itemUse.equals("back")){
-            return;
+        if (itemUse == null || itemUse.equalsIgnoreCase("back")) {
+            return; // User menekan Cancel atau mengetik "back"
         }
 
         Item foundItem = null;
         for (Item item : player.getInventory().getPlayerInventory().keySet()){
-            if (item.getName().equals(itemUse)){
+            if (item.getName().equalsIgnoreCase(itemUse)){
                 foundItem = item;
                 break;
             }
@@ -54,6 +61,18 @@ public class PlayerController {
         else{
             player.setItemHeld((foundItem));
             System.out.println("Item held: " + foundItem.getName());
+        }
+    }
+
+    public boolean rightTool(String toolName){
+        if(player.getItemHeld() == null){
+            return false;
+        }
+        else if(player.getItemHeld().getName().equals("Fishing Rod")){
+            return true;
+        }
+        else{
+            return false;
         }
     }
 
@@ -164,7 +183,67 @@ public class PlayerController {
 
     // WORLD ACTION
     public void fishing(){
-        System.out.println("You are fishing"); // Tetap di konsol untuk debug
+        System.out.println("You are fishing..."); // Tetap di konsol untuk debug
+
+        Season season = gameTime.getSeason();
+        int fishingHour = gameTime.getInGameHours();
+        Weather weather = gameTime.getWeather();
+        int playerRow = drawPlayer.worldY / gp.getTileSize();
+        int playerCol = drawPlayer.worldX / gp.getTileSize();
+        String fishingArea = gp.getPlayerFishingArea(playerRow, playerCol);
+
+        if (fishingArea == null){
+            System.out.println("This is not a fishing area");
+            return;
+        }
+
+//        Set<String> fishes = FishRegistry.getAvailableFishNames();
+        ArrayList<Fish> qualifiedFishList = new ArrayList<>();
+        for (String fishName : FishRegistry.getAvailableFishNames()){
+            Fish fish = FishRegistry.getFishPrototype(fishName);
+            int start = fish.getStartSpawnTime();
+            int end = fish.getEndSpawnTime();
+            boolean timeOk;
+            if (start < end) {
+                timeOk = fishingHour >= start && fishingHour < end;
+            } else {
+                timeOk = fishingHour >= start || fishingHour < end;
+            }
+            if (fish.getSeason().contains(season) && fish.getWeather().contains(weather) && timeOk && fish.getLocation().contains(fishingArea)){
+                qualifiedFishList.add(fish);
+            }
+        }
+
+        System.out.println("Available fish : ");
+        for (Fish fish : qualifiedFishList){
+            System.out.print(fish.getName() + " ");
+        }
+        System.out.println();
+
+        Fish caughtFish = null;
+        if (!qualifiedFishList.isEmpty()) {
+            caughtFish = qualifiedFishList.get(rand.nextInt(qualifiedFishList.size()));
+            System.out.println("Fish on the line : " + caughtFish.getName());
+
+            boolean success = caughtFish.fishingGame(caughtFish.getRarity());
+            if (success){
+                player.getInventory().add(caughtFish, 1);
+                System.out.println("You caught a " + caughtFish.getName() + "!");
+            }
+            else{
+                System.out.println("The fish got away!");
+            }
+        }
+        else {
+            System.out.println("There are no fish here");
+            return;
+        }
+
+        System.out.println("Advance time by: 15 minutes, before: " + gameTime.getInGameHours() + ":" + gameTime.getInGameMinutes());
+        gameTime.advanceGameTime(15);
+        System.out.println("After: " + gameTime.getInGameHours() + ":" + gameTime.getInGameMinutes());
+
+        player.setEnergy(player.getEnergy() - 5);
     }
     public void proposing(NPC npc){
         gameTime.advanceGameTime(60);
