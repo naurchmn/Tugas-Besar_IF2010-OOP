@@ -13,6 +13,12 @@ public class Item {
         this.buyPrice = 0;
     }
 
+    public Item(String name) {
+        this.name = name;
+        this.sellPrice = 0;
+        this.buyPrice = 0;
+    }
+
     public Item(String name, int sellPrice, int buyPrice) {
         this.name = name;
         this.sellPrice = sellPrice;
