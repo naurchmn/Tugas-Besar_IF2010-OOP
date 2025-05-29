@@ -89,3 +89,34 @@ public class FishRegistry {
         registerFish(legend);
     }
 }
+
+    public static void registerFish(Fish prototype) {
+        if (prototype != null && prototype.getName() != null) {
+            fishPrototypes.put(prototype.getName(), prototype);
+        }
+    }
+
+    // Returns a clone to prevent direct modification of the prototype
+    public static Fish getFishPrototype(String name) {
+        Fish prototype = fishPrototypes.get(name);
+        if (prototype != null) {
+            // Assuming Fish class has a clone() method
+            return prototype.clone();
+        }
+        return null;
+    }
+
+    public static Set<String> getAvailableFishNames() {
+        return new HashSet<>(fishPrototypes.keySet());
+    }
+
+    // New method to get the "Any Fish" wildcard item
+    public static Item getAnyFishWildcard() {
+        return ANY_FISH_WILDCARD;
+    }
+
+    // New method to get all registered fish items (useful for iteration, e.g., in Inventory)
+    public static Collection<Fish> getAllFishItems() {
+        return fishPrototypes.values();
+    }
+}

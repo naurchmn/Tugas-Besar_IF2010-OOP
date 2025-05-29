@@ -52,3 +52,4 @@ public class ShippingBin {
     public boolean isFull() {
         return itemsToSell.size() >= MAX_UNIQUE_ITEMS;
     }
+}
