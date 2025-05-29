@@ -2,6 +2,7 @@ package com.spakborhills.model.stores;
 
 import com.spakborhills.model.entity.Player;
 import com.spakborhills.model.items.Item;
+import com.spakborhills.model.items.Inventory; // Import Inventory class
 import com.spakborhills.model.items.crops.Crops;
 import com.spakborhills.model.items.crops.CropsRegistry;
 import com.spakborhills.model.items.recipes.Recipe;
@@ -12,7 +13,7 @@ import com.spakborhills.model.items.seeds.SeedRegistry;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Store { // Renamed from GeneralStore
+public class Store {
     private List<Item> itemsForSale;
     private String storeName;
 
@@ -39,8 +40,7 @@ public class Store { // Renamed from GeneralStore
             }
         }
 
-        // Add specific recipes (recipe_1 and recipe_10)
-        // Note: These are 'Recipe' objects which now extend 'Item', so they can be sold.
+        // Add specific recipes (recipe_1 and recipe_10) as they are purchasable
         Recipe fishChipsRecipe = RecipeRegistry.getRecipePrototype("Fish n' Chips Recipe");
         if (fishChipsRecipe != null) {
             itemsForSale.add(fishChipsRecipe);
@@ -62,6 +62,7 @@ public class Store { // Renamed from GeneralStore
         System.out.println("\n--- " + storeName + " Items for Sale ---");
         for (int i = 0; i < itemsForSale.size(); i++) {
             Item item = itemsForSale.get(i);
+            // Displaying buy price as these are items for sale by the store
             System.out.println((i + 1) + ". " + item.getName() + " (Buy: " + item.getBuyPrice() + "g)");
         }
         System.out.println("---------------------------------");
@@ -103,13 +104,13 @@ public class Store { // Renamed from GeneralStore
                 // If it's a recipe, unlock it for the player
                 if (storeItem instanceof Recipe) {
                     Recipe recipeToUnlock = (Recipe) storeItem;
-                    if (!player.hasRecipeUnlocked(recipeToUnlock.getId())) { // Assumes Player has hasRecipeUnlocked method
-                        player.unlockRecipe(recipeToUnlock.getId()); // Assumes Player has unlockRecipe method
+                    if (!player.hasRecipeUnlocked(recipeToUnlock.getId())) {
+                        player.unlockRecipe(recipeToUnlock.getId());
                     } else {
                         System.out.println(recipeToUnlock.getName() + " is already unlocked.");
                     }
                 } else {
-                    // Add the item to player's inventory
+                    // Add the item to player's inventory (clone to ensure new instance)
                     // It's crucial that all Item subclasses implement clone() properly
                     player.getInventory().addItem(storeItem.clone());
                 }
@@ -120,6 +121,46 @@ public class Store { // Renamed from GeneralStore
             System.out.println("Not enough money to buy " + storeItem.getName() + ".");
             return false;
         }
+    }
+
+    /**
+     * Handles the selling of an item from the player to the store for immediate gold.
+     * Items are sold at their defined sellPrice. Recipes are typically not sold to the store.
+     *
+     * @param player The player attempting to sell the item.
+     * @param itemToSell The item prototype to sell (used for its name and sellPrice).
+     * @param quantity The quantity of the item to sell.
+     * @return true if the sale was successful, false otherwise.
+     */
+    public boolean sellItem(Player player, Item itemToSell, int quantity) {
+        if (itemToSell == null || quantity <= 0) {
+            System.out.println("Invalid item or quantity.");
+            return false;
+        }
+
+        // Check if player has enough of the item in their inventory
+        Inventory playerInventory = player.getInventory();
+        if (playerInventory.getItemQuantity(itemToSell) < quantity) {
+            System.out.println("You don't have " + quantity + " " + itemToSell.getName() + "(s) to sell.");
+            return false;
+        }
+
+        // Recipes are usually consumed/unlocked, not sold back to a general store.
+        if (itemToSell instanceof Recipe) {
+            System.out.println("Recipes cannot be sold to the store.");
+            return false;
+        }
+
+        int totalIncome = itemToSell.getSellPrice() * quantity;
+
+        // Remove item from player's inventory
+        playerInventory.removeItem(itemToSell, quantity);
+
+        // Add money to player's inventory
+        playerInventory.addMoney(totalIncome);
+
+        System.out.println("Successfully sold " + quantity + " " + itemToSell.getName() + "(s) for " + totalIncome + "g.");
+        return true;
     }
 
     public String getStoreName() {
