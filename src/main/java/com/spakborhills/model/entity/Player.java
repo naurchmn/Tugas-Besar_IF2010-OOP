@@ -45,9 +45,13 @@ public class Player {
     }
 
     public void setEnergy(int energy) {
-        this.energy = energy;
+        if (energy > maxEnergy){
+            this.energy = maxEnergy;
+        }
+        else {
+            this.energy = Math.max(energy, -20);
+        }
     }
-
 
     public void setGold(int gold) {
         this.gold = gold;

@@ -1,17 +1,16 @@
 package com.spakborhills.model.items.foods;
 
-import com.spakborhills.model.entity.Player;
 import com.spakborhills.model.items.Item;
 
 public class Food extends Item implements Cloneable{
-    int playerEnergy;
+    int energyGain;
 
     public Food(String name, int buyPrice, int sellPrice) {
         super(name, sellPrice, buyPrice);
     }
-    public Food(String name, int buyPrice, int sellPrice, int playerEnergy) {
+    public Food(String name, int buyPrice, int sellPrice, int energyGain) {
         super(name, sellPrice, buyPrice);
-        this.playerEnergy = playerEnergy;
+        this.energyGain = energyGain;
     }
 
     @Override
@@ -25,7 +24,7 @@ public class Food extends Item implements Cloneable{
         }
     }
 
-    public int getEnergy() { return playerEnergy; }
+    public int getEnergy() { return energyGain; }
 
 
     @Override
