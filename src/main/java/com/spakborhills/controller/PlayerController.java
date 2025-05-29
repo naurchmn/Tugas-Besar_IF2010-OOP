@@ -78,9 +78,77 @@ public class PlayerController {
         player.setEnergy(energy);
         gameTime.advanceGameTime(5);
     }
-    public void cooking(){
+    public void cooking(String recipeName) { 
+        if (!player.isInHouse()) { 
+            System.out.println("You can only cook inside your house!");
+            return;
+        }
 
+       
+        Recipe recipe = RecipeRegistry.getRecipePrototype(recipeName);
+        if (recipe == null) {
+            System.out.println("Recipe '" + recipeName + "' not found.");
+            return;
+        }
+
+        
+        if (!recipe.isUnlocked()) {
+            System.out.println("Recipe '" + recipe.getRecipeName() + "' is not yet unlocked. Unlock condition: " + recipe.getUnlockCondition().getUnlockDescription());
+            return;
+        }
+
+        
+        final int ENERGY_COST_COOKING = 10;
+        if (player.getEnergy() < ENERGY_COST_COOKING) { // Assuming player.getEnergy() exists
+            System.out.println("Not enough energy to start cooking! (-" + ENERGY_COST_COOKING + " energy required)");
+            return;
+        }
+
+        
+        if (!player.getInventory().hasIngredients(recipe.getIngredients())) {
+            System.out.println("Missing ingredients for " + recipe.getRecipeName() + "!");
+            // The hasIngredients method already prints which ingredient is missing.
+            return;
+        }
+
+        
+        Item fuelItem = null;
+        
+        for (Item item : AllGameItems.getAllGameItems()) { 
+            if (item.getName().equals("Fuel")) {
+                fuelItem = item;
+                break;
+            }
+        }
+        if (fuelItem == null) {
+            
+            fuelItem = new Item("Fuel", 1, 1); 
+        }
+
+        
+        if (!player.getInventory().hasItem(fuelItem, recipe.getFuelRequired())) { // Assuming Recipe class also has getFuelRequired()
+            System.out.println("Not enough Fuel to cook " + recipe.getRecipeName() + "! " + recipe.getFuelRequired() + " Fuel required.");
+            return;
+        }
+
+        
+        player.setEnergy(player.getEnergy() - ENERGY_COST_COOKING);
+        System.out.println("Started cooking " + recipe.getRecipeName() + "! (-" + ENERGY_COST_COOKING + " Energy)");
+
+        
+        player.getInventory().removeIngredients(recipe.getIngredients());
+        player.getInventory().removeItem(fuelItem, recipe.getFuelRequired());
+
+        
+        System.out.println("Cooking will be completed in 1 hour (passive action).");
+        gameTime.advanceGameTime(60); 
+
+        
+        player.getInventory().add(recipe.getProduct(), 1); 
+        System.out.println("Finished cooking " + recipe.getRecipeName() + ". " + recipe.getProduct().getName() + " added to inventory!");
     }
+
+
     public void sleeping(int energyLeft, int sleepHour, int sleepMinute){
         if (energyLeft < 0.1 * player.getMaxEnergy()){
             player.setEnergy(player.getMaxEnergy() / 2);
