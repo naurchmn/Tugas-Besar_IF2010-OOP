@@ -243,6 +243,7 @@ public class GamePanel extends  JPanel{
             } else if (currentTileType.equals("146.png") || currentTileType.equals("148.png")) {
                 playerController.harvesting();
             }
+            keyH.setEnterPressed(false);
         }
 
         if (keyH.isSpacePressed()) {
@@ -261,7 +262,7 @@ public class GamePanel extends  JPanel{
                     System.out.println("\n" + item.getName());
                 }
             }
-            keyH.setInventoryPressed(false);
+            keyH.setSpacePressed(false);
         }
 
         // switch map sesuai kebutuhan
