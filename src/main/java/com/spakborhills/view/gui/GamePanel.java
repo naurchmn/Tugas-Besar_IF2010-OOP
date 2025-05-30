@@ -377,6 +377,13 @@ public class GamePanel extends  JPanel{
                 if (player.getItemHeld() == null){
                     playerController.harvesting();
                 }
+            } else if (frontTileType.equals("079.png") || frontTileType.equals("080.png") ||
+                    frontTileType.equals("090.png") ||frontTileType.equals("091.png") ||
+                    frontTileType.equals("102.png") ||frontTileType.equals("103.png") && currentMap.equals("house default")) {
+                playerController.sleeping(player.getEnergy(), gameLoop.getGameTime().getInGameHours(), gameLoop.getGameTime().getInGameMinutes());
+            } else if (frontTileType.equals("082.png") || frontTileType.equals("083.png") ||
+                    frontTileType.equals("093.png") || frontTileType.equals("094.png") && currentMap.equals("house default")) {
+                playerController.watching();
             }
             keyH.setEnterPressed(false);
         }
