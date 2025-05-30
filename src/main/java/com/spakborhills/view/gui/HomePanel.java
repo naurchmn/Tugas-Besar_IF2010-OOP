@@ -42,7 +42,7 @@ public class HomePanel extends JPanel{
 
         //action 4 button home screen
         playButton.addActionListener(e -> mainFrame.switchPanel("login"));
-        helpButton.addActionListener(e -> System.out.println("Help")); //belum implement
+        helpButton.addActionListener(e -> mainFrame.switchPanel("help"));
         creditButton.addActionListener(e -> mainFrame.switchPanel("credit"));
         exitButton.addActionListener(e -> System.exit(0));
     }
