@@ -87,28 +87,22 @@ public class NPCView extends Entity {
 
 
     public boolean isPlayerInInteractionRange(int playerWorldX, int playerWorldY, int tileSize, String playerDirection) {
-        // Hitung koordinat pusat pemain (perkiraan, di tengah tile)
         int playerCenterX = playerWorldX + tileSize / 2;
         int playerCenterY = playerWorldY + tileSize / 2;
 
-        // Tentukan ukuran area deteksi (3x3 tile)
         int detectionAreaSize = tileSize * 3; // 3 tile
 
-        // Hitung sudut kiri atas area deteksi agar pemain berada di tengah
         int detectionAreaX = playerCenterX - detectionAreaSize / 2;
         int detectionAreaY = playerCenterY - detectionAreaSize / 2;
 
-        // Buat Rectangle untuk area deteksi di sekitar pemain
         Rectangle playerDetectionArea = new Rectangle(detectionAreaX, detectionAreaY, detectionAreaSize, detectionAreaSize);
 
-        // Buat Rectangle untuk area solid NPC
         Rectangle npcSolidAreaWorld = new Rectangle(worldX + solidArea.x, worldY + solidArea.y, solidArea.width, solidArea.height);
 
         // Debugging print
-        System.out.println("Player Detection Area: " + playerDetectionArea);
+        // System.out.println("Player Detection Area: " + playerDetectionArea);
         // System.out.println("NPC Solid Area (World): " + npcSolidAreaWorld);
 
-        // Periksa apakah area deteksi pemain berpotongan dengan area solid NPC
         return playerDetectionArea.intersects(npcSolidAreaWorld);
     }
 

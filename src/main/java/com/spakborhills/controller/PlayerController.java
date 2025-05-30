@@ -137,7 +137,12 @@ public class PlayerController {
     }
     public void getOutTheHouse(){
         System.out.println("You get out the house");
-        gp.returnToPreviousMap();
+        if (gp.getCurrentMap().equals("house default")){
+            gp.setCurrentMap("farm");
+            drawPlayer.setDefaultValues(118, 120);
+        } else {
+            gp.returnToPreviousMap();
+        }
     }
     public void eating(Edible food){
         int energy = 0;
@@ -158,7 +163,7 @@ public class PlayerController {
     }
     public void sleeping(int energyLeft, int sleepHour, int sleepMinute){
         gp.showTemporaryPopUp("/assets/PopUps/SleepPopUp.png", 2500, 0);
-        gp.setCurrentMap("house");
+        gp.setCurrentMap("house default");
         drawPlayer.setDefaultValues(117, 119);
 
         if (energyLeft < 0.1 * player.getMaxEnergy()){

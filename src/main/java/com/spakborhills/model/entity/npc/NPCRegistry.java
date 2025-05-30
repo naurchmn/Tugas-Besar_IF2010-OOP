@@ -131,14 +131,6 @@ public class NPCRegistry {
         return npcPrototypes.containsKey(name);
     }
 
-    public static NPC getNPCPrototype(String name) {
-        NPC prototype = npcPrototypes.get(name);
-        if (prototype != null) {
-            return prototype.clone();
-        }
-        return null;
-    }
-
     public static Set<String> getAvailableNPCs() {
         return new HashSet<>(npcPrototypes.keySet());
     }

@@ -31,7 +31,7 @@ public class PlayerView extends Entity{
        solidArea = new Rectangle(12, 18, 18, 27);
 
        if (currentMap.equals("farm")) {
-           setDefaultValues(119, 123);
+           setDefaultValues(118, 120);
        } else if (currentMap.equals("world")) {
            setDefaultValues(216, 151);
        }
@@ -100,7 +100,6 @@ public class PlayerView extends Entity{
             // Dapatkan jenis tile yang sedang diinjak pemain
             currentTileType = gp.tileM.getTileTypeAtPlayerPosition(getWorldX(), getWorldY());
             frontTileType = gp.tileM.getTileTypeInFrontOfPlayer(getWorldX(), getWorldY(), direction);
-//            System.out.println("Player berada di atas tile: " + frontTileType);
 
             spriteCounter++;
             if (!collisionOn){
