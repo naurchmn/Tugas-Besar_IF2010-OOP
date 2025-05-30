@@ -59,7 +59,7 @@ public class PlayerController {
         }
         else{
             player.setItemHeld((foundItem));
-            System.out.println("Item held: " + foundItem.getName());
+            System.out.println("Chosen Item: " + foundItem.getName());
         }
     }
 
@@ -219,6 +219,10 @@ public class PlayerController {
         }
         player.setEnergy(player.getEnergy() + energy);
         gameTime.advanceGameTime(5);
+        player.getInventory().use((Item) food, 1);
+        if (!player.getInventory().getPlayerInventory().containsKey(food)){
+            player.setItemHeld(null);
+        }
     }
     public void cooking(){
 
@@ -269,7 +273,7 @@ public class PlayerController {
 
     // WORLD ACTION
     public void fishing(){
-        System.out.println("You are fishing..."); // Tetap di konsol untuk debug
+        System.out.println("You are trying to fish..."); // Tetap di konsol untuk debug
 
         Season season = gameTime.getSeason();
         int fishingHour = gameTime.getInGameHours();

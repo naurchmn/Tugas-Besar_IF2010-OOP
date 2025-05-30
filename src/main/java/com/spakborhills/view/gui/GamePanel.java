@@ -251,7 +251,7 @@ public class GamePanel extends  JPanel{
             // Print hanya saat inventory baru dibuka
             if (!wasInventoryOpened) {
                 try {
-                    System.out.println("Item held : " + player.getItemHeld().getName());
+                    System.out.println("Holding Item : " + player.getItemHeld().getName());
                 } catch (NullPointerException _) {
                     System.out.println("Not holding any item");
                 }
@@ -366,7 +366,7 @@ public class GamePanel extends  JPanel{
                             playerController.tilling();
                         }
                     }
-                } else if (frontTileType.equals("006.png") && player.energySufficient(5)) {
+                } else if (frontTileType.equals("006.png")) {
                     if (playerController.rightTool("Fishing Rod")) {
                         playerController.fishing();
                         gameLoop.getGameTime().setStartTime(System.nanoTime());
@@ -381,9 +381,16 @@ public class GamePanel extends  JPanel{
                     if (player.getItemHeld() == null) {
                         playerController.harvesting();
                     }
+                } else if (frontTileType.equals("079.png") || frontTileType.equals("080.png") ||
+                        frontTileType.equals("090.png") ||frontTileType.equals("091.png") ||
+                        frontTileType.equals("102.png") ||frontTileType.equals("103.png") && currentMap.equals("house default")) {
+                    playerController.sleeping(player.getEnergy(), gameLoop.getGameTime().getInGameHours(), gameLoop.getGameTime().getInGameMinutes());
+                } else if (frontTileType.equals("082.png") || frontTileType.equals("083.png") ||
+                        frontTileType.equals("093.png") || frontTileType.equals("094.png") && currentMap.equals("house default")) {
+                    playerController.watching();
                 }
-                keyH.setEnterPressed(false);
             }
+            keyH.setEnterPressed(false);
         }
         if (keyH.isSpacePressed()) {
             if (currentMap.equals("farm")) {
