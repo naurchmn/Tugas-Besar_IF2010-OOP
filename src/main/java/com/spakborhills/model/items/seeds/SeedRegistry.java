@@ -39,10 +39,10 @@ public class SeedRegistry {
 
             // WHEAT
             Seed wheatFile = seedPrototypes.get("Wheat Seeds");
-            Seed wheatSpring = new Seed("Wheat Seeds", wheatFile.getBuyPrice(), Season.SPRING, 1);
+            Seed wheatSpring = new Seed("Spring Wheat Seeds", wheatFile.getBuyPrice(), Season.SPRING, 1);
             registerSeed(wheatSpring);
 
-            Seed wheatFall = new Seed("Wheat Seeds", wheatFile.getBuyPrice(), Season.FALL, 1);
+            Seed wheatFall = new Seed("Fall Wheat Seeds", wheatFile.getBuyPrice(), Season.FALL, 1);
             registerSeed(wheatFall);
 
             // BLUEBERRY

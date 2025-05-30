@@ -11,6 +11,10 @@ public class Inventory {
     }
 
     public void add(Item item, int quantity) {
+        if (item == null) {
+            System.out.println("Cannot add null item to inventory!");
+            return;
+        }
         playerInventory.put(item, playerInventory.getOrDefault(item, 0) + quantity);
     }
 
