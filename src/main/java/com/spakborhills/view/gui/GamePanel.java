@@ -7,6 +7,7 @@ import com.spakborhills.model.entity.Player;
 import com.spakborhills.model.entity.PlayerView;
 import com.spakborhills.model.game.PlantManager;
 import com.spakborhills.model.items.Item;
+import com.spakborhills.model.items.behavior.Edible;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,7 +45,7 @@ public class GamePanel extends  JPanel{
     private Entity npc[];
     private GameLoop gameLoop;
     private KeyHandler keyH = new KeyHandler();
-    private PlantManager plantManager = new PlantManager();
+    private PlantManager plantManager = new PlantManager(this);
     private String currentMap = "farm";
     private String currentTileType;
     private String frontTileType;
@@ -177,7 +178,9 @@ public class GamePanel extends  JPanel{
             if (!wasInventoryOpened) {
                 try {
                     System.out.println("Item held : " + player.getItemHeld().getName());
-                } catch (NullPointerException _) {}
+                } catch (NullPointerException _) {
+                    System.out.println("Not holding any item");
+                }
 
                 if (player.getInventory().getPlayerInventory().isEmpty()) {
                     System.out.println("Inventory empty:(");
@@ -237,7 +240,10 @@ public class GamePanel extends  JPanel{
 
         if (keyH.isEnterPressed()) {
             if (currentTileType != null) {
-                if (currentTileType.equals("046.png") || currentTileType.equals("047.png") ||
+                if (playerController.holdingEdible()){
+                   playerController.eating((Edible) player.getItemHeld());
+                }
+                else if (currentTileType.equals("046.png") || currentTileType.equals("047.png") ||
                         currentTileType.equals("039.png") || currentTileType.equals("040.png")) {
                     System.out.println("Got in the house");
                     playerController.getInTheHouse();

@@ -3,6 +3,10 @@ package com.spakborhills.model.entity;
 //import com.spakborhills.model.entity.npc.NPCRegistry;
 import com.spakborhills.model.items.Inventory;
 import com.spakborhills.model.items.Item;
+import com.spakborhills.model.items.fish.FishRegistry;
+import com.spakborhills.model.items.foods.FoodRegistry;
+import com.spakborhills.model.items.seeds.Seed;
+import com.spakborhills.model.items.seeds.SeedRegistry;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +36,9 @@ public class Player {
         inventory.add(new Item("Watering Can"), 1);
         inventory.add(new Item("Pickaxe"), 1);
         inventory.add(new Item("Fishing Rod"), 1);
+        inventory.add(SeedRegistry.getSeedPrototype("Wheat Seeds Spring"), 2);
+        inventory.add(FoodRegistry.getFoodPrototype("Fish n' Chips"), 2);
+        inventory.add(FishRegistry.getFishPrototype("Carp"), 2);
     }
 
     public boolean energySufficient(int energyCost){

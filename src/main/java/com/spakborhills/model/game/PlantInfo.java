@@ -29,8 +29,8 @@ public class PlantInfo {
         return growthTime;
     }
 
-    public void setGrowthTime(int growthTime) {
-        this.growthTime = growthTime;
+    public void reduceGrowthTime() {
+        growthTime -= 1;
     }
 
     public boolean isWatered() {
