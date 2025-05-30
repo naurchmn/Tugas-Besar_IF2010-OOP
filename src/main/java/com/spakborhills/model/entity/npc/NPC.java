@@ -98,7 +98,12 @@ public class NPC implements Cloneable {
 
     // setters
     public void setHeartPoints(int heartPoints) {
-        this.heartPoints = heartPoints;
+        if (heartPoints > maxHeartPoints) {
+            this.heartPoints = maxHeartPoints;
+        }
+        else {
+            this.heartPoints = Math.max(heartPoints, 0);
+        }
     }
     public void setRelationshipStatus(RelationshipStatus relationshipStatus) {
         this.relationshipStatus = relationshipStatus;

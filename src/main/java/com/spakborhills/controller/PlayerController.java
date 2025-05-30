@@ -1,41 +1,56 @@
 package com.spakborhills.controller;
 
+import java.util.ArrayList;
 import java.util.Scanner;
+import javax.swing.JOptionPane; // tambahkan import di atas file
 
 //import com.spakborhills.model.entity.NPCRegistry;
 import com.spakborhills.model.entity.Player;
 import com.spakborhills.model.entity.PlayerView;
+import com.spakborhills.model.entity.RelationshipStatus;
+import com.spakborhills.model.entity.npc.NPC;
 import com.spakborhills.model.game.GameTime;
+import com.spakborhills.model.game.Season;
+import com.spakborhills.model.game.Weather;
 import com.spakborhills.model.items.Item;
 import com.spakborhills.model.items.behavior.Edible;
 import com.spakborhills.model.items.behavior.Usable;
+import com.spakborhills.model.items.crops.Crops;
+import com.spakborhills.model.items.fish.Fish;
+import com.spakborhills.model.items.fish.FishRegistry;
 import com.spakborhills.model.items.foods.Food;
 import com.spakborhills.model.items.seeds.Seed;
 import com.spakborhills.view.gui.GamePanel;
 import com.spakborhills.view.gui.MainFrame;
+import java.awt.*;
+import java.util.Set;
+import java.util.Random;
 
 public class PlayerController {
 
     private Player player;
     private PlayerView drawPlayer;
+    GameTime gameTime = GameTime.getInstance();
+    private GamePanel gp;
+    private Random rand = new Random();
 
-    public PlayerController(Player player, PlayerView drawPlayer) {
+    public PlayerController(Player player, PlayerView drawPlayer, GamePanel gp) {
         this.player = player;
         this.drawPlayer = drawPlayer;
+        this.gp = gp;
     }
 
     // General Action
     public void chooseItem(){
-        Scanner sc = new Scanner(System.in);
-        String itemUse = sc.nextLine();
-        
-        if (itemUse.equals("back")){
-            return;
+        String itemUse = JOptionPane.showInputDialog(null, "Masukkan nama item yang ingin dipilih atau back untuk kembali:", "Pilih Item", JOptionPane.QUESTION_MESSAGE);
+
+        if (itemUse == null || itemUse.equalsIgnoreCase("back")) {
+            return; // User menekan Cancel atau mengetik "back"
         }
 
         Item foundItem = null;
-        for (Item item : player.getInventory().keySet()){
-            if (item.getName().equals(itemUse)){
+        for (Item item : player.getInventory().getPlayerInventory().keySet()){
+            if (item.getName().equalsIgnoreCase(itemUse)){
                 foundItem = item;
                 break;
             }
@@ -49,28 +64,105 @@ public class PlayerController {
         }
     }
 
+    public boolean rightTool(String toolName){
+        if(player.getItemHeld() == null){
+            return false;
+        }
+        else if(player.getItemHeld().getName().equals("Fishing Rod")){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
     // FARM ACTION
     public void tilling(){
-        System.out.println("Do you want to do tilling?");
+        String currentTileType = drawPlayer.getCurrentTileType(); // Mengambil tile yang sedang diinjak player
+        int playerTileCol = drawPlayer.getWorldX() / gp.getTileSize();
+        int playerTileRow = drawPlayer.getWorldY() / gp.getTileSize();
+
+        if (currentTileType.equals("000.png")) { // Tilling dilakukan hanya jika player berada di atas tile 000.png
+            // Tile diubah menjadi 004.png setelah tilling
+            gp.tileM.changeTile(playerTileCol, playerTileRow, "004.png");
+        } else {
+            System.out.println("You cannot do tilling here"); // Jika tidak berada di atas tile 000.png maka olayer tidak dapat melakukan tilling
+        }
     }
-    public void recoverLand(){}
-    public void planting(){}
-    public void watering(){}
-    public void harvesting(){}
+
+    public void recoverLand(){
+        String currentTileType = drawPlayer.getCurrentTileType(); // Mengambil tile yang sedang diinjak oleh player
+        int playerTileCol = drawPlayer.getWorldX() / gp.getTileSize();
+        int playerTileRow = drawPlayer.getWorldY() / gp.getTileSize();
+
+        gp.tileM.changeTile(playerTileCol, playerTileRow, "000.png");
+    }
+
+    public void planting(){
+        String currentTileType = drawPlayer.getCurrentTileType(); // Mengambil tile yang sedang diinjak oleh player
+        int playerTileCol = drawPlayer.getWorldX() / gp.getTileSize();
+        int playerTileRow = drawPlayer.getWorldY() / gp.getTileSize();
+
+        if (currentTileType.equals("004.png")) { // Kalau sekarang tilenya 004.png
+            gp.tileM.changeTile(playerTileCol, playerTileRow, "148.png");
+        } else if (currentTileType.equals("147.png")) { // Kalau sekarang tilenya 147.png
+            gp.tileM.changeTile(playerTileCol, playerTileRow, "146.png");
+        } else {
+            System.out.println("Cannot till this tile: " + currentTileType);
+        }
+    }
+
+    public void watering(){
+        String currentTileType = drawPlayer.getCurrentTileType(); // Mengambil tile yang sedang diinjak oleh player
+        int playerTileCol = drawPlayer.getWorldX() / gp.getTileSize();
+        int playerTileRow = drawPlayer.getWorldY() / gp.getTileSize();
+
+        if (currentTileType.equals("004.png")) {
+            gp.tileM.changeTile(playerTileCol, playerTileRow, "147.png");
+        } else if (currentTileType.equals("148.png")) {
+            gp.tileM.changeTile(playerTileCol, playerTileRow, "146.png");
+        }
+    }
+
+    public void harvesting(){
+        String currentTileType = drawPlayer.getCurrentTileType(); // Mengambil tile yang sedang diinjak oleh player
+        int playerTileCol = drawPlayer.getWorldX() / gp.getTileSize();
+        int playerTileRow = drawPlayer.getWorldY() / gp.getTileSize();
+
+        this.recoverLand();
+        gp.showTemporaryPopUp("/assets/PopUps/HarvestPopUp.png", 2500);
+    }
 
     // AT HOUSE ACTION
-    public void eating(Item food){}
-    public void cooking(){}
+    public void eating(Edible food){
+        int energy = 0;
+        if (food instanceof Food){
+            energy = ((Food)food).getEnergy();
+        }
+        else if (food instanceof Crops){
+            energy = 3;
+        }
+        else if (food instanceof Fish){
+            energy = 1;
+        }
+        player.setEnergy(energy);
+        gameTime.advanceGameTime(5);
+    }
+    public void cooking(){
+
+    }
     public void sleeping(int energyLeft, int sleepHour, int sleepMinute){
-        GameTime gameTime = GameTime.getInstance();
         if (energyLeft < 0.1 * player.getMaxEnergy()){
-            player.setEnergy(player.getEnergy() / 2);
+            player.setEnergy(player.getMaxEnergy() / 2);
+            System.out.println("Anda terbangun dalam keadaan lelah");
         }
         else if (energyLeft == 0){
             player.setEnergy(10);
+            System.out.println("Anda terbangun tanpa tenaga");
         }
         else {
             player.setEnergy(player.getMaxEnergy());
+            System.out.println("SEMANGAT PAGI! PAGI PAGI PAGI LUAR BIASA!");
         }
         if ((sleepHour > -1 && sleepHour < 3)){
             int hourTo2 = 5 - sleepHour;
@@ -84,18 +176,122 @@ public class PlayerController {
         }
     }
     public void watching(){
-        GameTime gameTime = GameTime.getInstance();
+        gameTime.advanceGameTime(15);
+        player.setEnergy(player.getEnergy() - 5);
         System.out.println("Today's weather is : " + gameTime.getWeather());
     }
 
     // WORLD ACTION
-    public void fishing(){}
-//    public void proposing(NPCRegistry npc){}
-    public void marrying(){}
+    public void fishing(){
+        System.out.println("You are fishing..."); // Tetap di konsol untuk debug
+
+        Season season = gameTime.getSeason();
+        int fishingHour = gameTime.getInGameHours();
+        Weather weather = gameTime.getWeather();
+        int playerRow = drawPlayer.worldY / gp.getTileSize();
+        int playerCol = drawPlayer.worldX / gp.getTileSize();
+        String fishingArea = gp.getPlayerFishingArea(playerRow, playerCol);
+
+        if (fishingArea == null){
+            System.out.println("This is not a fishing area");
+            return;
+        }
+
+//        Set<String> fishes = FishRegistry.getAvailableFishNames();
+        ArrayList<Fish> qualifiedFishList = new ArrayList<>();
+        for (String fishName : FishRegistry.getAvailableFishNames()){
+            Fish fish = FishRegistry.getFishPrototype(fishName);
+            int start = fish.getStartSpawnTime();
+            int end = fish.getEndSpawnTime();
+            boolean timeOk;
+            if (start < end) {
+                timeOk = fishingHour >= start && fishingHour < end;
+            } else {
+                timeOk = fishingHour >= start || fishingHour < end;
+            }
+            if (fish.getSeason().contains(season) && fish.getWeather().contains(weather) && timeOk && fish.getLocation().contains(fishingArea)){
+                qualifiedFishList.add(fish);
+            }
+        }
+
+        System.out.println("Available fish : ");
+        for (Fish fish : qualifiedFishList){
+            System.out.print(fish.getName() + " ");
+        }
+        System.out.println();
+
+        Fish caughtFish = null;
+        if (!qualifiedFishList.isEmpty()) {
+            caughtFish = qualifiedFishList.get(rand.nextInt(qualifiedFishList.size()));
+            System.out.println("Fish on the line : " + caughtFish.getName());
+
+            boolean success = caughtFish.fishingGame(caughtFish.getRarity());
+            if (success){
+                player.getInventory().add(caughtFish, 1);
+                System.out.println("You caught a " + caughtFish.getName() + "!");
+            }
+            else{
+                System.out.println("The fish got away!");
+            }
+        }
+        else {
+            System.out.println("There are no fish here");
+            return;
+        }
+
+        System.out.println("Advance time by: 15 minutes, before: " + gameTime.getInGameHours() + ":" + gameTime.getInGameMinutes());
+        gameTime.advanceGameTime(15);
+        System.out.println("After: " + gameTime.getInGameHours() + ":" + gameTime.getInGameMinutes());
+
+        player.setEnergy(player.getEnergy() - 5);
+    }
+    public void proposing(NPC npc){
+        gameTime.advanceGameTime(60);
+        if (npc.getHeartPoints() == NPC.getMaxHeartPoints()){
+            System.out.println("Aku mau mas");
+            npc.setRelationshipStatus(RelationshipStatus.FIANCE);
+            player.setEnergy(player.getEnergy() - 10);
+        }
+        else{
+            System.out.println("Maaf aku belum siap");
+            player.setEnergy(player.getEnergy() - 20);
+        }
+    }
+    public void marrying(NPC npc){
+    }
     public void visiting(){
         System.out.println("Do you want to do visiting?");
     }
-    public void gifting(){}
+    public void getInTheHouse(){
+        System.out.println("You get in the house");
+        gp.setCurrentMap("house");
+    }
+    public void getOutTheHouse(){
+        System.out.println("You get out the house");
+        gp.returnToPreviousMap();
+    }
+    public void gifting(NPC npc, Item item){ //PLayerController.gifting(NPCRegistry.getNPCPrototype("Dasco")
+        int heartPoints;
+        if (npc.getLovedItems().contains(item)){
+            heartPoints = 25;
+            System.out.println("Ih makasih banget lohh aku suka deh!");
+        }
+        else if (npc.getLikedItems().contains(item)){
+            heartPoints = 20;
+            System.out.println("Wow terima kasih!");
+        }
+        else if (npc.getHatedItems().contains(item)){
+            heartPoints = -25;
+            System.out.println("Maksud lu apa?!");
+        }
+        else {
+            heartPoints = 0;
+            System.out.println("Terima kasih ya");
+        }
+        npc.setHeartPoints(npc.getHeartPoints() + heartPoints);
+        gameTime.advanceGameTime(10);
+        player.setEnergy(player.getEnergy() - 5);
+    }
     public void selling(){}
 
     // getter setter

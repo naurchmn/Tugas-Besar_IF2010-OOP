@@ -30,6 +30,8 @@ public class GameTime {
 
 
     private GameTime() {
+        randomizeRainyDay();
+        changeWeather();
         totalGameMinutes = 0; //testing purpose
         startTime = 0;
         inGameMinutes = 0;
@@ -71,6 +73,7 @@ public class GameTime {
         g2.setFont(new Font("Comic Sans", Font.PLAIN, 30));
         g2.drawString(season.seasonToString(inGameSeason) + ", " + inGameDays, 400, 30);
         g2.drawString(inGameHours + ":" + inGameMinutes, 500, 60);
+        g2.drawString(weather.toString(), 480, 90);
     }
 
     public void advanceGameTime(int gameMinutes){
@@ -108,7 +111,7 @@ public class GameTime {
         int secondRainyDay;
         do{
             secondRainyDay = random.nextInt(10) + 1;
-        } while(rainyDays.getFirst() == secondRainyDay);
+        } while(rainyDays.get(0) == secondRainyDay);
         rainyDays.add(secondRainyDay);
         Collections.sort(rainyDays);
 
@@ -136,6 +139,18 @@ public class GameTime {
 
     public int getTotalGameMinutes() {
         return totalGameMinutes;
+    }
+
+    public int getInGameHours(){
+        return inGameHours;
+    }
+
+    public int getInGameMinutes() {
+        return inGameMinutes;
+    }
+
+    public Season getSeason() {
+        return season;
     }
 
     public void startNewDay(int minuteTo2){

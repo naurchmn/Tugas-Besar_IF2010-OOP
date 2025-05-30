@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
 
-    boolean upPressed, downPressed, leftPressed, rightPressed, mapPressed, inventoryPressed;
+    boolean upPressed, downPressed, leftPressed, rightPressed, enterPressed, spacePressed, inventoryPressed;
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -29,8 +29,11 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_D, KeyEvent.VK_RIGHT:
                 rightPressed = true;
                 break;
-            case KeyEvent.VK_M:
-                mapPressed = true;
+            case KeyEvent.VK_ENTER:
+                enterPressed = true;
+                break;
+            case KeyEvent.VK_SPACE :
+                spacePressed = true;
                 break;
         }
     }
@@ -64,12 +67,15 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_RIGHT:
                 rightPressed = false;
                 break;
-            case KeyEvent.VK_M:
-                mapPressed = false;
+            case KeyEvent.VK_ENTER:
+                enterPressed = false;
+                break;
+            case KeyEvent.VK_SPACE :
+                spacePressed = false;
                 break;
             case KeyEvent.VK_I:
                 inventoryPressed = !inventoryPressed;
-                break;            
+                break;
         }
     }
 
@@ -85,7 +91,8 @@ public class KeyHandler implements KeyListener {
     public boolean isRightPressed() {
         return rightPressed;
     }
-    public boolean isMapPressed() {return mapPressed;}
+    public boolean isEnterPressed() {return enterPressed;}
+    public boolean isSpacePressed() {return spacePressed;}
     public boolean isInventoryPressed() {return inventoryPressed;}
     public void setInventoryPressed(boolean inventoryPressed) {this.inventoryPressed = inventoryPressed;}
 
