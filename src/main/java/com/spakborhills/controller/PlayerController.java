@@ -9,9 +9,7 @@ import com.spakborhills.model.entity.Player;
 import com.spakborhills.model.entity.PlayerView;
 import com.spakborhills.model.entity.RelationshipStatus;
 import com.spakborhills.model.entity.npc.NPC;
-import com.spakborhills.model.game.GameTime;
-import com.spakborhills.model.game.Weather;
-import com.spakborhills.model.game.Season;
+import com.spakborhills.model.game.*;
 import com.spakborhills.model.items.Item;
 import com.spakborhills.model.items.behavior.Edible;
 import com.spakborhills.model.items.behavior.Usable;
@@ -68,12 +66,7 @@ public class PlayerController {
         if(player.getItemHeld() == null){
             return false;
         }
-        else if(player.getItemHeld().getName().equals("Fishing Rod")){
-            return true;
-        }
-        else{
-            return false;
-        }
+        else return player.getItemHeld().getName().equals(toolName);
     }
 
     // FARM ACTION
@@ -109,6 +102,8 @@ public class PlayerController {
             gp.tileM.changeTile(playerTileCol, playerTileRow, "148.png");
         } else if (currentTileType.equals("147.png")) { // Kalau sekarang tilenya 147.png
             gp.tileM.changeTile(playerTileCol, playerTileRow, "146.png");
+        } else {
+            System.out.println("Cannot till this tile: " + currentTileType);
         }
     }
 
@@ -245,9 +240,9 @@ public class PlayerController {
             caughtFish = qualifiedFishList.get(rand.nextInt(qualifiedFishList.size()));
             System.out.println("Fish on the line : " + caughtFish.getName());
 
-            boolean success = caughtFish.fishingGame(caughtFish.getRarity());
+            boolean success = caughtFish.fishingGame();
             if (success){
-                player.getInventory().add(caughtFish, 1);
+                player.getInventory().add(caughtFish.clone(), 1);
                 System.out.println("You caught a " + caughtFish.getName() + "!");
             }
             else{

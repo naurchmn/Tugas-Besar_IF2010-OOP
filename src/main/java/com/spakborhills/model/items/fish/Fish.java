@@ -87,9 +87,9 @@ public class Fish extends Item implements Cloneable {
         this.sellPrice = calc;
     }
 
-    public boolean fishingGame(Rarity rarity) {
+    public boolean fishingGame() {
         int luckyNumber, maxAttempt = 10, bound = 10;
-        switch (rarity) {
+        switch (this.rarity) {
             case COMMON:
                 luckyNumber = random.nextInt(1, 10);
             break;
@@ -106,9 +106,17 @@ public class Fish extends Item implements Cloneable {
                 luckyNumber = 0;
         }
         System.out.println("Lucky number: " + luckyNumber);
-        for (int i = 0 ; i < maxAttempt ; i++){
-            int guess = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter your guess (1-" + bound + "): ", "Fishing Game", JOptionPane.QUESTION_MESSAGE));
-            if (guess == luckyNumber){
+        for (int i = 0 ; i < maxAttempt ; i++) {
+            String guess = JOptionPane.showInputDialog(null, "Enter your guess (1-" + bound + "): ", "Fishing Game", JOptionPane.QUESTION_MESSAGE);
+            int guessInt;
+            try {
+                guessInt = Integer.parseInt(guess);
+            } catch (NumberFormatException e) {
+                System.out.println("Guess must be an integer inside range");
+                return false;
+            }
+
+            if (guessInt == luckyNumber) {
                 return true;
             }
         }
@@ -132,6 +140,19 @@ public class Fish extends Item implements Cloneable {
 
     public List<String> getLocation() {
         return location;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Fish fish = (Fish) o;
+        return Objects.equals(name, fish.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }
 

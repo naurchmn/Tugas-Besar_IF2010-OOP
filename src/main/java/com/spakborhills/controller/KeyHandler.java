@@ -95,6 +95,8 @@ public class KeyHandler implements KeyListener {
     public boolean isSpacePressed() {return spacePressed;}
     public boolean isInventoryPressed() {return inventoryPressed;}
     public void setInventoryPressed(boolean inventoryPressed) {this.inventoryPressed = inventoryPressed;}
+    public void setEnterPressed(boolean enterPressed) {this.enterPressed = enterPressed;}
+    public void setSpacePressed(boolean spacePressed) {this.spacePressed = spacePressed;}
 
     public void resetKeys(){
         upPressed = false;

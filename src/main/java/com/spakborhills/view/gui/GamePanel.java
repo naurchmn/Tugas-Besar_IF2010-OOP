@@ -241,11 +241,6 @@ public class GamePanel extends  JPanel{
         if (keyH.isInventoryPressed()){
             inventoryOpened = !inventoryOpened;
             keyH.setInventoryPressed(false);
-
-            if(wasInventoryOpened && !inventoryOpened){
-                gameLoop.getGameTime().setStartTime(System.nanoTime());
-                System.out.println("Game continued");
-            }
         }
 
         if (inventoryOpened) {
@@ -260,6 +255,10 @@ public class GamePanel extends  JPanel{
                         System.out.println(entry.getKey().getName() + ": " + entry.getValue());
                     }
                     playerController.chooseItem();
+                    // Setelah chooseItem selesai, langsung lanjutkan game
+                    inventoryOpened = false;
+                    gameLoop.getGameTime().setStartTime(System.nanoTime());
+                    System.out.println("Game continued");
                 }
             }
             return;
@@ -300,7 +299,7 @@ public class GamePanel extends  JPanel{
                 (playerView.getWorldY() > 149 * tileSize && playerView.getWorldY() < 153 * tileSize) &&
                 currentMap.equals("world")){
             currentMap = "farm";
-            System.out.println("Playerriu ke " + currentMap);
+            System.out.println("Player pindah ke " + currentMap);
             positionSetByReturn = false;
 
             if ((!(oldMap.split(" ")[0]).equals("house"))) { // Jika peta sebelumnya bukan house
@@ -351,6 +350,7 @@ public class GamePanel extends  JPanel{
             } else if (frontTileType.equals("006.png") && player.energySufficient(5)) {
                 if (playerController.rightTool("Fishing Rod")){
                     playerController.fishing();
+                    gameLoop.getGameTime().setStartTime(System.nanoTime());
                 }
             } else if (currentTileType.equals("004.png") || currentTileType.equals("147.png")) {
                 playerController.planting();
@@ -364,6 +364,7 @@ public class GamePanel extends  JPanel{
                     frontTileType.equals("101.png") || frontTileType.equals("102.png")) && currentMap.equals("house")) {
                 playerController.sleeping(1, 1, 1);
             }
+            keyH.setEnterPressed(false);
         }
 
         if (keyH.isSpacePressed()) {
@@ -403,7 +404,7 @@ public class GamePanel extends  JPanel{
                     System.out.println("\n" + item.getName());
                 }
             }
-            keyH.setInventoryPressed(false);
+            keyH.setSpacePressed(false);
         }
 
         // switch map sesuai kebutuhan
