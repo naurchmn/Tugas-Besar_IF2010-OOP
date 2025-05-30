@@ -1,7 +1,7 @@
 package com.spakborhills.controller;
 
+import java.awt.*;
 import java.util.ArrayList;
-import java.util.Scanner;
 import javax.swing.JOptionPane; // tambahkan import di atas file
 
 //import com.spakborhills.model.entity.NPCRegistry;
@@ -12,16 +12,13 @@ import com.spakborhills.model.entity.npc.NPC;
 import com.spakborhills.model.game.*;
 import com.spakborhills.model.items.Item;
 import com.spakborhills.model.items.behavior.Edible;
-import com.spakborhills.model.items.behavior.Usable;
 import com.spakborhills.model.items.crops.Crops;
+import com.spakborhills.model.items.crops.CropsRegistry;
 import com.spakborhills.model.items.fish.Fish;
 import com.spakborhills.model.items.fish.FishRegistry;
 import com.spakborhills.model.items.foods.Food;
 import com.spakborhills.model.items.seeds.Seed;
 import com.spakborhills.view.gui.GamePanel;
-import com.spakborhills.view.gui.MainFrame;
-import java.awt.*;
-import java.util.Set;
 import java.util.Random;
 
 public class PlayerController {
@@ -40,10 +37,14 @@ public class PlayerController {
 
     // General Action
     public void chooseItem(){
-        String itemUse = JOptionPane.showInputDialog(null, "Masukkan nama item yang ingin dipilih atau back untuk kembali:", "Pilih Item", JOptionPane.QUESTION_MESSAGE);
+        String itemUse = JOptionPane.showInputDialog(null, "Masukkan nama item yang ingin dipilih/back untuk kembali/lepas untuk tangan kosong:", "Pilih Item", JOptionPane.QUESTION_MESSAGE);
 
         if (itemUse == null || itemUse.equalsIgnoreCase("back")) {
             return; // User menekan Cancel atau mengetik "back"
+        }
+        else if (itemUse.equalsIgnoreCase("lepas")) {
+            player.setItemHeld(null);
+            return;
         }
 
         Item foundItem = null;
@@ -69,6 +70,21 @@ public class PlayerController {
         else return player.getItemHeld().getName().equals(toolName);
     }
 
+    public boolean holdingSeed(){
+        return player.getItemHeld() instanceof Seed;
+    }
+
+    public void farmingAction(){
+        player.setEnergy(player.getEnergy() - 5);
+        gameTime.advanceGameTime(5);
+    }
+
+    public void lepasItem(Item item){
+        if (!player.getInventory().contains(item)){
+            player.setItemHeld(null);
+        }
+    }
+
     // FARM ACTION
     public void tilling(){
         if (gp.getCurrentMap().equals("farm")) {
@@ -79,6 +95,7 @@ public class PlayerController {
             if (currentTileType.equals("000.png")) { // Tilling dilakukan hanya jika player berada di atas tile 000.png
                 // Tile diubah menjadi 004.png setelah tilling
                 gp.tileM.changeTile(playerTileCol, playerTileRow, "004.png");
+                farmingAction();
             } else {
                 System.out.println("You cannot do tilling here"); // Jika tidak berada di atas tile 000.png maka olayer tidak dapat melakukan tilling
             }
@@ -91,19 +108,46 @@ public class PlayerController {
         int playerTileRow = (drawPlayer.getWorldY() + gp.getTileSize() / 2) / gp.getTileSize();
 
         gp.tileM.changeTile(playerTileCol, playerTileRow, "000.png");
+        farmingAction();
     }
 
-    public void planting(){
-        String currentTileType = drawPlayer.getCurrentTileType(); // Mengambil tile yang sedang diinjak oleh player
-        int playerTileCol = (drawPlayer.getWorldX() + gp.getTileSize() / 2) / gp.getTileSize();
-        int playerTileRow = (drawPlayer.getWorldY() + gp.getTileSize() / 2) / gp.getTileSize();
+    public void planting() {
+        Seed seed = (Seed) player.getItemHeld();
+        if (seed.getSeason().equals(gameTime.getSeason())) {
+            String cropName = seed.getName().split(" ")[0];
+            String currentTileType = drawPlayer.getCurrentTileType(); // Mengambil tile yang sedang diinjak oleh player
+            int playerTileCol = (drawPlayer.getWorldX() + gp.getTileSize() / 2) / gp.getTileSize();
+            int playerTileRow = (drawPlayer.getWorldY() + gp.getTileSize() / 2) / gp.getTileSize();
 
-        if (currentTileType.equals("004.png")) { // Kalau sekarang tilenya 004.png
-            gp.tileM.changeTile(playerTileCol, playerTileRow, "148.png");
-        } else if (currentTileType.equals("147.png")) { // Kalau sekarang tilenya 147.png
-            gp.tileM.changeTile(playerTileCol, playerTileRow, "146.png");
-        } else {
-            System.out.println("Cannot till this tile: " + currentTileType);
+
+            if (currentTileType.equals("004.png")) { // Kalau sekarang tilenya 004.png (kering)
+                //tambahkan ke plant manager
+                PlantInfo plant = new PlantInfo(playerTileCol, playerTileRow, cropName, seed.getDaysToHarvest(), false, true);
+                gp.getPlantManager().setPlant(plant.getSoilLocation(), plant);
+
+                //ubah gambar tile
+                gp.tileM.changeTile(playerTileCol, playerTileRow, "148.png");
+                farmingAction();
+                player.getInventory().use(seed, 1);
+                lepasItem(seed);
+
+            } else if (currentTileType.equals("147.png")) { // Kalau sekarang tilenya 147.png (basah)
+                //tambahkan ke plant manager
+                PlantInfo plant = new PlantInfo(playerTileCol, playerTileRow, cropName, seed.getDaysToHarvest(), true, false);
+                gp.getPlantManager().setPlant(plant.getSoilLocation(), plant);
+
+                //ubah gambar tile
+                gp.tileM.changeTile(playerTileCol, playerTileRow, "146.png");
+                farmingAction();
+                player.getInventory().use(seed, 1);
+                lepasItem(seed);
+
+            } else {
+                System.out.println("Cannot till this tile: " + currentTileType);
+            }
+        }
+        else{
+            System.out.println("Wrong season lil bro");
         }
     }
 
@@ -111,20 +155,33 @@ public class PlayerController {
         String currentTileType = drawPlayer.getCurrentTileType(); // Mengambil tile yang sedang diinjak oleh player
         int playerTileCol = (drawPlayer.getWorldX() + gp.getTileSize() / 2) / gp.getTileSize();
         int playerTileRow = (drawPlayer.getWorldY() + gp.getTileSize() / 2) / gp.getTileSize();
+        Point tileLoc = new Point(playerTileCol, playerTileRow);
 
-        if (currentTileType.equals("004.png")) {
+
+        if (currentTileType.equals("004.png")) { //tanah kering
             gp.tileM.changeTile(playerTileCol, playerTileRow, "147.png");
-        } else if (currentTileType.equals("148.png")) {
+        } else if (currentTileType.equals("148.png")) { //tanaman kering
             gp.tileM.changeTile(playerTileCol, playerTileRow, "146.png");
+            gp.getPlantManager().getPlants().get(tileLoc).setWatered(true);
         }
+        farmingAction();
     }
 
     public void harvesting(){
         String currentTileType = drawPlayer.getCurrentTileType(); // Mengambil tile yang sedang diinjak oleh player
         int playerTileCol = (drawPlayer.getWorldX() + gp.getTileSize() / 2) / gp.getTileSize();
         int playerTileRow = (drawPlayer.getWorldY() + gp.getTileSize() / 2) / gp.getTileSize();
+        Point tileLoc = new Point(playerTileCol, playerTileRow);
 
-        this.recoverLand();
+
+        if (!gp.getPlantManager().getPlants().get(tileLoc).isReadyToHarvest()){
+            System.out.println("Crop is not ready to harvest");
+            return;
+        }
+        player.getInventory().add(CropsRegistry.getCropsPrototype(gp.getPlantManager().getPlants().get(tileLoc).getCropName()), 1);
+
+        recoverLand();
+        farmingAction();
         gp.showTemporaryPopUp("/assets/PopUps/HarvestPopUp.png", 2500, 200);
     }
 
@@ -166,7 +223,11 @@ public class PlayerController {
         gp.setCurrentMap("house default");
         drawPlayer.setDefaultValues(117, 119);
 
-        if (energyLeft < 0.1 * player.getMaxEnergy()){
+        if (energyLeft <= 0){
+            player.setEnergy(10);
+            System.out.println("Anda terbangun tanpa tenaga");
+        }
+        else if (energyLeft < 0.1 * player.getMaxEnergy()){
             player.setEnergy(player.getMaxEnergy() / 2);
             System.out.println("Anda terbangun dalam keadaan lelah");
         }

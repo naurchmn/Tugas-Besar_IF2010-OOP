@@ -2,7 +2,6 @@ package com.spakborhills.controller;
 
 public class Gold {
     private int amount;
-    private static int totalGold;
 
     public Gold() {
         this.amount = 0;
@@ -16,22 +15,17 @@ public class Gold {
         return amount;
     }
 
-    public void setAmount(int amount) {
-        this.amount = Math.max(0, amount);
-    }
-
     public void add(int value) {
         if (value > 0) {
             amount += value;
         }
     }
 
-    public boolean subtract(int value) {
-        if (value <= amount) {
-            amount -= value;
-            return true;
+    public void subtract(int value) {
+        if (value > amount) {
+            return;
         }
-        return false;
+        amount -= value;
     }
 
     public boolean canAfford(int value) {

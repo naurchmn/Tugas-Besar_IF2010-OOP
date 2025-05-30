@@ -26,6 +26,10 @@ public class Inventory {
             System.out.println("Item not found");
         }
     }
+
+    public boolean contains(Item item) {
+        return playerInventory.containsKey(item);
+    }
     
     public Map<Item, Integer> getPlayerInventory() {
         return playerInventory;

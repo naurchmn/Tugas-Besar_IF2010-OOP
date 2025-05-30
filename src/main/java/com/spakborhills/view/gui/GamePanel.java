@@ -8,6 +8,7 @@ import com.spakborhills.model.entity.PlayerView;
 import com.spakborhills.model.entity.npc.NPC;
 import com.spakborhills.model.entity.npc.NPCRegistry;
 import com.spakborhills.model.entity.npc.NPCView;
+import com.spakborhills.model.game.PlantManager;
 import com.spakborhills.model.items.Item;
 
 import javax.swing.*;
@@ -49,6 +50,7 @@ public class GamePanel extends  JPanel{
     public ArrayList<NPCView> npcList;
     private GameLoop gameLoop;
     private KeyHandler keyH = new KeyHandler();
+    private PlantManager plantManager = new PlantManager();
     private NPC currentNPC;
 
     private String currentMap = "farm";
@@ -208,6 +210,7 @@ public class GamePanel extends  JPanel{
 
         this.addKeyListener(keyH);
         gameLoop = new GameLoop(60, this::update, this::repaint);
+//        gameLoop.getGameTime().addObserver(plantManager);
 
 //        JButton backButton = new GameButton("Back to homescreen");
 //        backButton.setBounds(15, 10, 157, 25);
@@ -233,7 +236,7 @@ public class GamePanel extends  JPanel{
             return;
         }
 
-        if (player.getEnergy() == -20){
+        if (player.getEnergy() <= -20){
             playerController.sleeping(player.getEnergy(), gameLoop.getGameTime().getInGameHours(), gameLoop.getGameTime().getInGameMinutes());
         }
 
@@ -246,6 +249,10 @@ public class GamePanel extends  JPanel{
         if (inventoryOpened) {
             // Print hanya saat inventory baru dibuka
             if (!wasInventoryOpened) {
+                try {
+                    System.out.println("Item held : " + player.getItemHeld().getName());
+                } catch (NullPointerException _) {}
+
                 if (player.getInventory().getPlayerInventory().isEmpty()) {
                     System.out.println("Inventory empty:(");
                     System.out.println("Press I to continue game");
@@ -279,6 +286,10 @@ public class GamePanel extends  JPanel{
         }
 
 //        if (currentMapParts)
+
+        if (gameLoop.getGameTime().getInGameHours() == 2){
+            playerController.sleeping(player.getEnergy(), gameLoop.getGameTime().getInGameHours(), 0);
+        }
 
         String oldMap = currentMap;
         // pindah map kalau melebihi boundary
@@ -346,30 +357,34 @@ public class GamePanel extends  JPanel{
                     playerController.getOutTheHouse();
                 }
             } else if (currentTileType.equals("000.png")) {
-                playerController.tilling();
+                if (currentMap.equals("farm")) {
+                    if (playerController.rightTool("Hoe")) {
+                        playerController.tilling();
+                    }
+                }
             } else if (frontTileType.equals("006.png") && player.energySufficient(5)) {
-                if (playerController.rightTool("Fishing Rod")){
+                if (playerController.rightTool("Fishing Rod")) {
                     playerController.fishing();
                     gameLoop.getGameTime().setStartTime(System.nanoTime());
                 }
             } else if (currentTileType.equals("004.png") || currentTileType.equals("147.png")) {
-                playerController.planting();
+                if (playerController.holdingSeed()) {
+                    playerController.planting();
+                } else if (playerController.rightTool("Hoe")) {
+                    playerController.recoverLand();
+                }
             } else if (currentTileType.equals("146.png") || currentTileType.equals("148.png")) {
-                playerController.harvesting();
-            } else if (frontTileType.equals("093.png") || frontTileType.equals("094.png") ||
-                    frontTileType.equals("082.png") || frontTileType.equals("083.png")) {
-                playerController.watching();
-            } else if ((frontTileType.equals("079.png") || frontTileType.equals("080.png") ||
-                frontTileType.equals("090.png") || frontTileType.equals("091.png") ||
-                    frontTileType.equals("101.png") || frontTileType.equals("102.png"))  && currentMap.equals("house default")) {
-                playerController.sleeping(1, 1, 1);
+                if (player.getItemHeld() == null){
+                    playerController.harvesting();
+                }
             }
             keyH.setEnterPressed(false);
         }
 
         if (keyH.isSpacePressed()) {
             if (currentMap.equals("farm")) {
-                if (currentTileType.equals("148.png") || currentTileType.equals("004.png")) {
+                if (currentTileType.equals("148.png") || currentTileType.equals("004.png") &&
+                        playerController.rightTool("Watering Can")) {
                     playerController.watering();
                 }
             }  else if (currentMapBaseNameForInteraction.equals("house")) {
@@ -527,7 +542,11 @@ public class GamePanel extends  JPanel{
 
         //draw energy
         g2.setColor(Color.white);
-        g2.setFont(new Font("Comic Sans", Font.PLAIN, 30));
-        g2.drawString(Integer.toString(player.getEnergy()), 10, 30);
+        g2.setFont(new Font("Comic Sans", Font.PLAIN, 20));
+        g2.drawString("Energy : " + Integer.toString(player.getEnergy()), 10, 25);
+    }
+
+    public PlantManager getPlantManager() {
+        return plantManager;
     }
 }
