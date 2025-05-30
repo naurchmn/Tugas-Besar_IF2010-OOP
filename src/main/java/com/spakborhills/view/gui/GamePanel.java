@@ -10,6 +10,7 @@ import com.spakborhills.model.entity.npc.NPCRegistry;
 import com.spakborhills.model.entity.npc.NPCView;
 import com.spakborhills.model.game.PlantManager;
 import com.spakborhills.model.items.Item;
+import com.spakborhills.model.items.behavior.Edible;
 
 import javax.swing.*;
 import java.awt.*;
@@ -329,11 +330,10 @@ public class GamePanel extends  JPanel{
 
         if (keyH.isEnterPressed()) {
             if (currentTileType != null) {
-                if (playerController.holdingEdible()){
+                if (playerController.holdingEdible()) {
                     playerController.eating((Edible) player.getItemHeld());
-                }
-                else if ((currentTileType.equals("046.png") || currentTileType.equals("047.png") ||
-                    currentTileType.equals("040.png") || currentTileType.equals("041.png"))) { // Pintu masuk rumah
+                } else if ((currentTileType.equals("046.png") || currentTileType.equals("047.png") ||
+                        currentTileType.equals("040.png") || currentTileType.equals("041.png"))) { // Pintu masuk rumah
                     if (!currentMap.split(" ")[0].equals("house")) { // Pastikan tidak sudah di dalam house
                         // Mendapatkan koordinat tile player saat ini
                         int playerTileCol = playerView.getWorldX() / tileSize;
@@ -363,7 +363,7 @@ public class GamePanel extends  JPanel{
                 } else if (currentTileType.equals("000.png")) {
                     if (currentMap.equals("farm")) {
                         if (playerController.rightTool("Hoe")) {
-                        playerController.tilling();
+                            playerController.tilling();
                         }
                     }
                 } else if (frontTileType.equals("006.png") && player.energySufficient(5)) {
@@ -378,7 +378,7 @@ public class GamePanel extends  JPanel{
                         playerController.recoverLand();
                     }
                 } else if (currentTileType.equals("146.png") || currentTileType.equals("148.png")) {
-                    if (player.getItemHeld() == null){
+                    if (player.getItemHeld() == null) {
                         playerController.harvesting();
                     }
                 }
