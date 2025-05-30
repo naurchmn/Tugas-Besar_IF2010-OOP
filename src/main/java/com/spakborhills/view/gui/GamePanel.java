@@ -237,6 +237,7 @@ public class GamePanel extends  JPanel{
             } else if (frontTileType.equals("006.png") && player.energySufficient(5)) {
                 if (playerController.rightTool("Fishing Rod")){
                     playerController.fishing();
+                    gameLoop.getGameTime().setStartTime(System.nanoTime());
                 }                
             } else if (currentTileType.equals("004.png") || currentTileType.equals("147.png")) {
                 playerController.planting();
