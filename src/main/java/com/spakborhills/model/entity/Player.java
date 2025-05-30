@@ -34,6 +34,10 @@ public class Player {
         inventory.add(new Item("Fishing Rod"), 1);
     }
 
+    public boolean energySufficient(int energyCost){
+        return energy - energyCost > -20;
+    }
+
     public int getEnergy() {
         return energy;
     }

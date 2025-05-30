@@ -145,6 +145,10 @@ public class GameTime {
         return inGameHours;
     }
 
+    public int getInGameMinutes() {
+        return inGameMinutes;
+    }
+
     public Season getSeason() {
         return season;
     }

@@ -233,6 +233,10 @@ public class GamePanel extends  JPanel{
             return;
         }
 
+        if (player.getEnergy() == -20){
+            playerController.sleeping(player.getEnergy(), gameLoop.getGameTime().getInGameHours(), gameLoop.getGameTime().getInGameMinutes());
+        }
+
         boolean wasInventoryOpened = inventoryOpened;
         if (keyH.isInventoryPressed()){
             inventoryOpened = !inventoryOpened;
@@ -344,8 +348,10 @@ public class GamePanel extends  JPanel{
                 }
             } else if (currentTileType.equals("000.png")) {
                 playerController.tilling();
-            } else if (frontTileType.equals("006.png")) {
-                playerController.fishing();
+            } else if (frontTileType.equals("006.png") && player.energySufficient(5)) {
+                if (playerController.rightTool("Fishing Rod")){
+                    playerController.fishing();
+                }
             } else if (currentTileType.equals("004.png") || currentTileType.equals("147.png")) {
                 playerController.planting();
             } else if (currentTileType.equals("146.png") || currentTileType.equals("148.png")) {
@@ -480,6 +486,22 @@ public class GamePanel extends  JPanel{
         }
     }
 
+    public String getPlayerFishingArea(int row, int col){
+        if (currentMap.equals("farm")) {
+            return "Pond";
+        }
+        else{
+            if (col > 5 && col < 42 && row > 111 && row < 136){
+                return "Mountain Lake";
+            } else if (row < 50) {
+                return "Ocean";
+            } else if (col > 182 && row > 50) {
+                return "Forest River";
+            }
+        }
+        return null;
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -503,5 +525,10 @@ public class GamePanel extends  JPanel{
                 }
             }
         }
+
+        //draw energy
+        g2.setColor(Color.white);
+        g2.setFont(new Font("Comic Sans", Font.PLAIN, 30));
+        g2.drawString(Integer.toString(player.getEnergy()), 10, 30);
     }
 }

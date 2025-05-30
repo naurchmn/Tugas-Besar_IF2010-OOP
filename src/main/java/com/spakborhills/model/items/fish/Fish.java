@@ -5,6 +5,7 @@ import com.spakborhills.model.game.Weather;
 import com.spakborhills.model.items.Item;
 import com.spakborhills.model.items.Rarity;
 
+import javax.swing.*;
 import java.util.*;
 
 public class Fish extends Item implements Cloneable {
@@ -16,6 +17,7 @@ public class Fish extends Item implements Cloneable {
     private List<String> location = new ArrayList<String>();
     private final Rarity rarity;
     private int sellPrice;
+    private Random random = new Random();
 
 
     public Fish (String name,  List<Season> season, List<Integer> startTimes, List<Integer> endTimes, List<Weather> weather,
@@ -72,7 +74,7 @@ public class Fish extends Item implements Cloneable {
 
     public Rarity getRarity(){ return rarity; }
     @Override
-    public int getSellPrice() { return sellPrice; }
+    public int getSellPrice() { return sellPrice;}
 
     public void setSellPrice() {
         int c = switch (rarity) {
@@ -85,5 +87,51 @@ public class Fish extends Item implements Cloneable {
         this.sellPrice = calc;
     }
 
+    public boolean fishingGame(Rarity rarity) {
+        int luckyNumber, maxAttempt = 10, bound = 10;
+        switch (rarity) {
+            case COMMON:
+                luckyNumber = random.nextInt(1, 10);
+            break;
+            case REGULAR:
+                luckyNumber = random.nextInt(1, 100);
+                bound = 100;
+            break;
+            case LEGENDARY:
+                luckyNumber = random.nextInt(1, 500);
+                maxAttempt = 7;
+                bound = 500;
+            break;
+            default:
+                luckyNumber = 0;
+        }
+        System.out.println("Lucky number: " + luckyNumber);
+        for (int i = 0 ; i < maxAttempt ; i++){
+            int guess = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter your guess (1-" + bound + "): ", "Fishing Game", JOptionPane.QUESTION_MESSAGE));
+            if (guess == luckyNumber){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<Season> getSeason() {
+        return season;
+    }
+
+    public int getStartSpawnTime(){
+        return startTimes.getFirst();
+    }
+    public int getEndSpawnTime(){
+        return endTimes.getFirst();
+    }
+
+    public List<Weather> getWeather() {
+        return weather;
+    }
+
+    public List<String> getLocation() {
+        return location;
+    }
 }
 

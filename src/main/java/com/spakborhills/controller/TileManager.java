@@ -185,16 +185,16 @@ public class TileManager {
         // Adjust target tile based on player's direction
         switch (playerDirection) {
             case "up":
-                targetRow--; // One tile above
+                targetRow-=2; // One tile above
                 break;
             case "down":
-                targetRow++; // One tile below
+                targetRow+=2; // One tile below
                 break;
             case "left":
-                targetCol--; // One tile to the left
+                targetCol-=2; // One tile to the left
                 break;
             case "right":
-                targetCol++; // One tile to the right
+                targetCol+=2; // One tile to the right
                 break;
         }
 
