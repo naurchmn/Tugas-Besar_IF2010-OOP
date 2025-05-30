@@ -28,7 +28,6 @@ public class GameTime {
     private ArrayList<Integer> rainyDays = new ArrayList<>();
     private int nextRainyDayIdx = 0;
 
-
     private GameTime() {
         randomizeRainyDay();
         changeWeather();
@@ -40,7 +39,7 @@ public class GameTime {
         inGameSeason = 0;
     }
 
-    public static GameTime getInstance() {
+    public static synchronized GameTime getInstance() {
         if (instance == null) {
             instance = new GameTime();
         }
@@ -94,18 +93,19 @@ public class GameTime {
             changeWeather();
         }
 
-        if (inGameDays >= 10) {
+        if (inGameDays >= 11) {
             inGameSeason += 1;
             inGameDays = 1;
             randomizeRainyDay();
         }
 
-        if (inGameSeason >= 3) {
+        if (inGameSeason >= 4) {
             inGameSeason = 0;
         }
     }
 
     private void randomizeRainyDay() {
+        System.out.println("Randomizing rainy day");
         rainyDays.clear();
         rainyDays.add(random.nextInt(10) + 1);
         int secondRainyDay;
@@ -119,6 +119,7 @@ public class GameTime {
     }
 
     private void changeWeather(){
+        System.out.println("Changing weather");
         if(nextRainyDayIdx < rainyDays.size() && inGameDays==rainyDays.get(nextRainyDayIdx)){
             weather = Weather.RAINY;
             nextRainyDayIdx++;
@@ -154,10 +155,10 @@ public class GameTime {
     }
 
     public void startNewDay(int minuteTo2){
-        inGameDays += 1;
+        advanceGameTime(2400 + minuteTo2);
+        normalizeTime();
         inGameHours = 6;
         inGameMinutes = 0;
         totalGameMinutes += 2400 + minuteTo2;
-        normalizeTime();
     }
 }

@@ -162,7 +162,7 @@ public class GamePanel extends  JPanel{
             return;
         }
 
-        if (player.getEnergy() == -20){
+        if (player.getEnergy() <= -20){
             playerController.sleeping(player.getEnergy(), gameLoop.getGameTime().getInGameHours(), gameLoop.getGameTime().getInGameMinutes());
         }
 
@@ -198,6 +198,10 @@ public class GamePanel extends  JPanel{
         }
         gameLoop.getGameTime().updateGameTime();
         playerView.update();
+
+        if (gameLoop.getGameTime().getInGameHours() == 2){
+            playerController.sleeping(player.getEnergy(), gameLoop.getGameTime().getInGameHours(), 0);
+        }
 
         String oldMap = currentMap;
         // pindah map kalau melebihi boundary

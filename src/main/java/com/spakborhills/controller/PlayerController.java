@@ -200,13 +200,13 @@ public class PlayerController {
 
     }
     public void sleeping(int energyLeft, int sleepHour, int sleepMinute){
-        if (energyLeft < 0.1 * player.getMaxEnergy()){
-            player.setEnergy(player.getMaxEnergy() / 2);
-            System.out.println("Anda terbangun dalam keadaan lelah");
-        }
-        else if (energyLeft == 0){
+        if (energyLeft <= 0){
             player.setEnergy(10);
             System.out.println("Anda terbangun tanpa tenaga");
+        }
+        else if (energyLeft < 0.1 * player.getMaxEnergy()){
+            player.setEnergy(player.getMaxEnergy() / 2);
+            System.out.println("Anda terbangun dalam keadaan lelah");
         }
         else {
             player.setEnergy(player.getMaxEnergy());
@@ -340,7 +340,6 @@ public class PlayerController {
         gameTime.advanceGameTime(10);
         player.setEnergy(player.getEnergy() - 5);
     }
-    public void selling(){}
 
     // getter setter
     public PlayerView getPlayerView() {
