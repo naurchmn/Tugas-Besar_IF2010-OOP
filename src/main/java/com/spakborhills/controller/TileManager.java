@@ -161,6 +161,9 @@ public class TileManager {
 
     // Metode baru untuk mendapatkan jenis tile di posisi pemain
     public String getTileTypeAtPlayerPosition(int worldX, int worldY) {
+        worldX += gp.getTileSize() / 2;
+        worldY += gp.getTileSize() / 2;
+
         int tileCol = worldX / gp.getTileSize();
         int tileRow = worldY / gp.getTileSize();
 
@@ -173,6 +176,9 @@ public class TileManager {
 
     // Metode untuk mendapatkan jenis tile yang ada di hadapan Player
     public String getTileTypeInFrontOfPlayer(int playerWorldX, int playerWorldY, String playerDirection) {
+        playerWorldX += gp.getTileSize() / 2;
+        playerWorldY += gp.getTileSize() / 2;
+
         int targetCol = playerWorldX / gp.getTileSize();
         int targetRow = playerWorldY / gp.getTileSize();
 

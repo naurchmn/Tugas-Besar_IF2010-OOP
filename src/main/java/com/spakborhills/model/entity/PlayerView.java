@@ -41,7 +41,7 @@ public class PlayerView extends Entity{
     public void setDefaultValues(int x, int y){
         setWorldX(gp.getTileSize() * x);
         setWorldY(gp.getTileSize() * y);
-        speed = 5;
+        speed = 7;
         direction = "down";
     }
 
