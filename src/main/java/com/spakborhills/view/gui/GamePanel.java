@@ -167,11 +167,6 @@ public class GamePanel extends  JPanel{
         if (keyH.isInventoryPressed()){
             inventoryOpened = !inventoryOpened;
             keyH.setInventoryPressed(false);
-
-            if(wasInventoryOpened && !inventoryOpened){
-                gameLoop.getGameTime().setStartTime(System.nanoTime());
-                System.out.println("Game continued");
-            }
         }
 
         if (inventoryOpened) {
@@ -186,6 +181,10 @@ public class GamePanel extends  JPanel{
                         System.out.println(entry.getKey().getName() + ": " + entry.getValue());
                     }
                     playerController.chooseItem();
+                    // Setelah chooseItem selesai, langsung lanjutkan game
+                    inventoryOpened = false;
+                    gameLoop.getGameTime().setStartTime(System.nanoTime());
+                    System.out.println("Game continued");
                 }
             }
             return;
@@ -212,7 +211,7 @@ public class GamePanel extends  JPanel{
                 (playerView.getWorldY() > 149 * tileSize && playerView.getWorldY() < 153 * tileSize) &&
                 currentMap.equals("world")){
             currentMap = "farm";
-            System.out.println("Playerriu ke " + currentMap);
+            System.out.println("Player pindah ke " + currentMap);
             positionSetByReturn = false;
 
             if ((!(oldMap.split(" ")[0]).equals("house"))) { // Jika peta sebelumnya bukan house
@@ -228,9 +227,10 @@ public class GamePanel extends  JPanel{
         if (keyH.isEnterPressed()) {
             if (currentTileType.equals("046.png") || currentTileType.equals("047.png") ||
                     currentTileType.equals("039.png") || currentTileType.equals("040.png")) {
+                System.out.println("Got in the house");
                 playerController.getInTheHouse();
             } else if (currentTileType.equals("138.png") ||  currentTileType.equals("139.png")) {
-                System.out.println("Calling getOutTheHouse() from GamePanel");
+                System.out.println("Got out the house");
                 playerController.getOutTheHouse();
             } else if (currentTileType.equals("000.png")) {
                 playerController.tilling();
