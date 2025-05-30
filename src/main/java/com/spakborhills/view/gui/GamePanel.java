@@ -361,7 +361,7 @@ public class GamePanel extends  JPanel{
                 playerController.watching();
             } else if ((frontTileType.equals("079.png") || frontTileType.equals("080.png") ||
                 frontTileType.equals("090.png") || frontTileType.equals("091.png") ||
-                    frontTileType.equals("101.png") || frontTileType.equals("102.png")) && currentMap.equals("house")) {
+                    frontTileType.equals("101.png") || frontTileType.equals("102.png"))  && currentMap.equals("house default")) {
                 playerController.sleeping(1, 1, 1);
             }
             keyH.setEnterPressed(false);
@@ -377,14 +377,11 @@ public class GamePanel extends  JPanel{
                 for (NPCView npc : npcList) {
                     if (currentHouseNPCNameForInteraction != null && currentHouseNPCNameForInteraction.equals(npc.getNPCModel().getName()) &&
                             npc.isPlayerInInteractionRange(playerView.getWorldX(), playerView.getWorldY(), tileSize, playerView.direction)) {
-//
-//                        System.out.println("Anda mencoba berinteraksi dengan " + npc.getNPCModel().getName() + ".");
-//                        // Mengaktifkan interaksi marrying
-//                        playerController.marrying(npc.getNPCModel()); // <-- AKTIFKAN INI
-
+                        // Pindah ke Panel untuk interaksi dengan NPC
                         mainFrame.switchPanel("npc");
-
+                        pauseGame();
                         interactedWithNPC = true;
+                        keyH.setSpacePressed(false);
                         break;
                     }
                 }
@@ -446,6 +443,7 @@ public class GamePanel extends  JPanel{
                 }
                 break;
         }
+//        System.out.println(currentMap); // debug kecil kecilan
     }
 
     // Metode baru untuk menampilkan gambar

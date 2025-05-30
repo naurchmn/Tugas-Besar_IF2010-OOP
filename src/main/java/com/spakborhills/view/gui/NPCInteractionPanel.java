@@ -49,10 +49,14 @@ public class NPCInteractionPanel extends JPanel {
         giftButton.setBounds(160, 405, 250, 50);
         this.add(giftButton);
 
-        //action 4 button home screen
+        JButton backGameButton = new GameButton("Back to game");
+        backGameButton.setBounds(15, 10, 157, 25);
+        this.add(backGameButton);
+
         proposeButton.addActionListener(e -> {gp.getPlayerController().proposing(gp.getCurrentNPC());});
         marryButton.addActionListener(e -> {gp.getPlayerController().marrying(gp.getCurrentNPC());}); //belum implement
         chatButton.addActionListener(e -> System.out.println("Chatting with NPC " + gp.getCurrentNPC().getName())); //belum implement
         giftButton.addActionListener(e -> {gp.getPlayerController().gifting(gp.getCurrentNPC(), gp.getPlayer().getItemHeld());});
+        backGameButton.addActionListener(e -> {mainFrame.switchPanel("game");});
     }
 }
