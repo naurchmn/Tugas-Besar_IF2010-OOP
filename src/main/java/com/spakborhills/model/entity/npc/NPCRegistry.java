@@ -119,13 +119,6 @@ public class NPCRegistry {
         npcPrototypes.put(prototype.getName(), prototype);
     }
 
-    public static NPC createNPC(String name) {
-        NPC prototype = npcPrototypes.get(name);
-        if (prototype == null) {
-            throw new IllegalArgumentException("No prototype found for NPC: " + name);
-        }
-        return prototype.clone();
-    }
 
     public static boolean hasPrototype(String name) {
         return npcPrototypes.containsKey(name);

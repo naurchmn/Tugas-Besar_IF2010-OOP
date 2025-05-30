@@ -41,7 +41,7 @@ class NPCInteractionTracker<T extends Enum<T>>{
 
         // Update interaction count
         int currentCount = npcInteractions.getOrDefault(type, 0);
-        npcInteractions.put(type, currentCount++);
+        npcInteractions.put(type, currentCount+1);
     }
 
     public int getInteractionCount(String npcName, T type){
@@ -84,7 +84,7 @@ public class PlayerStats extends Subject {
     
     private int totalFishCaught = 0;
     private Map<Rarity, Integer> fishTypeAmt = new HashMap<>();
-    private int currentTypeFishAmt = 0;
+    //private int currentTypeFishAmt = 0;
 
     public static PlayerStats getInstance(){
         if (instance == null){
@@ -112,30 +112,31 @@ public class PlayerStats extends Subject {
     // total rata-rata gold yang didapatkan player per season
     public void addToAvgSeasonIncome(Season season){
 
-        int prev = seasonalIncome.getOrDefault(season, 0);
-        seasonalIncome.put(season, prev+currentSeasonIncome);
+        seasonalIncome.put(season, currentSeasonIncome);
 
-        int sum = 0;
-        for (Integer income : seasonalIncome.values()) {
-            sum += income;
+        if(seasonalIncome.size() > 0){
+            int sum = 0;
+            for (Integer income : seasonalIncome.values()) {
+                sum += income;
+            }
+            avgSeasonIncome = (double) sum / seasonalIncome.size();
         }
     
-        avgSeasonIncome = (double) sum / 4;
         currentSeasonIncome = 0; //reset ketika berganti season
     }
 
     // total rata-rata gold yang dikeluarkan player per season
     public void addToAvgSeasonOutcome(Season season){
 
-        int prev = seasonalOutcome.getOrDefault(season, 0);
-        seasonalOutcome.put(season, prev+currentSeasonOutcome);
+        seasonalOutcome.put(season, currentSeasonOutcome);
 
-        int sum = 0;
-        for (Integer outcome : seasonalOutcome.values()) {
-            sum += outcome;
+        if (seasonalOutcome.size() > 0){
+            int sum = 0;
+            for (Integer outcome : seasonalOutcome.values()) {
+                sum += outcome;
+            }
+            avgSeasonOutcome = (double) sum / seasonalOutcome.size();
         }
-    
-        avgSeasonOutcome = (double) sum / 4;
         currentSeasonOutcome = 0; //reset ketika berganti season
     }
 
@@ -161,13 +162,12 @@ public class PlayerStats extends Subject {
         totalFishCaught++; 
         
         int prev = fishTypeAmt.getOrDefault(fish, 0);
-        fishTypeAmt.put(fish.getRarity(), prev+currentTypeFishAmt);
+        fishTypeAmt.put(fish.getRarity(), prev++);
         
         // NOTIFY
         notifyObservers("IKAN_DITANGKAP", totalFishCaught);
         notifyObservers("TIPE_IKAN_DITANGKAP", fish.getName());
         
-        currentTypeFishAmt = 0; // reset
     }
     
     // CROPS
@@ -238,8 +238,12 @@ public class PlayerStats extends Subject {
         System.out.println("╠════════════════════════════════════════════════════╣");
         System.out.printf("║ Total Crops Harvested: %-29d ║%n", getTotalHarvest());
         System.out.printf("║ Total Fish Caught: %-33d ║%n", getTotalFishCaught());
-        
+        System.out.println("║ Fish Caught By Rarity:                              ║");
+        for (Rarity rarity : Rarity.values()) {
+            int count = fishTypeAmt.getOrDefault(rarity, 0);
+            System.out.printf("║   %-10s: %-37d ║%n", rarity.name(), count);
+        }
         System.out.println("╚════════════════════════════════════════════════════╝");
-}
+    }
 }
 
