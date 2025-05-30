@@ -5,6 +5,7 @@ import com.spakborhills.controller.KeyHandler;
 import com.spakborhills.model.entity.Entity;
 import com.spakborhills.model.entity.Player;
 import com.spakborhills.model.entity.PlayerView;
+import com.spakborhills.model.game.PlantManager;
 import com.spakborhills.model.items.Item;
 
 import javax.swing.*;
@@ -43,6 +44,7 @@ public class GamePanel extends  JPanel{
     private Entity npc[];
     private GameLoop gameLoop;
     private KeyHandler keyH = new KeyHandler();
+    private PlantManager plantManager = new PlantManager();
     private String currentMap = "farm";
     private String currentTileType;
     private String frontTileType;
@@ -134,6 +136,7 @@ public class GamePanel extends  JPanel{
         npc = new Entity[7];
         this.addKeyListener(keyH);
         gameLoop = new GameLoop(60, this::update, this::repaint);
+        gameLoop.getGameTime().addObserver(plantManager);
 
 //        JButton backButton = new GameButton("Back to homescreen");
 //        backButton.setBounds(15, 10, 157, 25);
@@ -172,6 +175,10 @@ public class GamePanel extends  JPanel{
         if (inventoryOpened) {
             // Print hanya saat inventory baru dibuka
             if (!wasInventoryOpened) {
+                try {
+                    System.out.println("Item held : " + player.getItemHeld().getName());
+                } catch (NullPointerException _) {}
+
                 if (player.getInventory().getPlayerInventory().isEmpty()) {
                     System.out.println("Inventory empty:(");
                     System.out.println("Press I to continue game");
@@ -225,42 +232,44 @@ public class GamePanel extends  JPanel{
         frontTileType = playerView.getFrontTileType();
 
         if (keyH.isEnterPressed()) {
-            if (currentTileType.equals("046.png") || currentTileType.equals("047.png") ||
-                    currentTileType.equals("039.png") || currentTileType.equals("040.png")) {
-                System.out.println("Got in the house");
-                playerController.getInTheHouse();
-            } else if (currentTileType.equals("138.png") ||  currentTileType.equals("139.png")) {
-                System.out.println("Got out the house");
-                playerController.getOutTheHouse();
-            } else if (currentTileType.equals("000.png")) {
-                playerController.tilling();
-            } else if (frontTileType.equals("006.png") && player.energySufficient(5)) {
-                if (playerController.rightTool("Fishing Rod")){
-                    playerController.fishing();
-                    gameLoop.getGameTime().setStartTime(System.nanoTime());
-                }                
-            } else if (currentTileType.equals("004.png") || currentTileType.equals("147.png")) {
-                playerController.planting();
-            } else if (currentTileType.equals("146.png") || currentTileType.equals("148.png")) {
-                playerController.harvesting();
+            if (currentTileType != null) {
+                if (currentTileType.equals("046.png") || currentTileType.equals("047.png") ||
+                        currentTileType.equals("039.png") || currentTileType.equals("040.png")) {
+                    System.out.println("Got in the house");
+                    playerController.getInTheHouse();
+                } else if (currentTileType.equals("138.png") || currentTileType.equals("139.png")) {
+                    System.out.println("Got out the house");
+                    playerController.getOutTheHouse();
+                } else if (currentTileType.equals("000.png")) {
+                    if (currentMap.equals("farm")) {
+                        if (playerController.rightTool("Hoe")) {
+                            playerController.tilling();
+                        }
+                    }
+                } else if (frontTileType.equals("006.png") && player.energySufficient(5)) {
+                    if (playerController.rightTool("Fishing Rod")) {
+                        playerController.fishing();
+                        gameLoop.getGameTime().setStartTime(System.nanoTime());
+                    }
+                } else if (currentTileType.equals("004.png") || currentTileType.equals("147.png")) {
+                    if (playerController.holdingSeed()) {
+                        playerController.planting();
+                    } else if (playerController.rightTool("Hoe")) {
+                        playerController.recoverLand();
+                    }
+                } else if (currentTileType.equals("146.png") || currentTileType.equals("148.png")) {
+                    if (player.getItemHeld() == null){
+                        playerController.harvesting();
+                    }
+                }
             }
             keyH.setEnterPressed(false);
         }
 
         if (keyH.isSpacePressed()) {
             if (currentTileType.equals("004.png") || currentTileType.equals("148.png")) {
-                playerController.watering();
-            }
-        }
-
-        if (keyH.isInventoryPressed()){
-            if(player.getInventory().getPlayerInventory().isEmpty()) {
-                System.out.println("Inventory kosong!");
-            }
-            else{
-                System.out.println("Inventory :");
-                for (Item item : player.getInventory().getPlayerInventory().keySet()) {
-                    System.out.println("\n" + item.getName());
+                if (playerController.rightTool("Watering Can")){
+                    playerController.watering();
                 }
             }
             keyH.setSpacePressed(false);
@@ -378,7 +387,11 @@ public class GamePanel extends  JPanel{
 
         //draw energy
         g2.setColor(Color.white);
-        g2.setFont(new Font("Comic Sans", Font.PLAIN, 30));
-        g2.drawString(Integer.toString(player.getEnergy()), 10, 30);
+        g2.setFont(new Font("Comic Sans", Font.PLAIN, 20));
+        g2.drawString("Energy : " + Integer.toString(player.getEnergy()), 10, 25);
+    }
+
+    public PlantManager getPlantManager() {
+        return plantManager;
     }
 }
