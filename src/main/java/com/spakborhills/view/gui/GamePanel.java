@@ -167,6 +167,8 @@ public class GamePanel extends  JPanel{
         NPCView mayorTadiNPC = new NPCView(this, "Mayor Tadi", 117, 120);
         NPCView perryNPC = new NPCView(this, "Perry", 117, 120);
 
+        currentNPC = NPCRegistry.getNPCPrototype("Abigail");
+
         npcList.add(abigailNPC);
         npcList.add(carolineNPC);
         npcList.add(dascoNPC);
@@ -409,6 +411,8 @@ public class GamePanel extends  JPanel{
                     if (currentHouseNPCNameForInteraction != null && currentHouseNPCNameForInteraction.equals(npc.getNPCModel().getName()) &&
                             npc.isPlayerInInteractionRange(playerView.getWorldX(), playerView.getWorldY(), tileSize, playerView.direction)) {
                         // Pindah ke Panel untuk interaksi dengan NPC
+                        NPCInteractionPanel npcInteractionPanel = new NPCInteractionPanel(mainFrame, this, this.currentNPC.getName());
+                        mainFrame.mainPanel.add(npcInteractionPanel, "npc");
                         mainFrame.switchPanel("npc");
                         pauseGame();
                         interactedWithNPC = true;
@@ -472,7 +476,7 @@ public class GamePanel extends  JPanel{
             }
             positionSetByReturn = false; // Reset flag setelah digunakan
         }
-//        System.out.println(currentMap); // debug kecil kecilan
+        System.out.println("Current NPC: " + currentNPC.getName());
     }
 
     // Metode baru untuk menampilkan gambar

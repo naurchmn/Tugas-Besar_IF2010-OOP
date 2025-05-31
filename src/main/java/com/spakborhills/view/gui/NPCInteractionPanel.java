@@ -1,28 +1,30 @@
 package com.spakborhills.view.gui;
 
-import com.spakborhills.controller.PlayerController;
-import com.spakborhills.model.entity.Player;
+import com.spakborhills.model.game.Store;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Objects;
 
 public class NPCInteractionPanel extends JPanel {
+
     private BufferedImage background;
-    private JTextField playerNameField;
-    private JTextField farmNameField;
-    private JButton confirmButton;
-    private JButton backButton;
+    private Store store;
+
     GamePanel gp;
 
-    public NPCInteractionPanel(MainFrame mainFrame, GamePanel gp) {
+    public NPCInteractionPanel(MainFrame mainFrame, GamePanel gp, String npcName) {
         this.gp = gp;
+        this.store = new Store();
 
         try {
-            background = ImageIO.read(getClass().getResource("/assets/backgrounds/home bg new.png"));
+            background = ImageIO.read(Objects.requireNonNull(getClass().getResource("/assets/backgrounds/NPCInteractBG/" + npcName + "_BG.png")));
         } catch (IOException e) {
+            System.err.println("Failed to load NPC background: " + e.getMessage());
+            // Jika gambar tidak bisa dimuat, set background JPanel menjadi warna solid
             setBackground(Color.black);
         }
 
@@ -30,6 +32,7 @@ public class NPCInteractionPanel extends JPanel {
         this.setLayout(null);
         this.setDoubleBuffered(true); //improve rendering performance
         this.setFocusable(true);
+        this.setOpaque(false);
 
         // bikin 4 button home screen
 
@@ -49,6 +52,14 @@ public class NPCInteractionPanel extends JPanel {
         giftButton.setBounds(160, 405, 250, 50);
         this.add(giftButton);
 
+        if (gp.getCurrentNPC().getName().equals("Emily")) {
+            JButton storeButton = new GameButton("Store");
+            storeButton.setBounds(160, 460, 250, 50);
+            this.add(storeButton);
+
+            storeButton.addActionListener(e -> {store.buyItem();});
+        }
+
         JButton backGameButton = new GameButton("Back to game");
         backGameButton.setBounds(15, 10, 157, 25);
         this.add(backGameButton);
@@ -58,5 +69,13 @@ public class NPCInteractionPanel extends JPanel {
         chatButton.addActionListener(e -> System.out.println("Chatting with NPC " + gp.getCurrentNPC().getName())); //belum implement
         giftButton.addActionListener(e -> {gp.getPlayerController().gifting(gp.getCurrentNPC(), gp.getPlayer().getItemHeld());});
         backGameButton.addActionListener(e -> {mainFrame.switchPanel("game");});
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if(background != null) {
+            g.drawImage(background, 0, 0, null);
+        }
     }
 }
