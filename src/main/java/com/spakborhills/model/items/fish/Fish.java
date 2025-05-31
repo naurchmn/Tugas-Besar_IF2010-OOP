@@ -4,11 +4,12 @@ import com.spakborhills.model.game.Season;
 import com.spakborhills.model.game.Weather;
 import com.spakborhills.model.items.Item;
 import com.spakborhills.model.items.Rarity;
+import com.spakborhills.model.items.behavior.Edible;
 
 import javax.swing.*;
 import java.util.*;
 
-public class Fish extends Item implements Cloneable {
+public class Fish extends Item implements Cloneable, Edible {
     private String name;
     private List<Season> season = new ArrayList<>();
     private List<Integer> startTimes = new ArrayList<>();

@@ -1,8 +1,9 @@
 package com.spakborhills.model.items.foods;
 
 import com.spakborhills.model.items.Item;
+import com.spakborhills.model.items.behavior.Edible;
 
-public class Food extends Item implements Cloneable{
+public class Food extends Item implements Cloneable, Edible {
     int energyGain;
 
     public Food(String name, int buyPrice, int sellPrice) {

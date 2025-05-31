@@ -38,4 +38,6 @@ public class Entity {
     public void setWorldX(int worldX) {
         this.worldX = worldX;
     }
+
+    public Rectangle getSolidArea() {return solidArea;}
 }
