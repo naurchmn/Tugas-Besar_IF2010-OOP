@@ -6,6 +6,7 @@ import com.spakborhills.model.entity.Entity;
 import com.spakborhills.model.entity.Player;
 import com.spakborhills.model.entity.PlayerView;
 import com.spakborhills.model.items.Item;
+import com.spakborhills.model.items.ShippingBin;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,6 +55,8 @@ public class GamePanel extends  JPanel{
     private boolean positionSetByReturn = false;
 
     private boolean inventoryOpened;
+
+    private ShippingBin shippingBin = new ShippingBin();
 
     public int getTileSize() {
         return tileSize;
@@ -243,6 +246,17 @@ public class GamePanel extends  JPanel{
                 playerController.planting();
             } else if (currentTileType.equals("146.png") || currentTileType.equals("148.png")) {
                 playerController.harvesting();
+            } else if (currentTileType.equals("009.png") || currentTileType.equals("010.png") || currentTileType.equals("011.png") || currentTileType.equals("012.png")) {
+                playerController.chooseItem();
+                if (player.getItemHeld() != null){
+                    if (shippingBin.addItem(player.getItemHeld(), 1)){
+                        player.getInventory().use(player.getItemHeld(), 1);
+                        System.out.println("Item " + player.getItemHeld().getName() + " added to bin");
+                    }
+                    else{
+                        System.out.println("Shipping bin is full");
+                    }
+                } 
             }
             keyH.setEnterPressed(false);
         }

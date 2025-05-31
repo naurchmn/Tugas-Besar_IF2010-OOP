@@ -10,24 +10,29 @@ import com.spakborhills.model.entity.PlayerView;
 import com.spakborhills.model.entity.RelationshipStatus;
 import com.spakborhills.model.entity.npc.NPC;
 import com.spakborhills.model.game.*;
+import com.spakborhills.model.items.Inventory;
 import com.spakborhills.model.items.Item;
+import com.spakborhills.model.items.ShippingBin;
 import com.spakborhills.model.items.behavior.Edible;
 import com.spakborhills.model.items.behavior.Usable;
 import com.spakborhills.model.items.crops.Crops;
 import com.spakborhills.model.items.fish.Fish;
 import com.spakborhills.model.items.fish.FishRegistry;
 import com.spakborhills.model.items.foods.Food;
+import com.spakborhills.model.items.recipes.Recipe;
+import com.spakborhills.model.items.recipes.RecipeRegistry;
+import com.spakborhills.model.items.recipes.RecipeUnlocker;
 import com.spakborhills.model.items.seeds.Seed;
 import com.spakborhills.view.gui.GamePanel;
 import com.spakborhills.view.gui.MainFrame;
 import java.awt.*;
-import java.util.Set;
-import java.util.Random;
+import java.util.*;
 
 public class PlayerController {
 
     private Player player;
     private PlayerView drawPlayer;
+    PlayerStats playerStats = PlayerStats.getInstance();
     GameTime gameTime = GameTime.getInstance();
     private GamePanel gp;
     private Random rand = new Random();
@@ -59,6 +64,30 @@ public class PlayerController {
         else{
             player.setItemHeld((foundItem));
             System.out.println("Item held: " + foundItem.getName());
+        }
+    }
+
+    public void chooseRecipe(){
+        String recipeUse = JOptionPane.showInputDialog(null, "Masukkan nama resep yang ingin dipilih atau back untuk kembali:", "Pilih Resep", JOptionPane.QUESTION_MESSAGE);
+
+        if (recipeUse==null || recipeUse.equalsIgnoreCase("back")){
+            return;
+        }
+
+        Recipe foundRecipe = null;
+        for (Recipe recipe : RecipeRegistry.getUnlockedRecipes()){
+            if (recipe.getRecipeName().equalsIgnoreCase(recipeUse)){
+                foundRecipe = recipe;
+                break;
+            }
+        }
+
+        if (foundRecipe == null){
+            System.out.println("Recipe not found!");
+        }
+        else{
+            player.setRecipePicked(foundRecipe);
+            System.out.println("Recipe picked: " + foundRecipe.getRecipeName());
         }
     }
 
@@ -142,9 +171,46 @@ public class PlayerController {
         gameTime.advanceGameTime(5);
     }
     public void cooking(){
+        Inventory inventory = player.getInventory();
+        Map<Item, Integer> ingredients = player.getRecipePicked().getIngredients();
+
+        boolean ingredientsEnough = true;
+
+        if (!inventory.getPlayerInventory().containsKey("Coal") && !inventory.getPlayerInventory().containsKey("Firewood")){
+            System.out.println("You don't have any fuel!");
+            return;
+        }
+
+
+        // ngecek ingredients yang ada di inventory player
+        for (Item item : ingredients.keySet()){
+            if (inventory.getPlayerInventory().containsKey(item)){
+                if (ingredients.get(item) > inventory.getPlayerInventory().get(item)){ // kalau jumlah yang dibutuhkan recipe > daripada yang dipunya
+                    System.out.println("You don't have enough " + item.getName());
+                    return;
+                }
+                // inventory.put(item, inventory.get(item) - recipe.get(item));
+            }
+            else{
+                System.out.println("You don't have " + item.getName());
+                return;
+            }
+        }
+
+        // ngurangin ingredients di inventory player
+        for (Item item : ingredients.keySet()){
+            inventory.use(item, ingredients.get(item));
+        }
+
+
+
+        player.setEnergy(player.getEnergy() - 10);
 
     }
     public void sleeping(int energyLeft, int sleepHour, int sleepMinute){
+        ShippingBin shippingBin = new ShippingBin();
+        int incomeGold = shippingBin.sellAllItemsAndReturnProfit();
+
         if (energyLeft < 0.1 * player.getMaxEnergy()){
             player.setEnergy(player.getMaxEnergy() / 2);
             System.out.println("Anda terbangun dalam keadaan lelah");
@@ -166,6 +232,10 @@ public class PlayerController {
             int hourTo2 = 23 - sleepHour;
             int minuteTo2 = (60 - sleepMinute) + hourTo2 * 60;
             gameTime.startNewDay(minuteTo2);
+        }
+
+        if (incomeGold > 0){
+            player.setGold(player.getGold() + incomeGold);
         }
     }
     public void watching(){
@@ -222,6 +292,8 @@ public class PlayerController {
             if (success){
                 player.getInventory().add(caughtFish.clone(), 1);
                 System.out.println("You caught a " + caughtFish.getName() + "!");
+
+                playerStats.fishCaught(caughtFish);
             }
             else{
                 System.out.println("The fish got away!");
@@ -284,8 +356,20 @@ public class PlayerController {
         npc.setHeartPoints(npc.getHeartPoints() + heartPoints);
         gameTime.advanceGameTime(10);
         player.setEnergy(player.getEnergy() - 5);
+
+        playerStats.addNPCInteraction(npc.getName(), NPCInteractionType.GIFTING);
     }
-    public void selling(){}
+    public void selling(){
+        ShippingBin shippingBin = new ShippingBin();
+        
+        for (Map.Entry<Item, Integer> entry : shippingBin.getItemsToSell().entrySet()){
+            Item item = entry.getKey();
+
+            System.out.println(item.getName() + "dijual seharga " + item.getSellPrice() + "g");
+        }
+        shippingBin.getItemsToSell();
+        shippingBin.sellAllItemsAndReturnProfit();
+    }
 
     // getter setter
     public PlayerView getPlayerView() {

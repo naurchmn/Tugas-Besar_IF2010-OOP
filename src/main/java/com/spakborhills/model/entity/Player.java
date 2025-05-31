@@ -3,6 +3,7 @@ package com.spakborhills.model.entity;
 //import com.spakborhills.model.entity.npc.NPCRegistry;
 import com.spakborhills.model.items.Inventory;
 import com.spakborhills.model.items.Item;
+import com.spakborhills.model.items.recipes.Recipe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ public class Player {
     private int gold;
     private Inventory inventory;
     private Item itemHeld = null;
+    private Recipe recipePicked = null;
 
     // location
 
@@ -72,4 +74,8 @@ public class Player {
     public Inventory getInventory() {
         return inventory;
     }
+
+    public Recipe getRecipePicked() { return recipePicked; }
+
+    public void setRecipePicked(Recipe recipePicked) { this.recipePicked = recipePicked;}
 }
