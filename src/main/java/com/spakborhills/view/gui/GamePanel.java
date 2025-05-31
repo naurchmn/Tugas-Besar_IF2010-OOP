@@ -365,12 +365,8 @@ public class GamePanel extends  JPanel{
                         System.out.println("Calling getOutTheHouse() from GamePanel");
                         playerController.getOutTheHouse();
                     }
-                } else if (currentTileType.equals("000.png")) {
-                    if (currentMap.equals("farm")) {
-                        if (playerController.rightTool("Hoe")) {
-                            playerController.tilling();
-                        }
-                    }
+                } else if (currentTileType.equals("000.png") && currentMap.equals("farm") && playerController.rightTool("Hoe")) {
+                    playerController.tilling();
                 } else if (frontTileType.equals("006.png")) {
                     if (playerController.rightTool("Fishing Rod")) {
                         System.out.println("try to fish");
@@ -476,7 +472,7 @@ public class GamePanel extends  JPanel{
             }
             positionSetByReturn = false; // Reset flag setelah digunakan
         }
-        System.out.println("Current NPC: " + currentNPC.getName());
+//        System.out.println("Current NPC: " + currentNPC.getName());
     }
 
     // Metode baru untuk menampilkan gambar

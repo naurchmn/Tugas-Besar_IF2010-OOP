@@ -77,7 +77,7 @@ public class TileManager {
 
     public void draw(Graphics2D g2) {
         if (currentActiveMap == null || currentActiveMap.getTileData() == null) {
-            System.err.println("Error: No active map or tile data in TileManager to draw.");
+//            System.err.println("Error: No active map or tile data in TileManager to draw.");
             return;
         }
 
