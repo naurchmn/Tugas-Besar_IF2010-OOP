@@ -1,10 +1,14 @@
 package com.spakborhills.model.items;
 
+import com.spakborhills.controller.PlayerStats;
+import com.spakborhills.model.entity.Player;
+
 import java.util.*;
 
 public class ShippingBin {
     private final int MAX_UNIQUE_ITEMS = 16;
     private final Map<Item, Integer> itemsToSell;
+    private Inventory inventory = new Inventory();
 
     public ShippingBin() {
         this.itemsToSell = new HashMap<>();
@@ -40,6 +44,15 @@ public class ShippingBin {
 
     // Panggil method ini saat Player tidur (misalnya di Player.sleep())
     public int sellAllItemsAndReturnProfit() {
+        PlayerStats playerStats = PlayerStats.getInstance();
+        for (Map.Entry<Item, Integer> entry : itemsToSell.entrySet()) {
+            Item item = entry.getKey();
+            int quantity = entry.getValue();
+
+            for (int i = 0; i < quantity; i++) {
+                playerStats.addToIncome(item);
+            }
+        }
         int income = calculateTotalSellPrice();
         clearBin(); // kosongin bin setelah penjualans
         return income;

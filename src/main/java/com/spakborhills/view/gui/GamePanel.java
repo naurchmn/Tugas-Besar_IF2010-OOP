@@ -12,6 +12,7 @@ import com.spakborhills.model.game.GameMap;
 import com.spakborhills.model.game.PlantManager;
 import com.spakborhills.model.items.Item;
 import com.spakborhills.model.items.behavior.Edible;
+import com.spakborhills.model.items.ShippingBin;
 
 import javax.swing.*;
 import java.awt.*;
@@ -72,6 +73,8 @@ public class GamePanel extends  JPanel{
 
     // Map untut menentukan player masuk ke dalam house milik NPC yang mana
     private Map<String, String> houseEntrances = new HashMap<>();
+
+    private ShippingBin shippingBin = new ShippingBin();
 
     public int getTileSize() {
         return tileSize;
@@ -400,6 +403,17 @@ public class GamePanel extends  JPanel{
                         frontTileType.equals("109.png") || frontTileType.equals("110.png") ||
                         frontTileType.equals("120.png") || frontTileType.equals("121.png")) && currentMap.equals("house default")) {
                     playerController.cooking();
+                } else if (currentTileType.equals("009.png") || currentTileType.equals("010.png") || currentTileType.equals("011.png") || currentTileType.equals("012.png")) {
+                    playerController.chooseItem();
+                    if (player.getItemHeld() != null){
+                        if (shippingBin.addItem(player.getItemHeld(), 1)){
+                            player.getInventory().use(player.getItemHeld(), 1);
+                            System.out.println("Item " + player.getItemHeld().getName() + " added to bin");
+                        }
+                        else{
+                            System.out.println("Shipping bin is full");
+                        }
+                    }
                 }
             }
             keyH.setEnterPressed(false);
@@ -482,7 +496,6 @@ public class GamePanel extends  JPanel{
             }
             positionSetByReturn = false; // Reset flag setelah digunakan
         }
-//        System.out.println("Current NPC: " + currentNPC.getName());
     }
 
     // Metode baru untuk menampilkan gambar

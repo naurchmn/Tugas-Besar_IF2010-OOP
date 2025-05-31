@@ -7,6 +7,7 @@ import com.spakborhills.model.items.fish.FishRegistry;
 import com.spakborhills.model.items.foods.FoodRegistry;
 import com.spakborhills.model.items.seeds.Seed;
 import com.spakborhills.model.items.seeds.SeedRegistry;
+import com.spakborhills.model.items.recipes.Recipe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ public class Player {
     private int gold;
     private Inventory inventory;
     private Item itemHeld = null;
+    private Recipe recipePicked = null;
 
     // location
 
@@ -79,4 +81,8 @@ public class Player {
     public Inventory getInventory() {
         return inventory;
     }
+
+    public Recipe getRecipePicked() { return recipePicked; }
+
+    public void setRecipePicked(Recipe recipePicked) { this.recipePicked = recipePicked;}
 }

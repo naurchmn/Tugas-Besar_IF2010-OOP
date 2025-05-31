@@ -155,5 +155,16 @@ public class Fish extends Item implements Cloneable, Edible {
     public int hashCode() {
         return Objects.hash(name);
     }
+
+    @Override
+    public String toString() {
+        return "Fish{" +
+                "Name='" + getName() + '\'' +
+                ", Season='" + getSeason() + '\'' +
+                ", Rarity='" + getRarity() + '\'' +
+                ", Sell Price=" + getSellPrice() + '\'' +
+                ", Buy Price=" + getBuyPrice() + '\'' +
+                '}';
+    }
 }
 

@@ -119,16 +119,17 @@ public class NPCRegistry {
         npcPrototypes.put(prototype.getName(), prototype);
     }
 
+
+    public static boolean hasPrototype(String name) {
+        return npcPrototypes.containsKey(name);
+    }
+
     public static NPC getNPCPrototype(String name) {
         NPC prototype = npcPrototypes.get(name);
         if (prototype != null) {
             return prototype.clone();
         }
         return null;
-    }
-
-    public static boolean hasPrototype(String name) {
-        return npcPrototypes.containsKey(name);
     }
 
     public static Set<String> getAvailableNPCs() {

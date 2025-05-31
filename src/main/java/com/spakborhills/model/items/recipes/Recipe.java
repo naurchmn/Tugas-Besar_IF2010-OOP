@@ -2,7 +2,7 @@ package com.spakborhills.model.items.recipes;
 
 import com.spakborhills.model.items.Item;
 import com.spakborhills.model.items.foods.Food;
-import com.spakborhills.model.items.foods.FoodRegistry;
+
 import java.util.*;
 
 public class Recipe implements Cloneable {
@@ -29,6 +29,7 @@ public class Recipe implements Cloneable {
     public Recipe clone(){
         try {
             Recipe cloned = (Recipe) super.clone();
+            cloned.ingredients = new HashMap<>(this.ingredients);
             return cloned;
         }
         catch (CloneNotSupportedException e) {
@@ -43,7 +44,7 @@ public class Recipe implements Cloneable {
     public UnlockCondition getUnlockCondition() {return unlockCondition;}
     public boolean isUnlocked() {return isUnlocked;}
 
-    public void unlock(){
+    public void unlock(){ 
         if (!this.isUnlocked){
             this.isUnlocked = true;
             System.out.println("Resep " + recipeName + " telah dibuka.");
