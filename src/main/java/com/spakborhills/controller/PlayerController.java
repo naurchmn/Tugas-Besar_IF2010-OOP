@@ -59,7 +59,7 @@ public class PlayerController {
         }
         else{
             player.setItemHeld((foundItem));
-            System.out.println("Item held: " + foundItem.getName());
+            System.out.println("Chosen Item: " + foundItem.getName());
         }
     }
 
@@ -72,6 +72,10 @@ public class PlayerController {
 
     public boolean holdingSeed(){
         return player.getItemHeld() instanceof Seed;
+    }
+
+    public boolean holdingEdible(){
+        return player.getItemHeld() instanceof Edible;
     }
 
     public void farmingAction(){
@@ -122,7 +126,7 @@ public class PlayerController {
 
             if (currentTileType.equals("004.png")) { // Kalau sekarang tilenya 004.png (kering)
                 //tambahkan ke plant manager
-                PlantInfo plant = new PlantInfo(playerTileCol, playerTileRow, cropName, seed.getDaysToHarvest(), false, true);
+                PlantInfo plant = new PlantInfo(playerTileCol, playerTileRow, cropName, seed.getDaysToHarvest(), false, false);
                 gp.getPlantManager().setPlant(plant.getSoilLocation(), plant);
 
                 //ubah gambar tile
@@ -179,6 +183,7 @@ public class PlayerController {
             return;
         }
         player.getInventory().add(CropsRegistry.getCropsPrototype(gp.getPlantManager().getPlants().get(tileLoc).getCropName()), 1);
+        gp.getPlantManager().getPlants().remove(tileLoc);
 
         recoverLand();
         farmingAction();
@@ -213,8 +218,12 @@ public class PlayerController {
         else if (food instanceof Fish){
             energy = 1;
         }
-        player.setEnergy(energy);
+        player.setEnergy(player.getEnergy() + energy);
         gameTime.advanceGameTime(5);
+        player.getInventory().use((Item) food, 1);
+        if (!player.getInventory().getPlayerInventory().containsKey(food)){
+            player.setItemHeld(null);
+        }
     }
     public void cooking(){
 
@@ -265,7 +274,7 @@ public class PlayerController {
 
     // WORLD ACTION
     public void fishing(){
-        System.out.println("You are fishing..."); // Tetap di konsol untuk debug
+        System.out.println("You are trying to fish..."); // Tetap di konsol untuk debug
 
         Season season = gameTime.getSeason();
         int fishingHour = gameTime.getInGameHours();

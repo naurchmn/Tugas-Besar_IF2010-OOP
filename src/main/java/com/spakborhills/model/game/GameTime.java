@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Random;
 
-public class GameTime {
+public class GameTime extends Subject {
     private static GameTime instance; //singleton
 
     private Season season = Season.SPRING;
@@ -91,12 +91,14 @@ public class GameTime {
             inGameDays += 1;
             inGameHours = 0;
             changeWeather();
+            notifyObservers("DAYS CHANGED", weather);
         }
 
         if (inGameDays >= 11) {
             inGameSeason += 1;
             inGameDays = 1;
             randomizeRainyDay();
+            notifyObservers("SEASON CHANGED", season);
         }
 
         if (inGameSeason >= 4) {

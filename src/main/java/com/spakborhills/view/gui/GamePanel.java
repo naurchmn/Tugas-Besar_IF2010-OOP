@@ -11,6 +11,7 @@ import com.spakborhills.model.entity.npc.NPCView;
 import com.spakborhills.model.game.GameMap;
 import com.spakborhills.model.game.PlantManager;
 import com.spakborhills.model.items.Item;
+import com.spakborhills.model.items.behavior.Edible;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,7 +52,7 @@ public class GamePanel extends  JPanel{
     public ArrayList<NPCView> npcList;
     private GameLoop gameLoop;
     private KeyHandler keyH = new KeyHandler();
-    private PlantManager plantManager = new PlantManager();
+    private PlantManager plantManager = new PlantManager(this);
     private NPC currentNPC;
 
     private String currentMap = "farm";
@@ -67,7 +68,7 @@ public class GamePanel extends  JPanel{
     private boolean inventoryOpened;
 
     private Map<String, GameMap> loadedGameMaps = new HashMap<>();
-    
+
     // Map untut menentukan player masuk ke dalam house milik NPC yang mana
     private Map<String, String> houseEntrances = new HashMap<>();
 
@@ -213,7 +214,7 @@ public class GamePanel extends  JPanel{
 
         this.addKeyListener(keyH);
         gameLoop = new GameLoop(60, this::update, this::repaint);
-//        gameLoop.getGameTime().addObserver(plantManager);
+        gameLoop.getGameTime().addObserver(plantManager);
 
 //        JButton backButton = new GameButton("Back to homescreen");
 //        backButton.setBounds(15, 10, 157, 25);
@@ -253,8 +254,10 @@ public class GamePanel extends  JPanel{
             // Print hanya saat inventory baru dibuka
             if (!wasInventoryOpened) {
                 try {
-                    System.out.println("Item held : " + player.getItemHeld().getName());
-                } catch (NullPointerException _) {}
+                    System.out.println("Holding Item : " + player.getItemHeld().getName());
+                } catch (NullPointerException _) {
+                    System.out.println("Not holding any item");
+                }
 
                 if (player.getInventory().getPlayerInventory().isEmpty()) {
                     System.out.println("Inventory empty:(");
@@ -287,8 +290,6 @@ public class GamePanel extends  JPanel{
                 }
             }
         }
-
-//        if (currentMapParts)
 
         if (gameLoop.getGameTime().getInGameHours() == 2){
             playerController.sleeping(player.getEnergy(), gameLoop.getGameTime().getInGameHours(), 0);
@@ -331,62 +332,67 @@ public class GamePanel extends  JPanel{
         String currentHouseNPCNameForInteraction = (currentMapPartsForInteraction.length > 1) ? currentMapPartsForInteraction[1] : null; // Default ke null
 
         if (keyH.isEnterPressed()) {
-            if ((currentTileType.equals("046.png") || currentTileType.equals("047.png") ||
-                    currentTileType.equals("040.png") || currentTileType.equals("041.png"))) { // Pintu masuk rumah
-                if (!currentMap.split(" ")[0].equals("house")) { // Pastikan tidak sudah di dalam house
-                    // Mendapatkan koordinat tile player saat ini
-                    int playerTileCol = playerView.getWorldX() / tileSize;
-                    int playerTileRow = playerView.getWorldY() / tileSize;
+            if (currentTileType != null) {
+                if (playerController.holdingEdible()) {
+                    playerController.eating((Edible) player.getItemHeld());
+                } else if ((currentTileType.equals("046.png") || currentTileType.equals("047.png") ||
+                        currentTileType.equals("040.png") || currentTileType.equals("041.png"))) { // Pintu masuk rumah
+                    if (!currentMap.split(" ")[0].equals("house")) { // Pastikan tidak sudah di dalam house
+                        // Mendapatkan koordinat tile player saat ini
+                        int playerTileCol = playerView.getWorldX() / tileSize;
+                        int playerTileRow = playerView.getWorldY() / tileSize;
 
-                    // Membuat key untuk mencari di houseEntrances map
-                    String entranceKey = playerTileCol + "," + playerTileRow;
-                    String npcForThisHouse = houseEntrances.get(entranceKey); // mengambil nama npc untuk house
+                        // Membuat key untuk mencari di houseEntrances map
+                        String entranceKey = playerTileCol + "," + playerTileRow;
+                        String npcForThisHouse = houseEntrances.get(entranceKey); // mengambil nama npc untuk house
 
-                    if (npcForThisHouse != null) {
-                        // Ubah currentMap menjadi "house [NPCName]"
-                        setCurrentMap("house " + npcForThisHouse);
-                        System.out.println("Entering " + npcForThisHouse + "'s house.");
-                        currentNPC = NPCRegistry.getNPCPrototype(npcForThisHouse);
-                    } else {
-                        // Jika tidak ada NPC yang terdaftar untuk pintu ini, masuk ke house default
-                        // Jika semua rumah ada NPC-nya, bagian ini bisa dihapus
-                        setCurrentMap("house default"); // Atau "house" saja
-                        System.out.println("Entering a generic house.");
+                        if (npcForThisHouse != null) {
+                            // Ubah currentMap menjadi "house [NPCName]"
+                            setCurrentMap("house " + npcForThisHouse);
+                            System.out.println("Entering " + npcForThisHouse + "'s house.");
+                            currentNPC = NPCRegistry.getNPCPrototype(npcForThisHouse);
+                        } else {
+                            // Jika tidak ada NPC yang terdaftar untuk pintu ini, masuk ke house default
+                            // Jika semua rumah ada NPC-nya, bagian ini bisa dihapus
+                            setCurrentMap("house default"); // Atau "house" saja
+                            System.out.println("Entering a generic house.");
+                        }
                     }
-                }
-            } else if (currentTileType.equals("138.png") || currentTileType.equals("139.png")) { // Pintu keluar rumah
-                if (currentMap.split(" ")[0].equals("house")) { // Pastikan sedang di dalam house
-                    System.out.println("Calling getOutTheHouse() from GamePanel");
-                    playerController.getOutTheHouse();
-                }
-            } else if (currentTileType.equals("000.png")) {
-                if (currentMap.equals("farm")) {
-                    if (playerController.rightTool("Hoe")) {
-                        playerController.tilling();
+                } else if (currentTileType.equals("138.png") || currentTileType.equals("139.png")) { // Pintu keluar rumah
+                    if (currentMap.split(" ")[0].equals("house")) { // Pastikan sedang di dalam house
+                        System.out.println("Calling getOutTheHouse() from GamePanel");
+                        playerController.getOutTheHouse();
                     }
+                } else if (currentTileType.equals("000.png")) {
+                    if (currentMap.equals("farm")) {
+                        if (playerController.rightTool("Hoe")) {
+                            playerController.tilling();
+                        }
+                    }
+                } else if (frontTileType.equals("006.png")) {
+                    if (playerController.rightTool("Fishing Rod")) {
+                        System.out.println("try to fish");
+                        playerController.fishing();
+                        gameLoop.getGameTime().setStartTime(System.nanoTime());
+                    }
+                } else if (currentTileType.equals("004.png") || currentTileType.equals("147.png")) {
+                    if (playerController.holdingSeed()) {
+                        playerController.planting();
+                    } else if (playerController.rightTool("Hoe")) {
+                        playerController.recoverLand();
+                    }
+                } else if (currentTileType.equals("146.png") || currentTileType.equals("148.png")) {
+                    if (player.getItemHeld() == null) {
+                        playerController.harvesting();
+                    }
+                } else if (frontTileType.equals("079.png") || frontTileType.equals("080.png") ||
+                        frontTileType.equals("090.png") ||frontTileType.equals("091.png") ||
+                        frontTileType.equals("102.png") ||frontTileType.equals("103.png") && currentMap.equals("house default")) {
+                    playerController.sleeping(player.getEnergy(), gameLoop.getGameTime().getInGameHours(), gameLoop.getGameTime().getInGameMinutes());
+                } else if (frontTileType.equals("082.png") || frontTileType.equals("083.png") ||
+                        frontTileType.equals("093.png") || frontTileType.equals("094.png") && currentMap.equals("house default")) {
+                    playerController.watching();
                 }
-            } else if (frontTileType.equals("006.png") && player.energySufficient(5)) {
-                if (playerController.rightTool("Fishing Rod")) {
-                    playerController.fishing();
-                    gameLoop.getGameTime().setStartTime(System.nanoTime());
-                }
-            } else if (currentTileType.equals("004.png") || currentTileType.equals("147.png")) {
-                if (playerController.holdingSeed()) {
-                    playerController.planting();
-                } else if (playerController.rightTool("Hoe")) {
-                    playerController.recoverLand();
-                }
-            } else if (currentTileType.equals("146.png") || currentTileType.equals("148.png")) {
-                if (player.getItemHeld() == null){
-                    playerController.harvesting();
-                }
-            } else if ((frontTileType.equals("079.png") || frontTileType.equals("080.png") ||
-                    frontTileType.equals("090.png") ||frontTileType.equals("091.png") ||
-                    frontTileType.equals("102.png") ||frontTileType.equals("103.png")) && currentMap.equals("house default")) {
-                playerController.sleeping(player.getEnergy(), gameLoop.getGameTime().getInGameHours(), gameLoop.getGameTime().getInGameMinutes());
-            } else if ((frontTileType.equals("082.png") || frontTileType.equals("083.png") ||
-                    frontTileType.equals("093.png") || frontTileType.equals("094.png")) && currentMap.equals("house default")) {
-                playerController.watching();
             }
             keyH.setEnterPressed(false);
         }
@@ -466,8 +472,7 @@ public class GamePanel extends  JPanel{
             }
             positionSetByReturn = false; // Reset flag setelah digunakan
         }
-        System.out.println("Current map: " + currentMap);
-
+//        System.out.println(currentMap); // debug kecil kecilan
     }
 
     // Metode baru untuk menampilkan gambar
@@ -509,7 +514,7 @@ public class GamePanel extends  JPanel{
         }
     }
 
-    public String getPlayerFishingArea(int row, int col){
+    public String getPlayerFishingArea(int col, int row){
         if (currentMap.equals("farm")) {
             return "Pond";
         }
