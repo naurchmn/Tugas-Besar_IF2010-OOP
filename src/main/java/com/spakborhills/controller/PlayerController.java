@@ -19,6 +19,7 @@ import com.spakborhills.model.items.fish.FishRegistry;
 import com.spakborhills.model.items.foods.Food;
 import com.spakborhills.model.items.seeds.Seed;
 import com.spakborhills.view.gui.GamePanel;
+import com.spakborhills.view.gui.NPCInteractionPanel;
 import java.util.Random;
 
 public class PlayerController {
@@ -352,6 +353,8 @@ public class PlayerController {
     }
     public void marrying(NPC npc){
         System.out.println("You are now married to " + npc.getName());
+        String currentNPCName = gp.getCurrentNPC().getName();
+        gp.getNpcInteractionPanel().showTemporaryPopUpNPC("/assets/PopUps/MarriedPopUp/Marry" + currentNPCName + ".png", 2500, 0);
     }
 
     public void gifting(NPC npc, Item item){ //PLayerController.gifting(NPCRegistry.getNPCPrototype("Dasco")

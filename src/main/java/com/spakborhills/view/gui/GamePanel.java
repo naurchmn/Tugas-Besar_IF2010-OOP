@@ -54,6 +54,7 @@ public class GamePanel extends  JPanel{
     private KeyHandler keyH = new KeyHandler();
     private PlantManager plantManager = new PlantManager(this);
     private NPC currentNPC;
+    private NPCInteractionPanel npcInteractionPanel;
 
     private String currentMap = "farm";
     private String currentTileType;
@@ -139,6 +140,10 @@ public class GamePanel extends  JPanel{
 
     public Player getPlayer() { return player;}
 
+    public NPCInteractionPanel getNpcInteractionPanel() {
+        return npcInteractionPanel;
+    }
+
     public GamePanel(MainFrame mainFrame, LoginPanel loginPanel) {
 
         this.setBackground(Color.WHITE);
@@ -218,15 +223,15 @@ public class GamePanel extends  JPanel{
         gameLoop = new GameLoop(60, this::update, this::repaint);
         gameLoop.getGameTime().addObserver(plantManager);
 
-//        JButton backButton = new GameButton("Back to homescreen");
-//        backButton.setBounds(15, 10, 157, 25);
-//        this.add(backButton);
-//
-//        backButton.addActionListener(e -> {
-//            mainFrame.switchPanel("home");
-//            pauseGame();
-//            keyH.resetKeys();
-//        });
+        JButton backButton = new GameButton("Back to homescreen");
+        backButton.setBounds(15, 25, 157, 25);
+        this.add(backButton);
+
+        backButton.addActionListener(e -> {
+            mainFrame.switchPanel("home");
+            pauseGame();
+            keyH.resetKeys();
+        });
     }
 
     public void startGame() {
@@ -411,7 +416,7 @@ public class GamePanel extends  JPanel{
                     if (currentHouseNPCNameForInteraction != null && currentHouseNPCNameForInteraction.equals(npc.getNPCModel().getName()) &&
                             npc.isPlayerInInteractionRange(playerView.getWorldX(), playerView.getWorldY(), tileSize, playerView.direction)) {
                         // Pindah ke Panel untuk interaksi dengan NPC
-                        NPCInteractionPanel npcInteractionPanel = new NPCInteractionPanel(mainFrame, this, this.currentNPC.getName());
+                        npcInteractionPanel = new NPCInteractionPanel(mainFrame, this, this.currentNPC.getName());
                         mainFrame.mainPanel.add(npcInteractionPanel, "npc");
                         mainFrame.switchPanel("npc");
                         pauseGame();
@@ -476,7 +481,6 @@ public class GamePanel extends  JPanel{
             }
             positionSetByReturn = false; // Reset flag setelah digunakan
         }
-        System.out.println("Current NPC: " + currentNPC.getName());
     }
 
     // Metode baru untuk menampilkan gambar
