@@ -514,7 +514,7 @@ public class GamePanel extends  JPanel{
         }
     }
 
-    public String getPlayerFishingArea(int col, int row){
+    public String getPlayerFishingArea(int row, int col){
         if (currentMap.equals("farm")) {
             return "Pond";
         }
