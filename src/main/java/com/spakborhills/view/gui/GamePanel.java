@@ -8,6 +8,7 @@ import com.spakborhills.model.entity.PlayerView;
 import com.spakborhills.model.entity.npc.NPC;
 import com.spakborhills.model.entity.npc.NPCRegistry;
 import com.spakborhills.model.entity.npc.NPCView;
+import com.spakborhills.model.game.GameMap;
 import com.spakborhills.model.game.PlantManager;
 import com.spakborhills.model.items.Item;
 
@@ -65,6 +66,8 @@ public class GamePanel extends  JPanel{
 
     private boolean inventoryOpened;
 
+    private Map<String, GameMap> loadedGameMaps = new HashMap<>();
+    
     // Map untut menentukan player masuk ke dalam house milik NPC yang mana
     private Map<String, String> houseEntrances = new HashMap<>();
 
@@ -123,13 +126,9 @@ public class GamePanel extends  JPanel{
             this.currentMap = "farm";
             playerView.setWorldX(tileSize * 95);
             playerView.setWorldY(tileSize * 122);
-            // Pastikan TileManager juga di-reset jika fallback terjadi dan peta belum "farm"
-            if (!"farm".equals(tileM.getLoadedMap())) {
-                tileM.setLoadedMap("farm");
-                tileM.loadMap("/assets/FarmMaps/farm_map.txt");
-            }
+            // Muat peta farm dari loadedGameMaps
+            // Ini akan ditangani di switch case di update()
             positionSetByReturn = false;
-            System.out.println("Fallback: Moved to default farm position.");
         }
     }
 
@@ -153,9 +152,13 @@ public class GamePanel extends  JPanel{
         playerView = new PlayerView(this, keyH, player);
         playerController = new PlayerController(player, playerView, this);
 
+        // Load semua map di awal
+        loadedGameMaps.put("farm", new GameMap(this, "farm", "/assets/FarmMaps/farm_map.txt"));
+        loadedGameMaps.put("world", new GameMap(this, "world", "/assets/WorldMaps/WorldMaps"));
+        loadedGameMaps.put("house", new GameMap(this, "house", "/assets/HouseMap/HouseInteriorMap"));
+
         // Menambahkan para NPC ke dalam game
         npcList = new ArrayList<>();
-
         NPCView abigailNPC = new NPCView(this, "Abigail", 117, 120);
         NPCView carolineNPC = new NPCView(this, "Caroline", 117, 120);
         NPCView dascoNPC = new NPCView(this, "Dasco", 117, 120);
@@ -377,12 +380,12 @@ public class GamePanel extends  JPanel{
                 if (player.getItemHeld() == null){
                     playerController.harvesting();
                 }
-            } else if (frontTileType.equals("079.png") || frontTileType.equals("080.png") ||
+            } else if ((frontTileType.equals("079.png") || frontTileType.equals("080.png") ||
                     frontTileType.equals("090.png") ||frontTileType.equals("091.png") ||
-                    frontTileType.equals("102.png") ||frontTileType.equals("103.png") && currentMap.equals("house default")) {
+                    frontTileType.equals("102.png") ||frontTileType.equals("103.png")) && currentMap.equals("house default")) {
                 playerController.sleeping(player.getEnergy(), gameLoop.getGameTime().getInGameHours(), gameLoop.getGameTime().getInGameMinutes());
-            } else if (frontTileType.equals("082.png") || frontTileType.equals("083.png") ||
-                    frontTileType.equals("093.png") || frontTileType.equals("094.png") && currentMap.equals("house default")) {
+            } else if ((frontTileType.equals("082.png") || frontTileType.equals("083.png") ||
+                    frontTileType.equals("093.png") || frontTileType.equals("094.png")) && currentMap.equals("house default")) {
                 playerController.watching();
             }
             keyH.setEnterPressed(false);
@@ -426,46 +429,45 @@ public class GamePanel extends  JPanel{
             keyH.setSpacePressed(false);
         }
 
-        // switch map sesuai kebutuhan
-        String prevLoadedMap = tileM.getLoadedMap(); // Simpan map yang sudah dimuat sebelumnya
-        String targetMap = currentMap.split(" ")[0]; // Simpan currentMap sebelum diubah oleh tileM.setLoadedMap()
+        // Logic untuk switch map
+        String targetMap = currentMap.split(" ")[0]; // Ambil nama base map dari currentMap
 
-        switch (targetMap){
-            case "farm":
-                if(!"farm".equals(prevLoadedMap)){ // Hanya muat ulang jika belum dimuat
-                    tileM.setLoadedMap("farm");
-                    tileM.loadMap("/assets/FarmMaps/farm_map.txt");
-                    // Posisi default jika tidak ada posisi masuk dari rumah
-                    if (entranceWorldX == -1) { // Hanya set default jika tidak ada posisi masuk yang disimpan
+        if (tileM.getActiveMap() == null || !tileM.getActiveMap().getMapName().equals(targetMap)) {
+            GameMap mapToLoad = loadedGameMaps.get(targetMap);
+            if (mapToLoad != null) {
+                tileM.setActiveMap(mapToLoad);
+                System.out.println("Switched active map to: " + mapToLoad.getMapName());
+            } else {
+                System.err.println("Error: GameMap '" + targetMap + "' not found in loadedGameMaps!");
+                // Fallback jika map tidak ditemukan
+                tileM.setActiveMap(loadedGameMaps.get("farm")); // Kembali ke farm sebagai default
+                this.currentMap = "farm";
+                playerView.setWorldX(tileSize * 95);
+                playerView.setWorldY(tileSize * 122);
+            }
+
+            // Atur posisi pemain jika ini adalah transisi peta dan bukan karena returnToPreviousMap()
+            if (!positionSetByReturn) {
+                if (targetMap.equals("farm")) {
+                    if (previousMap.equals("house default")) {
+                        playerView.setWorldX(tileSize * 118);
+                        playerView.setWorldY(tileSize * 120);
+                    } else {
                         playerView.setWorldX(tileSize * 95);
                         playerView.setWorldY(tileSize * 122);
                     }
-                    positionSetByReturn = false;
-                }
-                break;
-            case "world":
-                if(!"world".equals(prevLoadedMap)){ // Hanya muat ulang jika belum dimuat
-                    tileM.setLoadedMap("world");
-                    tileM.loadMap("/assets/WorldMaps/WorldMaps");
-                    // Posisi default jika tidak ada posisi masuk dari rumah
-                    if (entranceWorldX == -1) { // Hanya set default jika tidak ada posisi masuk yang disimpan
-                        playerView.setWorldX(tileSize * 216);
-                        playerView.setWorldY(tileSize * 151);
-                    }
-                    positionSetByReturn = false;
-                }
-                break;
-            case "house" :
-                if(!"house".equals(prevLoadedMap.split(" ")[0])){
-                    tileM.setLoadedMap(targetMap);
-                    tileM.loadMap("/assets/HouseMap/HouseInteriorMap");
+                } else if (targetMap.equals("world")) {
+                    playerView.setWorldX(tileSize * 216);
+                    playerView.setWorldY(tileSize * 151);
+                } else if (targetMap.equals("house")) {
                     playerView.setWorldX(tileSize * 120);
                     playerView.setWorldY(tileSize * 122);
-                    positionSetByReturn = false;
                 }
-                break;
+            }
+            positionSetByReturn = false; // Reset flag setelah digunakan
         }
-//        System.out.println(currentMap); // debug kecil kecilan
+        System.out.println("Current map: " + currentMap);
+
     }
 
     // Metode baru untuk menampilkan gambar

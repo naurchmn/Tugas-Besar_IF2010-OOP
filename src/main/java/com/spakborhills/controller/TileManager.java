@@ -7,13 +7,14 @@ import java.util.*;
 
 import javax.imageio.ImageIO;
 
+import com.spakborhills.model.game.GameMap;
 import com.spakborhills.model.game.Tile;
 import com.spakborhills.view.gui.GamePanel;
 
 public class TileManager {
     GamePanel gp;
     public Tile[] tile;
-    public int[][] mapTileNum;
+    private GameMap currentActiveMap;
     ArrayList<String> fileNames = new ArrayList<>();
     ArrayList<String> tileCols = new ArrayList<>();
     private String loadedMap;
@@ -39,8 +40,6 @@ public class TileManager {
 
         tile = new Tile[fileNames.size()];
         getTileImage();
-
-        mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
     }
 
     public void getTileImage() {
@@ -71,38 +70,19 @@ public class TileManager {
         }
     }
 
-    public void loadMap(String loadedMap) {
-        try {
-            InputStream is = getClass().getResourceAsStream(loadedMap);
-            BufferedReader br = new BufferedReader(new InputStreamReader(Objects.requireNonNull(is)));
-
-            int col = 0;
-            int row = 0;
-
-            while (col < gp.maxWorldCol && row < gp.maxWorldRow) {
-                String line = br.readLine(); // just read the number including the space
-
-                String[] numbers = line.split(" "); // input the number into the array with space seperator
-
-                while (col < gp.maxWorldCol) {
-                    int num = Integer.parseInt(numbers[col]); // changing the String numbers[] into integer
-
-                    mapTileNum[col][row] = num;
-                    col++;
-                }
-                col = 0;
-                row++;
-            }
-
-            br.close();
-
-        } catch (Exception e) {
-            e.printStackTrace(); // <-- TAMBAHKAN INI
-            System.err.println("Failed to load map: " + loadedMap);
-        }
+    public void setActiveMap(GameMap map) {
+        this.currentActiveMap = map;
+        System.out.println("TileManager active map set to: " + map.getMapName());
     }
 
     public void draw(Graphics2D g2) {
+        if (currentActiveMap == null || currentActiveMap.getTileData() == null) {
+            System.err.println("Error: No active map or tile data in TileManager to draw.");
+            return;
+        }
+
+        int[][] mapTileNum = currentActiveMap.getTileData(); // Ambil data dari map aktif
+
         int worldCol = 0;
         int worldRow = 0;
 
@@ -151,74 +131,75 @@ public class TileManager {
             }
         }
     }
-    public String getLoadedMap() {
-        return loadedMap;
-    }
-
-    public void setLoadedMap(String loadedMap) {
-        this.loadedMap = loadedMap;
-    }
 
     // Metode baru untuk mendapatkan jenis tile di posisi pemain
     public String getTileTypeAtPlayerPosition(int worldX, int worldY) {
-        worldX += gp.getTileSize() / 2;
-        worldY += gp.getTileSize() / 2;
-
-        int tileCol = worldX / gp.getTileSize();
-        int tileRow = worldY / gp.getTileSize();
+        if (currentActiveMap == null || currentActiveMap.getTileData() == null) {
+            return "Unknown";
+        }
+        int tileCol = (worldX + gp.getTileSize() / 2) / gp.getTileSize();
+        int tileRow = (worldY + gp.getTileSize() / 2) / gp.getTileSize();
 
         if (tileCol >= 0 && tileCol < gp.maxWorldCol && tileRow >= 0 && tileRow < gp.maxWorldRow) {
-            int tileNum = mapTileNum[tileCol][tileRow];
-            return fileNames.get(tileNum); // Mengembalikan nama file tile
+            int tileNum = currentActiveMap.getTileData()[tileCol][tileRow]; // Ambil dari active map
+            return fileNames.get(tileNum);
         }
-        return "Unknown"; // Jika di luar batas
+        return "Unknown";
     }
 
     // Metode untuk mendapatkan jenis tile yang ada di hadapan Player
     public String getTileTypeInFrontOfPlayer(int playerWorldX, int playerWorldY, String playerDirection) {
+        if (currentActiveMap == null || currentActiveMap.getTileData() == null) {
+            return "Unknown";
+        }
         playerWorldX += gp.getTileSize() / 2;
         playerWorldY += gp.getTileSize() / 2;
 
         int targetCol = playerWorldX / gp.getTileSize();
         int targetRow = playerWorldY / gp.getTileSize();
 
-        // Adjust target tile based on player's direction
         switch (playerDirection) {
             case "up":
-                targetRow-=2; // One tile above
+                targetRow-=2;
                 break;
             case "down":
-                targetRow+=2; // One tile below
+                targetRow+=2;
                 break;
             case "left":
-                targetCol-=2; // One tile to the left
+                targetCol-=2;
                 break;
             case "right":
-                targetCol+=2; // One tile to the right
+                targetCol+=2;
                 break;
         }
 
-        // Check if the target tile is within map boundaries
         if (targetCol >= 0 && targetCol < gp.maxWorldCol && targetRow >= 0 && targetRow < gp.maxWorldRow) {
-            int tileNum = mapTileNum[targetCol][targetRow];
+            int tileNum = currentActiveMap.getTileData()[targetCol][targetRow]; // Ambil dari active map
             return fileNames.get(tileNum);
         }
 
-        return "Unknown"; // Target tile is out of bounds
+        return "Unknown";
     }
 
     public void changeTile(int col, int row, String newTileFileName) {
+        if (currentActiveMap == null || currentActiveMap.getTileData() == null) {
+            System.err.println("Error: Cannot change tile, no active map or tile data.");
+            return;
+        }
         if (col >= 0 && col < gp.maxWorldCol && row >= 0 && row < gp.maxWorldRow) {
-            // Temukan indeks tile dari nama file
             int newTileIndex = fileNames.indexOf(newTileFileName);
             if (newTileIndex != -1) {
-                mapTileNum[col][row] = newTileIndex;
-                System.out.println("Tile at [" + col + "," + row + "] changed to " + newTileFileName);
+                currentActiveMap.getTileData()[col][row] = newTileIndex; // Ubah pada active map
+                System.out.println("Tile at [" + col + "," + row + "] changed to " + newTileFileName + " in " + currentActiveMap.getMapName());
             } else {
                 System.err.println("Error: Tile file name '" + newTileFileName + "' not found in TileData.");
             }
         } else {
             System.err.println("Error: Attempted to change tile out of bounds at [" + col + "," + row + "]");
         }
+    }
+
+    public GameMap getActiveMap() {
+        return currentActiveMap;
     }
 }

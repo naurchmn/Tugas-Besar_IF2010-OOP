@@ -29,7 +29,7 @@ public class NPCView extends Entity {
         this.worldX = this.initialWorldX;
         this.worldY = this.initialWorldY;
 
-        this.collisionOn = true;
+        this.collisionOn = false;
 
         this.currentMapName = "house";
 

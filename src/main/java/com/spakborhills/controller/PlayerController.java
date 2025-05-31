@@ -195,8 +195,9 @@ public class PlayerController {
     public void getOutTheHouse(){
         System.out.println("You get out the house");
         if (gp.getCurrentMap().equals("house default")){
+//            gp.setPreviousMap("house default");
             gp.setCurrentMap("farm");
-            drawPlayer.setDefaultValues(118, 120);
+            gp.setPreviousMap("house default");
         } else {
             gp.returnToPreviousMap();
         }
