@@ -182,6 +182,7 @@ public class PlayerController {
             } else {
                 System.out.println("Cannot till this tile: " + currentTileType);
             }
+            gp.showTemporaryPopUp("/assets/PopUps/PlantingPopUp.png", 2500, 200);
         }
         else{
             System.out.println("Wrong season lil bro");
@@ -213,6 +214,7 @@ public class PlayerController {
 
         if (!gp.getPlantManager().getPlants().get(tileLoc).isReadyToHarvest()){
             System.out.println("Crop is not ready to harvest");
+            gp.showTemporaryPopUp("/assets/PopUps/CropNotReadyPopUp.png", 2500, 200);
             return;
         }
         player.getInventory().add(CropsRegistry.getCropsPrototype(gp.getPlantManager().getPlants().get(tileLoc).getCropName()), 1);
@@ -263,7 +265,8 @@ public class PlayerController {
     }
 
     public void cooking(){
-        System.out.println("You are trying to cook...");
+        gp.showTemporaryPopUp("/assets/PopUps/CookingPopUp.png", 2500, 0);
+
         Inventory inventory = player.getInventory();
         Map<Item, Integer> ingredients = player.getRecipePicked().getIngredients();
 
@@ -419,6 +422,7 @@ public class PlayerController {
 
     // TO NPC ACTION
     public void proposing(NPC npc){
+        String npcName = npc.getName();
         gameTime.advanceGameTime(60);
         if (npc.getHeartPoints() == NPC.getMaxHeartPoints()){
             System.out.println("Aku mau mas");
