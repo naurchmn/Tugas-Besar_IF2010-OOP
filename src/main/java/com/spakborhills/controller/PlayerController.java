@@ -229,9 +229,11 @@ public class PlayerController {
             player.setItemHeld(null);
         }
     }
-    public void cooking(){
 
+    public void cooking(){
+        System.out.println("You are trying to cook...");
     }
+
     public void sleeping(int energyLeft, int sleepHour, int sleepMinute){
         gp.showTemporaryPopUp("/assets/PopUps/SleepPopUp.png", 2500, 0);
         gp.setCurrentMap("house default");

@@ -6,7 +6,7 @@ import com.spakborhills.model.items.foods.Food;
 import com.spakborhills.model.items.seeds.*;
 import com.spakborhills.model.items.crops.*;
 import com.spakborhills.model.items.foods.FoodRegistry;
-//import com.spakborhills.model.items.recipes.*;
+import com.spakborhills.model.items.recipes.RecipeRegistry;
 import com.spakborhills.model.items.seeds.*;
 import com.spakborhills.model.items.Item;
 
