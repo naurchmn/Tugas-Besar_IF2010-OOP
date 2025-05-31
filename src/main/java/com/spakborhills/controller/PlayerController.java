@@ -21,12 +21,9 @@ import com.spakborhills.model.items.fish.FishRegistry;
 import com.spakborhills.model.items.foods.Food;
 import com.spakborhills.model.items.recipes.Recipe;
 import com.spakborhills.model.items.recipes.RecipeRegistry;
-import com.spakborhills.model.items.recipes.RecipeUnlocker;
 import com.spakborhills.model.items.seeds.Seed;
 import com.spakborhills.view.gui.GamePanel;
 import java.util.Random;
-import com.spakborhills.view.gui.MainFrame;
-import java.awt.*;
 import java.util.*;
 
 public class PlayerController {
@@ -426,11 +423,14 @@ public class PlayerController {
         gameTime.advanceGameTime(60);
         if (npc.getHeartPoints() == NPC.getMaxHeartPoints()){
             System.out.println("Aku mau mas");
+            gp.getNpcInteractionPanel().showTemporaryPopUpNPC("/assets/PopUps/AcceptProposal/" + npcName + " Proposed.png", 2500, 0);
             npc.setRelationshipStatus(RelationshipStatus.FIANCE);
             player.setEnergy(player.getEnergy() - 10);
         }
         else{
             System.out.println("Maaf aku belum siap");
+            gp.getNpcInteractionPanel().showTemporaryPopUpNPC("/assets/PopUps/NotReadyMarry/" + npcName + " Not Ready.png", 2500, 0);
+
             player.setEnergy(player.getEnergy() - 20);
         }
     }
