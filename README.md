@@ -2,7 +2,7 @@
 # “That Time I Became a Farming Game Dev to Save the World”
 
 ### Deskripsi
-That Time I Became a Farming Game Dev to Save the World merupakan permainan pixel-art 2D farming simulator yang dikembangkan dengan bahasa pemrograman Java. Tujuan permainan ini menjalani hidup sebagai petani sampai sukses dan menikah.
+Spakbor Hills adalah game simulasi pertanian yang dikembangkan dengan Java, di mana pemain dapat mengelola kebun mereka sendiri. Game ini terinspirasi berdasarkan game Stardew Valley dan mencoba menerapkan berbagai mekanik yang ada di dalam game tersebut. Game ini memiliki keunikan hybrid-based antara CLI dan GUI. Keseluruhan game Spakbor Hills dibuat menggunakan bahasa pemrograman Java dengan menggunakan build manager gradle. Untuk mencoba game ini lihat pada bagian ###How To Run.
 
 ### Contributors
 | No       | Nama       | NIM       | Github      |
@@ -17,49 +17,28 @@ That Time I Became a Farming Game Dev to Save the World merupakan permainan pixe
 
 ### Features
 Technical Features:
-- GUI
-- Mouse and Keyboard Utilization
-Game Features:
-- Minecraft Mechanics
-- Free Market
-- Lets Go Gambling!
-- Save dan Load
-- NPC Easter Egg
-
-### Screenshots
-Main menu
- 
-Preparation
-
-Player
-
-Farm
-
-House
-
-NPC
-
-Items
-
-Gameplay
-
-Maps
--Farm Map
-
-- World Map
+- GUI & CLI Hybrid
+- Mouse and Keyboard input
 
 ### Tech Needs
-IDE: IntelliJ IDEA
 Modules: Java
 
  ### How to Run
-Clone the Project
+1. Clone the repository
 
-Go to the Project Directory
+2. Open the Project Folder in your IDE
 
-Open the Project Folder
+3. Open terminal
 
-Run the Program
+4. run "./gradlew run"
+
+OR 
+
+3. Open Main.java
+
+4. run the file
+
+
 
 
 
