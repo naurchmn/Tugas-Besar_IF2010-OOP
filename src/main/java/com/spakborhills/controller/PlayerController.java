@@ -219,6 +219,9 @@ public class PlayerController {
         else if (food instanceof Fish){
             energy = 1;
         }
+        Item foodz = (Item) food;
+        System.out.println("You ate a " + foodz.getName() + " and regain " + energy + " energy");
+
         player.setEnergy(player.getEnergy() + energy);
         gameTime.advanceGameTime(5);
         player.getInventory().use((Item) food, 1);

@@ -19,10 +19,15 @@ public class MainFrame extends JFrame {
         HomePanel homePanel = new HomePanel(this);
         LoginPanel loginPanel = new LoginPanel(this);
         GamePanel gamePanel = new GamePanel(this, loginPanel);
+        CreditPanel creditPanel = new CreditPanel(this);
+        HelpPanel helpPanel = new HelpPanel(this);
 
         mainPanel.add(homePanel, "home");
         mainPanel.add(loginPanel, "login");
         mainPanel.add(gamePanel, "game");
+        mainPanel.add(creditPanel, "credit");
+        mainPanel.add(helpPanel, "help");
+
 
         setContentPane(mainPanel);
 
