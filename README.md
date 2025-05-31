@@ -24,19 +24,18 @@ Technical Features:
 Modules: Java
 
  ### How to Run
-1. Clone the repository
+ 1. Pastikan software terinstal
+   a. JDK 23
+   b. Git
+   c. (Opsional) IDE: IntelliJ, VSCode
 
-2. Open the Project Folder in your IDE
+2. Clone repository Github
+ 
+3. Buka IDE dan impor folder proyek sebagai proyek Gradle.
 
-3. Open terminal
+4. Gunakan perintah gradlew build (Windows) atau ./gradlew build (Linux/macOS) di terminal untuk mengkompilasi kode dan menghasilkan file aplikasi (JAR).
 
-4. run "./gradlew run"
-
-OR 
-
-3. Open Main.java
-
-4. run the file
+5. Jalankan aplikasi langsung dari kode sumbernya dengan perintah gradlew run (Windows) atau ./gradlew run (Linux/macOS).
 
 
 
